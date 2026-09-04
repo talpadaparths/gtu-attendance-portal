@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gujarat Technological University - Attendance Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { 
+      background-color: #f1f5f9; 
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
+    }
+    .tab-active { background-color: #2563eb !important; color: white !important; }
+    .nav-active { background-color: #2563eb !important; color: white !important; font-weight: 600; }
+    .mobile-nav-active { color: #2563eb !important; font-weight: 700; }
+    
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen md:h-screen flex flex-col bg-slate-100 text-slate-800 md:overflow-hidden">
+
+  <!-- Header -->
+  <header class="bg-white border-b px-4 md:px-6 py-2.5 md:py-3 flex items-center justify-between shrink-0 sticky top-0 md:static z-40 shadow-xs">
+    <div class="flex items-center space-x-2.5 md:space-x-3 truncate">
+      <div class="flex-shrink-0 flex items-center justify-center">
+        <img 
+          src="P:\P S Talpada\1\logo.png" 
+          alt="College Logo" 
+          class="w-10 h-10 md:w-12 md:h-12 rounded-lg border border-slate-200 bg-white p-0.5 shadow-sm"
+          style="aspect-ratio: 1 / 1; object-fit: contain;"
+          onerror="this.onerror=null; this.src='https://placehold.co/48x48/white/dc2626?text=GTU';"
+        >
+      </div>
+      <div class="truncate">
+        <h1 class="text-xs md:text-base font-bold tracking-tight text-slate-900 leading-tight uppercase truncate">Gujarat Technological University</h1>
+        <p class="hidden sm:block text-[9px] md:text-xs text-red-600 font-semibold tracking-wide uppercase truncate">International Innovative University • Accredited with A+ Grade by NAAC</p>
+      </div>
+    </div>
+
+    <div id="userProfileBadge" class="hidden items-center space-x-2 md:space-x-4 shrink-0">
+      <div class="flex items-center space-x-2 text-right">
+        <div class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+          <i class="fa-solid fa-user text-xs md:text-sm"></i>
+        </div>
+        <div class="hidden sm:block text-left">
+          <div id="displayUserName" class="text-xs font-bold leading-none text-slate-800"></div>
+          <div class="text-[10px] text-emerald-600 font-medium mt-0.5">Active Session</div>
+        </div>
+      </div>
+      <button onclick="logout()" class="text-xs text-red-600 font-semibold border border-red-200 hover:bg-red-50 p-1.5 sm:px-2.5 sm:py-1 rounded-md transition cursor-pointer" title="Logout">
+        <i class="fa-solid fa-arrow-right-from-bracket sm:mr-1"></i><span class="hidden sm:inline">Logout</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Login Section -->
+  <section id="authSection" class="flex-1 overflow-y-auto flex items-center justify-center py-8 md:py-16 px-4">
+    <div class="bg-white shadow-xl rounded-2xl p-6 md:p-8 max-w-md w-full border border-slate-100">
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl mx-auto flex items-center justify-center text-xl mb-3 shadow-inner">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <h2 class="text-lg md:text-xl font-bold text-slate-900">Welcome Back</h2>
+        <p class="text-xs text-slate-400 mt-1">Login to access GTU Attendance Portal</p>
+      </div>
+
+      <!-- Role Tabs -->
+      <div class="flex bg-slate-100 p-1 rounded-xl mb-6 text-xs font-semibold">
+        <button id="tabStudent" type="button" onclick="switchLoginRole('student')" class="flex-1 py-2 rounded-lg text-slate-600 transition flex items-center justify-center gap-1.5 cursor-pointer">
+          <i class="fa-solid fa-graduation-cap"></i> Student
+        </button>
+        <button id="tabFaculty" type="button" onclick="switchLoginRole('faculty')" class="flex-1 py-2 rounded-lg text-slate-600 transition flex items-center justify-center gap-1.5 tab-active cursor-pointer">
+          <i class="fa-solid fa-chalkboard-user"></i> Faculty
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label id="loginIdLabel" class="block font-semibold text-slate-600 uppercase tracking-wider mb-1">Faculty ID</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-id-badge"></i></span>
+            <input id="loginIdInput" type="text" placeholder="e.g. FAC01" class="w-full pl-9 pr-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-slate-50">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-600 uppercase tracking-wider mb-1">Password</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-lock"></i></span>
+            <input id="loginPasswordInput" type="password" placeholder="••••••" class="w-full pl-9 pr-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-slate-50">
+          </div>
+        </div>
+
+        <button id="btnLoginAction" type="button" onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg shadow-sm transition cursor-pointer">
+          Login to Portal <i class="fa-solid fa-arrow-right ml-1"></i>
+        </button>
+        <div id="loginError" class="text-xs text-red-500 text-center font-medium mt-2 hidden"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Workspace -->
+  <main id="appContainer" class="hidden flex-1 md:overflow-hidden max-w-7xl w-full mx-auto p-3.5 md:p-6 flex flex-col md:flex-row gap-6 pb-24 md:pb-6">
+    
+    <!-- Desktop Locked Sidebar (Hidden on Mobile) -->
+    <aside class="hidden md:flex md:w-60 shrink-0 h-full flex-col justify-between select-none">
+      <div class="space-y-2">
+        <div id="facultyNav" class="space-y-1">
+          <button onclick="navigateView('facultyDashboard')" id="btnNavDash" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 transition nav-active cursor-pointer">
+            <i class="fa-solid fa-gauge"></i> Dashboard
+          </button>
+          <button onclick="navigateView('attendanceLogs')" id="btnNavLogs" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-200 transition cursor-pointer">
+            <i class="fa-solid fa-calendar-days"></i> Attendance Logs
+          </button>
+          <button onclick="navigateView('reportsExport')" id="btnNavReports" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-200 transition cursor-pointer">
+            <i class="fa-solid fa-file-excel"></i> Reports & Export
+          </button>
+        </div>
+
+        <div id="studentNav" class="hidden space-y-1">
+          <button class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 nav-active cursor-pointer">
+            <i class="fa-solid fa-clipboard-user"></i> My Attendance
+          </button>
+        </div>
+      </div>
+
+      <div class="pt-4 pb-1">
+        <div class="bg-blue-50/70 border border-blue-100/90 rounded-2xl p-4 text-center shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+          <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-2">
+            <i class="fa-solid fa-headset text-sm"></i>
+          </div>
+          <div class="text-xs font-bold text-slate-800">Need Technical Support?</div>
+          <div class="text-[11px] text-slate-500 font-medium mt-1">Call / WhatsApp: +91 9054826042</div>
+          <div class="text-[10px] text-slate-500 font-medium mt-0.5 break-all">E Mail ID : talpadaparth1@gmail.com</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="flex-1 w-full md:h-full md:overflow-y-auto custom-scroll md:pr-1">
+      
+      <!-- Faculty Panel: Dashboard -->
+      <section id="facultyDashboardView" class="space-y-4">
+        <div class="bg-gradient-to-r from-slate-900 to-blue-950 text-white p-4 md:p-6 rounded-2xl shadow-sm">
+          <span class="text-[9px] md:text-[10px] bg-blue-700/80 px-2.5 py-0.5 rounded font-bold uppercase tracking-widest">Faculty Control Panel</span>
+          <h2 class="text-lg md:text-xl font-bold mt-1">Take New Attendance</h2>
+        </div>
+
+        <div class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 text-xs">
+            <div>
+              <label class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Session Date</label>
+              <input id="sessionDate" type="date" onchange="validateDate(this)" oninput="validateDate(this)" class="w-full border rounded-lg px-2.5 py-2 md:py-1.5 bg-slate-50">
+            </div>
+            <div>
+              <label class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Course</label>
+              <select id="courseSelect" onchange="syncCourseSemesters()" class="w-full border rounded-lg px-2.5 py-2 md:py-1.5 bg-slate-50 font-medium"></select>
+            </div>
+            <div>
+              <label class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Semester / Year</label>
+              <select id="semSelect" onchange="syncSubjects()" class="w-full border rounded-lg px-2.5 py-2 md:py-1.5 bg-slate-50 font-medium"></select>
+            </div>
+            <div>
+              <label id="subjectFieldLabel" class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Subject</label>
+              <select id="subjectSelect" class="w-full border rounded-lg px-2.5 py-2 md:py-1.5 bg-slate-50 font-medium truncate" style="display: block;"></select>
+              <input id="seminarTopicInput" type="text" placeholder="Enter seminar topic..." class="w-full border rounded-lg px-2.5 py-2 md:py-1.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none" style="display: none;">
+            </div>
+            <div class="sm:col-span-2 md:col-span-1">
+              <label class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Class Type</label>
+              <select id="classTypeSelect" onchange="handleClassTypeChange()" class="w-full border rounded-lg px-2.5 py-2 md:py-1.5 bg-slate-50 font-medium">
+                <option value="Theory">Theory</option>
+                <option value="Practical">Practical</option>
+                <option value="Seminar">Seminar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 pt-2 border-t">
+            <button onclick="loadStudentRoster()" class="flex-1 sm:flex-none justify-center bg-blue-600 hover:bg-blue-700 text-white text-xs px-4 py-2.5 md:py-2 rounded-lg font-semibold flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+              <i class="fa-solid fa-users-viewfinder"></i> Load Roster
+            </button>
+            <button onclick="bulkMark('Present')" class="flex-1 sm:flex-none justify-center border border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-xs px-3 py-2.5 md:py-2 rounded-lg font-semibold flex items-center gap-1 transition cursor-pointer">
+              <i class="fa-solid fa-check"></i> All Present
+            </button>
+            <button onclick="bulkMark('Absent')" class="flex-1 sm:flex-none justify-center border border-red-500 text-red-600 hover:bg-red-50 text-xs px-3 py-2.5 md:py-2 rounded-lg font-semibold flex items-center gap-1 transition cursor-pointer">
+              <i class="fa-solid fa-xmark"></i> All Absent
+            </button>
+          </div>
+
+          <div id="rosterContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-3"></div>
+
+          <div id="submitAttendanceArea" style="display: none; text-align: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid #e2e8f0; width: 100%;">
+            <button type="button" onclick="commitAttendance()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-sm px-8 py-3 rounded-xl font-bold shadow-md hover:shadow-lg transition inline-flex items-center justify-center gap-2 cursor-pointer mx-auto">
+              <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Submit Attendance Record
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Faculty Panel: Attendance Logs -->
+      <section id="attendanceLogsView" class="hidden w-full bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+          <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-calendar-check text-blue-600"></i> Monthly Session History
+          </h3>
+          <input id="logMonthFilter" type="month" onchange="validateMonth(this); renderLogs();" oninput="validateMonth(this)" class="w-full sm:w-auto text-xs border rounded-lg px-3 py-2 md:py-1.5 bg-slate-50 font-medium">
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs whitespace-nowrap">
+            <thead class="bg-slate-50 border-b text-slate-500 uppercase tracking-wider text-[10px]">
+              <tr>
+                <th class="py-3 px-3">Date Taken</th>
+                <th class="py-3 px-3">Subject & Details</th>
+                <th class="py-3 px-3">Class Type</th>
+                <th class="py-3 px-3 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody id="logsTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Faculty Panel: Reports & Export -->
+      <section id="reportsExportView" class="hidden w-full bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+          <i class="fa-solid fa-file-excel text-emerald-600"></i> Export Attendance Reports (.xlsx)
+        </h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 max-w-2xl text-xs">
+          <div>
+            <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Target Course</label>
+            <select id="exportCourseSelect" onchange="syncExportSemesters()" class="w-full border rounded-lg px-3 py-2 bg-slate-50 font-medium"></select>
+          </div>
+          <div>
+            <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Target Semester / Year</label>
+            <select id="exportSemSelect" class="w-full border rounded-lg px-3 py-2 bg-slate-50 font-medium"></select>
+          </div>
+          <div>
+            <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Target Month</label>
+            <input id="exportMonthSelect" type="month" onchange="validateMonth(this)" oninput="validateMonth(this)" class="w-full border rounded-lg px-3 py-2 bg-slate-50 font-medium">
+          </div>
+        </div>
+
+        <button onclick="downloadFacultyMatrixExcel()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-5 py-3 md:py-2.5 rounded-lg flex items-center justify-center gap-2 transition shadow-sm cursor-pointer">
+          <i class="fa-solid fa-download"></i> Download Excel Matrix (.xlsx)
+        </button>
+      </section>
+
+      <!-- Student Dashboard -->
+      <section id="studentDashboardView" class="hidden w-full space-y-4 md:space-y-5">
+        <div class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100">
+          <h2 class="text-base font-bold text-slate-900">Attendance Overview</h2>
+          <p class="text-xs text-slate-400">Track your overall academic attendance.</p>
+          <div class="flex items-center gap-6 md:gap-8 mt-4 md:mt-5">
+            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-blue-600 flex items-center justify-center font-bold text-xs md:text-sm text-blue-600 shrink-0" id="studentPercentageRing">
+              0%
+            </div>
+            <div>
+              <div class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Classes Attended</div>
+              <div id="studentAttendanceFraction" class="text-lg md:text-xl font-bold text-slate-800">0 / 0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div>
+            <h3 class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+              <i class="fa-solid fa-file-excel text-emerald-600"></i> Download My Attendance Report
+            </h3>
+            <p class="text-[10px] text-slate-400">Select month to download report.</p>
+          </div>
+          <div class="flex w-full sm:w-auto items-center gap-2">
+            <input id="studentExportMonth" type="month" onchange="validateMonth(this)" oninput="validateMonth(this)" class="flex-1 sm:flex-none border rounded-lg text-xs px-2.5 py-2 md:py-1.5 bg-slate-50 font-medium">
+            <button onclick="downloadStudentReportExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3.5 py-2 md:py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition cursor-pointer shrink-0">
+              <i class="fa-solid fa-download"></i> Excel
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100">
+          <h3 class="font-bold text-slate-800 text-xs mb-3">Recent Class Logs</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs whitespace-nowrap">
+              <thead class="bg-slate-50 border-b text-[10px] uppercase text-slate-400">
+                <tr>
+                  <th class="py-2.5 px-3">Date</th>
+                  <th class="py-2.5 px-3">Subject / Topic</th>
+                  <th class="py-2.5 px-3">Type</th>
+                  <th class="py-2.5 px-3 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody id="studentLogsTableBody" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Mobile Technical Support Modal -->
+  <div id="mobileSupportModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-sm p-5 border border-slate-100 shadow-2xl text-center relative">
+      <button onclick="toggleMobileSupport(false)" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 p-1">
+        <i class="fa-solid fa-xmark text-base"></i>
+      </button>
+      <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-2.5">
+        <i class="fa-solid fa-headset text-base"></i>
+      </div>
+      <div class="text-sm font-bold text-slate-800">Need Technical Support?</div>
+      <div class="text-xs text-slate-600 font-semibold mt-2">Call / WhatsApp: +91 9054826042</div>
+      <div class="text-[11px] text-slate-500 font-medium mt-1 break-all">E Mail ID : talpadaparth1@gmail.com</div>
+      <button onclick="toggleMobileSupport(false)" class="w-full mt-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold py-2 rounded-lg transition">Close</button>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Navigation Bar (Hidden on Desktop) -->
+  <nav id="mobileBottomNav" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-3 py-2 z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.04)]">
+    <!-- Faculty Mobile Bar -->
+    <div id="facultyMobileNav" class="flex items-center justify-around text-center">
+      <button onclick="navigateView('facultyDashboard')" id="mBtnDash" class="flex flex-col items-center gap-0.5 text-slate-500 mobile-nav-active">
+        <i class="fa-solid fa-gauge text-sm"></i>
+        <span class="text-[10px]">Dashboard</span>
+      </button>
+      <button onclick="navigateView('attendanceLogs')" id="mBtnLogs" class="flex flex-col items-center gap-0.5 text-slate-500">
+        <i class="fa-solid fa-calendar-days text-sm"></i>
+        <span class="text-[10px]">Logs</span>
+      </button>
+      <button onclick="navigateView('reportsExport')" id="mBtnReports" class="flex flex-col items-center gap-0.5 text-slate-500">
+        <i class="fa-solid fa-file-excel text-sm"></i>
+        <span class="text-[10px]">Export</span>
+      </button>
+      <button onclick="toggleMobileSupport(true)" class="flex flex-col items-center gap-0.5 text-slate-500">
+        <i class="fa-solid fa-headset text-sm"></i>
+        <span class="text-[10px]">Support</span>
+      </button>
+    </div>
+
+    <!-- Student Mobile Bar -->
+    <div id="studentMobileNav" class="hidden flex items-center justify-around text-center">
+      <button onclick="navigateView('studentDashboard')" class="flex flex-col items-center gap-0.5 text-blue-600 font-bold">
+        <i class="fa-solid fa-clipboard-user text-base"></i>
+        <span class="text-[10px]">My Attendance</span>
+      </button>
+      <button onclick="toggleMobileSupport(true)" class="flex flex-col items-center gap-0.5 text-slate-500">
+        <i class="fa-solid fa-headset text-base"></i>
+        <span class="text-[10px]">Support</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Bottom Developer Credit -->
+  <footer class="shrink-0 py-2 border-t border-slate-200 bg-white/70 text-center select-none z-30">
+    <span class="text-[10px] md:text-[11px] font-mono font-medium text-slate-500 hover:text-blue-600 transition cursor-default">
+      &lt;/&gt; Developed by Parth S Talpada
+    </span>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    var currentRole = 'faculty';
+    var currentUser = null;
+    var currentRoster = [];
+    var attendanceState = {}; 
+    var db = null;
+
+    var SUPABASE_URL = "https://ierhattpsvizmajwtcol.supabase.co";
+    var SUPABASE_ANON_KEY = "sb_publishable_rZKrmVTYtxm0KLvFqoI_AQ__hTETjXH";
+
+    try {
+      if (typeof supabase !== 'undefined' && SUPABASE_URL && SUPABASE_URL !== "YOUR_SUPABASE_URL") {
+        db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+    } catch (e) {
+      console.warn("Supabase initialization error:", e);
+    }
+
+    var ACADEMIC_MAP = {
+      "B.Pharm": {
+        semesters: ["Sem 1", "Sem 2", "Sem 3", "Sem 4", "Sem 5", "Sem 6", "Sem 7", "Sem 8"],
+        subjects: {
+          "Sem 1": ["BP101T Basics of Python Programming", "BP102T General Pharmacy", "BP103T Healthcare Psychology", "BP104T Human Anatomy & Phys I", "BP105T Intro to Pharmacognosy", "BP106T Pharm Inorganic Chemistry", "BP107P General Pharmacy Practical", "BP108P Healthcare Psychology Practical", "BP109P Human Anatomy Practical", "BP110P Pharmacognosy Practical", "BP111P Inorganic Practical"],
+          "Sem 2": ["BP201T Applied Biostatistics", "BP202T Biochemistry", "BP203T Human Anatomy & Phys II", "BP204T Pharmaceutical Organic Chemistry", "BP205T Pharmacognosy & Phytochemistry", "BP206T Physical Pharmaceutics", "BP207P Biochemistry Practical", "BP208P Human Anatomy II Practical", "BP209P Organic Chemistry Practical", "BP210P Pharmacognosy Practical", "BP211P Physical Pharmaceutics Practical"],
+          "Sem 3": ["BP301T ML in Pharm Sciences", "BP302T Environmental Sciences", "BP303T Ethics and Human Values", "BP304T General Pharmacology", "BP305T Heterocyclic Compounds", "BP306T Pharm Dosage Forms I", "BP307T Pharm Engineering", "BP308T Pharm Microbiology", "BP309P Pharmacology Practical", "BP310P Heterocyclic Practical", "BP311P Dosage Forms Practical"],
+          "Sem 4": ["BP401T Herbal Drug Tech", "BP402T Medicinal Chemistry", "BP403T Pharm Biotechnology", "BP404T Social Pharmacy", "BP405T Systemic Pharmacology I", "BP406P Herbal Tech Practical", "BP407P Med Chem Practical", "BP408P Biotech Practical", "BP409P Social Pharmacy Practical", "BP410P Systemic Pharmacology I Practical", "BP411I Internship"],
+          "Sem 5": ["BP501T Biomedical Chemistry", "BP502T Industrial Pharmacognosy", "BP503T Innovation & Startup", "BP504T Pharm Dosage Forms II", "BP505T Quality Assurance", "BP506T Systemic Pharmacology II", "BP507P Biomedical Chemistry Practical", "BP508P Industrial Pharmacognosy Practical", "BP509P Dosage Forms II Practical", "BP510P Pharmacology II Practical"],
+          "Sem 6": ["BP601T Advanced Pharmacognosy", "BP602T Biopharmaceutics", "BP603T IPR", "BP604T AI Applications", "BP605T Pharm Analysis", "BP606T Jurisprudence", "BP608P Biopharmaceutics Practical", "BP609P Analysis Practical", "BP612I Internship"],
+          "Sem 7": ["BP701T Biostatistics & Research", "BP702T Cosmetics & Cosmeceuticals", "BP703T AI in Clinical Applications", "BP704T Modern Analytical Tech", "BP705T Pharmacovigilance", "BP706T Pharmacy Practice", "BP707T Regulatory Affairs", "BP709P Analytical Practical", "BP710RP Research Project"],
+          "Sem 8": ["BP801T AI Ethics in Pharmacy", "BP802T Clinical Pharmacotherapeutics", "BP803T Industrial Pharmacy", "BP804T Pharm Management", "BP805T Sterile Dosage Forms", "BP807P Marketing Skills Practical", "BP808P Sterile Dosage Practical", "BP810RP Research Project"]
+        }
+      },
+      "M.Pharm (QA)": {
+        semesters: ["Sem 1", "Sem 2", "Sem 3", "Sem 4"],
+        subjects: {
+          "Sem 1": ["MQA101T Modern Analytical Techniques", "MQA102T Quality Management System", "MQA103T QC and QA", "MQA104T Product Development & TT", "MQA105P QA Practical I"],
+          "Sem 2": ["MQA201T Hazards and Safety", "MQA202T Pharm Validation", "MQA203T Audits & Compliance", "MQA204T Manufacturing Tech", "MQA205P QA Practical II"],
+          "Sem 3": ["MRM301T Research Methodology", "Journal Club", "Research Work / Dissertation"],
+          "Sem 4": ["Journal Club", "Research Work / Dissertation", "Viva Voce"]
+        }
+      },
+      "M.Pharm (Pharmaceutics)": {
+        semesters: ["Sem 1", "Sem 2", "Sem 3", "Sem 4"],
+        subjects: {
+          "Sem 1": ["MPH101T Modern Analytical Tech", "MPH102T Drug Delivery System", "MPH103T Modern Pharmaceutics", "MPH104T Regulatory Affairs", "MPH105P Pharmaceutics Practical I"],
+          "Sem 2": ["MPH201T Molecular Pharmaceutics", "MPH202T Adv Biopharmaceutics", "MPH203T CADD System", "MPH204T Cosmetics", "MPH205P Practical II"],
+          "Sem 3": ["Research Methodology & Biostatistics", "Journal Club", "Research Work / Dissertation"],
+          "Sem 4": ["Journal Club", "Research Work", "Viva Voce"]
+        }
+      },
+      "M.Pharm (Pharmacology)": {
+        semesters: ["Sem 1", "Sem 2", "Sem 3", "Sem 4"],
+        subjects: {
+          "Sem 1": ["MPL101T Modern Analytical Tech", "MPL102T Advanced Pharmacology I", "MPL103T Screening Methods I", "MPL104T Cellular & Molecular Pharmacology", "MPL105P Pharmacology Practical I"],
+          "Sem 2": ["MPL201T Advanced Pharmacology II", "MPL202T Screening Methods II", "MPL203T Principles of Drug Discovery", "MPL204T Experimental Practical II", "MPL205P Practical II"],
+          "Sem 3": ["Research Methodology & Biostatistics", "Journal Club", "Dissertation"],
+          "Sem 4": ["Journal Club", "Dissertation", "Viva Voce"]
+        }
+      },
+      "Pharm. D": {
+        semesters: ["Year 1", "Year 2", "Year 3", "Year 4", "Year 5", "Year 6"],
+        subjects: {
+          "Year 1": ["DP101T Human Anatomy & Physiology", "DP102T Pharmaceutics", "DP103T Medicinal Biochemistry", "DP104T Organic Chemistry", "DP105T Inorganic Chemistry", "DP106T Remedial Mathematics / Bio"],
+          "Year 2": ["Pathophysiology (DP201T)", "Pharmaceutical Microbiology (DP202T)", "Pharmacognosy and Phytopharmaceuticals (DP203T)", "Pharmacology I (DP204T)", "Community Pharmacy (DP205T)", "Pharmacotherapeutics I (DP206T)"],
+          "Year 3": ["DP301T Pharmacology II", "DP302T Pharm Analysis", "DP303T Pharmacotherapeutics II", "DP304T Jurisprudence", "DP305T Medicinal Chemistry", "DP306T Formulations"],
+          "Year 4": ["DP401T Pharmacotherapeutics III", "DP402T Hospital Pharmacy", "DP403T Clinical Pharmacy", "DP404T Biostatistics & RM", "DP405T Biopharmaceutics", "DP406T Clinical Toxicology"],
+          "Year 5": ["DP501T Clinical Research", "DP502T Pharmacoepidemiology", "DP503T Clinical PK & TDM", "DP504C Clerkship", "DP505P Project Work"],
+          "Year 6": ["DP601I Internship / Residency", "Clinical Pharmacy Practice", "Postings", "Hospital Practice"]
+        }
+      }
+    };
+
+    function formatDateToDMY(dateStr) {
+      if (!dateStr) return '';
+      var clean = String(dateStr).split('T')[0];
+      var parts = clean.split('-');
+      if (parts.length === 3) return parts[2] + '/' + parts[1] + '/' + parts[0];
+      return dateStr;
+    }
+
+    function getTodayString() {
+      var d = new Date();
+      var year = d.getFullYear();
+      var month = ('0' + (d.getMonth() + 1)).slice(-2);
+      var day = ('0' + d.getDate()).slice(-2);
+      return year + '-' + month + '-' + day;
+    }
+
+    function getCurrentMonthString() {
+      var d = new Date();
+      var year = d.getFullYear();
+      var month = ('0' + (d.getMonth() + 1)).slice(-2);
+      return year + '-' + month;
+    }
+
+    function validateDate(input) {
+      var maxToday = getTodayString();
+      if (input.value && input.value > maxToday) {
+        alert("Future dates are not permitted. Selecting today's date instead.");
+        input.value = maxToday;
+      }
+    }
+
+    function validateMonth(input) {
+      var maxMonth = getCurrentMonthString();
+      if (input.value && input.value > maxMonth) {
+        alert("Future months are not permitted. Selecting current month instead.");
+        input.value = maxMonth;
+      }
+    }
+
+    function applyDateLimits() {
+      var today = getTodayString();
+      var currentMonth = getCurrentMonthString();
+
+      var sessionDateInput = document.getElementById('sessionDate');
+      if (sessionDateInput) {
+        sessionDateInput.value = today;
+        sessionDateInput.setAttribute('max', today);
+        sessionDateInput.max = today;
+      }
+
+      ['logMonthFilter', 'exportMonthSelect', 'studentExportMonth'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.value = currentMonth;
+          el.setAttribute('max', currentMonth);
+          el.max = currentMonth;
+        }
+      });
+    }
+
+    applyDateLimits();
+    window.addEventListener('DOMContentLoaded', function() {
+      applyDateLimits();
+      populateCourseDropdowns();
+      syncCourseSemesters();
+      syncExportSemesters();
+    });
+
+    function toggleMobileSupport(show) {
+      var modal = document.getElementById('mobileSupportModal');
+      if (show) modal.classList.remove('hidden');
+      else modal.classList.add('hidden');
+    }
+
+    function handleClassTypeChange() {
+      var classType = document.getElementById('classTypeSelect').value;
+      var label = document.getElementById('subjectFieldLabel');
+      var subjectDropdown = document.getElementById('subjectSelect');
+      var seminarInput = document.getElementById('seminarTopicInput');
+
+      if (classType === 'Seminar') {
+        label.innerText = 'Seminar Topic';
+        subjectDropdown.style.display = 'none';
+        seminarInput.style.display = 'block';
+        seminarInput.focus();
+      } else {
+        label.innerText = 'Subject';
+        seminarInput.style.display = 'none';
+        subjectDropdown.style.display = 'block';
+      }
+    }
+
+    function switchLoginRole(role) {
+      currentRole = role;
+      var errBox = document.getElementById('loginError');
+      if (errBox) errBox.classList.add('hidden');
+
+      var tabStudent = document.getElementById('tabStudent');
+      var tabFaculty = document.getElementById('tabFaculty');
+      var loginIdLabel = document.getElementById('loginIdLabel');
+      var loginIdInput = document.getElementById('loginIdInput');
+
+      if (role === 'student') {
+        tabStudent.classList.add('tab-active');
+        tabFaculty.classList.remove('tab-active');
+        loginIdLabel.innerText = 'Enrollment Number';
+        loginIdInput.placeholder = 'e.g. 252440888001';
+      } else {
+        tabFaculty.classList.add('tab-active');
+        tabStudent.classList.remove('tab-active');
+        loginIdLabel.innerText = 'Faculty ID';
+        loginIdInput.placeholder = 'e.g. FAC01';
+      }
+    }
+
+    async function handleLogin() {
+      var id = document.getElementById('loginIdInput').value.trim();
+      var pwd = document.getElementById('loginPasswordInput').value.trim();
+      var errBox = document.getElementById('loginError');
+      errBox.classList.add('hidden');
+
+      if (!id || !pwd) {
+        showError("Please enter both ID and password.");
+        return;
+      }
+
+      if (!db) {
+        try {
+          if (typeof supabase !== 'undefined' && SUPABASE_URL && SUPABASE_URL !== "YOUR_SUPABASE_URL") {
+            db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          } else {
+            showError("Please enter your Supabase URL & Anon Key in the script tag.");
+            return;
+          }
+        } catch (e) {
+          showError("Supabase connection failure: " + e.message);
+          return;
+        }
+      }
+
+      try {
+        if (currentRole === 'faculty') {
+          var res = await db.from('faculty').select('*').eq('faculty_id', id).eq('password', pwd);
+          if (res.error) throw res.error;
+          if (!res.data || res.data.length === 0) {
+            showError("Invalid Faculty ID or Password.");
+            return;
+          }
+          currentUser = res.data[0];
+          setupFacultySession();
+        } else {
+          var resStudent = await db.from('students').select('*').eq('enrollment_no', id).eq('password', pwd);
+          if (resStudent.error) throw resStudent.error;
+          if (!resStudent.data || resStudent.data.length === 0) {
+            showError("Invalid Enrollment ID or Password.");
+            return;
+          }
+          currentUser = resStudent.data[0];
+          setupStudentSession();
+        }
+      } catch (err) {
+        showError(err.message || "Database connection error.");
+      }
+    }
+
+    function showError(msg) {
+      var errBox = document.getElementById('loginError');
+      errBox.innerText = msg;
+      errBox.classList.remove('hidden');
+    }
+
+    function setupFacultySession() {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('appContainer').classList.remove('hidden');
+      document.getElementById('mobileBottomNav').classList.remove('hidden');
+      document.getElementById('facultyMobileNav').classList.remove('hidden');
+      document.getElementById('studentMobileNav').classList.add('hidden');
+
+      document.getElementById('userProfileBadge').classList.remove('hidden');
+      document.getElementById('userProfileBadge').classList.add('flex');
+      document.getElementById('displayUserName').innerText = currentUser.name;
+      document.getElementById('facultyNav').classList.remove('hidden');
+      document.getElementById('studentNav').classList.add('hidden');
+      navigateView('facultyDashboard');
+    }
+
+    function setupStudentSession() {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('appContainer').classList.remove('hidden');
+      document.getElementById('mobileBottomNav').classList.remove('hidden');
+      document.getElementById('facultyMobileNav').classList.add('hidden');
+      document.getElementById('studentMobileNav').classList.remove('hidden');
+
+      document.getElementById('userProfileBadge').classList.remove('hidden');
+      document.getElementById('userProfileBadge').classList.add('flex');
+      document.getElementById('displayUserName').innerText = currentUser.name;
+      document.getElementById('facultyNav').classList.add('hidden');
+      document.getElementById('studentNav').classList.remove('hidden');
+      navigateView('studentDashboard');
+      loadStudentPortalData();
+    }
+
+    function logout() {
+      currentUser = null;
+      document.getElementById('appContainer').classList.add('hidden');
+      document.getElementById('mobileBottomNav').classList.add('hidden');
+      document.getElementById('userProfileBadge').classList.add('hidden');
+      document.getElementById('userProfileBadge').classList.remove('flex');
+      document.getElementById('authSection').classList.remove('hidden');
+      document.getElementById('loginPasswordInput').value = '';
+    }
+
+    function navigateView(viewName) {
+      ['facultyDashboardView', 'attendanceLogsView', 'reportsExportView', 'studentDashboardView'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+      ['btnNavDash', 'btnNavLogs', 'btnNavReports'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.classList.remove('nav-active');
+          el.classList.add('text-slate-600');
+        }
+      });
+      ['mBtnDash', 'mBtnLogs', 'mBtnReports'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.remove('mobile-nav-active');
+      });
+
+      if (viewName === 'facultyDashboard') {
+        document.getElementById('facultyDashboardView').classList.remove('hidden');
+        document.getElementById('btnNavDash')?.classList.add('nav-active');
+        document.getElementById('mBtnDash')?.classList.add('mobile-nav-active');
+      } else if (viewName === 'attendanceLogs') {
+        document.getElementById('attendanceLogsView').classList.remove('hidden');
+        document.getElementById('btnNavLogs')?.classList.add('nav-active');
+        document.getElementById('mBtnLogs')?.classList.add('mobile-nav-active');
+        renderLogs();
+      } else if (viewName === 'reportsExport') {
+        document.getElementById('reportsExportView').classList.remove('hidden');
+        document.getElementById('btnNavReports')?.classList.add('nav-active');
+        document.getElementById('mBtnReports')?.classList.add('mobile-nav-active');
+        syncExportSemesters();
+      } else if (viewName === 'studentDashboard') {
+        document.getElementById('studentDashboardView').classList.remove('hidden');
+      }
+    }
+
+    function populateCourseDropdowns() {
+      var courseSelect = document.getElementById('courseSelect');
+      var exportCourseSelect = document.getElementById('exportCourseSelect');
+      
+      if (courseSelect) courseSelect.innerHTML = '';
+      if (exportCourseSelect) exportCourseSelect.innerHTML = '';
+
+      Object.keys(ACADEMIC_MAP).forEach(function(c) {
+        if (courseSelect) {
+          var opt = document.createElement('option');
+          opt.value = c;
+          opt.innerText = c;
+          courseSelect.appendChild(opt);
+        }
+        if (exportCourseSelect) {
+          var opt2 = document.createElement('option');
+          opt2.value = c;
+          opt2.innerText = c;
+          exportCourseSelect.appendChild(opt2);
+        }
+      });
+    }
+
+    function syncCourseSemesters() {
+      var course = document.getElementById('courseSelect').value;
+      var semSelect = document.getElementById('semSelect');
+      semSelect.innerHTML = '';
+      if (!ACADEMIC_MAP[course]) return;
+      ACADEMIC_MAP[course].semesters.forEach(function(s) {
+        var opt = document.createElement('option');
+        opt.value = s;
+        opt.innerText = s;
+        semSelect.appendChild(opt);
+      });
+      syncSubjects();
+    }
+
+    function syncSubjects() {
+      var course = document.getElementById('courseSelect').value;
+      var sem = document.getElementById('semSelect').value;
+      var subSelect = document.getElementById('subjectSelect');
+      subSelect.innerHTML = '';
+      var subjects = (ACADEMIC_MAP[course] && ACADEMIC_MAP[course].subjects[sem]) || [];
+      subjects.forEach(function(sub) {
+        var opt = document.createElement('option');
+        opt.value = sub;
+        opt.innerText = sub;
+        subSelect.appendChild(opt);
+      });
+    }
+
+    function syncExportSemesters() {
+      var exportCourseSelect = document.getElementById('exportCourseSelect');
+      var semSelect = document.getElementById('exportSemSelect');
+      if (!exportCourseSelect || !semSelect) return;
+      
+      var course = exportCourseSelect.value;
+      semSelect.innerHTML = '';
+      if (!ACADEMIC_MAP[course]) return;
+
+      ACADEMIC_MAP[course].semesters.forEach(function(s) {
+        var opt = document.createElement('option');
+        opt.value = s;
+        opt.innerText = s;
+        semSelect.appendChild(opt);
+      });
+    }
+
+    async function loadStudentRoster() {
+      if (!db) { alert("Please connect to Supabase first."); return; }
+      var course = document.getElementById('courseSelect').value;
+      var semester = document.getElementById('semSelect').value;
+      var container = document.getElementById('rosterContainer');
+      container.innerHTML = '<div class="text-xs text-slate-400 p-2 col-span-2">Loading students...</div>';
+
+      var res = await db.from('students').select('*').eq('course', course).eq('semester', semester);
+      if (res.error) {
+        alert("Failed to load roster: " + res.error.message);
+        return;
+      }
+
+      currentRoster = res.data || [];
+      attendanceState = {};
+      currentRoster.forEach(function(student) {
+        attendanceState[student.enrollment_no] = 'Present';
+      });
+
+      renderRosterItems();
+    }
+
+    function setStudentStatus(enrollmentNo, status) {
+      attendanceState[enrollmentNo] = status;
+      updateBadgeUI(enrollmentNo);
+    }
+
+    function updateBadgeUI(enrollmentNo) {
+      var current = attendanceState[enrollmentNo] || 'Present';
+      var btnPresent = document.getElementById('badge_present_' + enrollmentNo);
+      var btnAbsent = document.getElementById('badge_absent_' + enrollmentNo);
+
+      if (!btnPresent || !btnAbsent) return;
+
+      if (current === 'Present') {
+        btnPresent.className = "px-2.5 sm:px-3 py-1.5 sm:py-1 rounded-full text-[11px] font-medium border border-emerald-300 bg-emerald-50/90 text-emerald-700 flex items-center gap-1.5 transition cursor-pointer shadow-xs";
+        btnPresent.innerHTML = '<i class="fa-solid fa-circle-dot text-[10px] text-emerald-600"></i> Present';
+
+        btnAbsent.className = "px-2.5 sm:px-3 py-1.5 sm:py-1 rounded-full text-[11px] font-medium border border-rose-200 bg-white text-rose-400 hover:bg-rose-50/50 hover:text-rose-600 flex items-center gap-1.5 transition cursor-pointer";
+        btnAbsent.innerHTML = '<i class="fa-regular fa-circle text-[10px] text-rose-300"></i> Absent';
+      } else {
+        btnPresent.className = "px-2.5 sm:px-3 py-1.5 sm:py-1 rounded-full text-[11px] font-medium border border-emerald-200 bg-white text-emerald-400 hover:bg-emerald-50/50 hover:text-emerald-600 flex items-center gap-1.5 transition cursor-pointer";
+        btnPresent.innerHTML = '<i class="fa-regular fa-circle text-[10px] text-emerald-300"></i> Present';
+
+        btnAbsent.className = "px-2.5 sm:px-3 py-1.5 sm:py-1 rounded-full text-[11px] font-medium border border-rose-400 bg-rose-50/90 text-rose-700 flex items-center gap-1.5 transition cursor-pointer shadow-xs";
+        btnAbsent.innerHTML = '<i class="fa-solid fa-circle-dot text-[10px] text-rose-600"></i> Absent';
+      }
+    }
+
+    function renderRosterItems() {
+      var container = document.getElementById('rosterContainer');
+      container.innerHTML = '';
+
+      if (currentRoster.length === 0) {
+        container.innerHTML = '<div class="text-xs text-amber-600 p-2 col-span-2">No students registered under this Course & Semester.</div>';
+        document.getElementById('submitAttendanceArea').style.display = 'none';
+        return;
+      }
+
+      currentRoster.forEach(function(student) {
+        var card = document.createElement('div');
+        card.className = "flex items-center justify-between px-3.5 py-3 bg-white border border-slate-200/90 rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.03)] hover:border-slate-300 transition";
+        card.innerHTML = `
+          <div class="pr-2 truncate">
+            <div class="text-xs font-bold text-slate-800 tracking-wide uppercase truncate">${student.name}</div>
+            <div class="text-[10px] text-slate-400 font-mono mt-0.5 tracking-tight">${student.enrollment_no}</div>
+          </div>
+          <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+            <button 
+              type="button" 
+              id="badge_present_${student.enrollment_no}" 
+              onclick="setStudentStatus('${student.enrollment_no}', 'Present')"
+              class="px-2.5 sm:px-3 py-1.5 sm:py-1 rounded-full text-[11px] font-medium border border-emerald-300 bg-emerald-50/90 text-emerald-700 flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+            >
+              <i class="fa-solid fa-circle-dot text-[10px] text-emerald-600"></i> Present
+            </button>
+            <button 
+              type="button" 
+              id="badge_absent_${student.enrollment_no}" 
+              onclick="setStudentStatus('${student.enrollment_no}', 'Absent')"
+              class="px-2.5 sm:px-3 py-1.5 sm:py-1 rounded-full text-[11px] font-medium border border-rose-200 bg-white text-rose-400 hover:bg-rose-50/50 hover:text-rose-600 flex items-center gap-1.5 transition cursor-pointer"
+            >
+              <i class="fa-regular fa-circle text-[10px] text-rose-300"></i> Absent
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      document.getElementById('submitAttendanceArea').style.display = 'block';
+    }
+
+    function bulkMark(status) {
+      currentRoster.forEach(function(s) {
+        setStudentStatus(s.enrollment_no, status);
+      });
+    }
+
+    async function commitAttendance() {
+      if (!db) { alert("Please connect to Supabase first."); return; }
+      var sessionDate = document.getElementById('sessionDate').value;
+      var today = getTodayString();
+
+      if (!sessionDate || sessionDate > today) {
+        alert("Invalid Date: You cannot record attendance for future dates.");
+        document.getElementById('sessionDate').value = today;
+        return;
+      }
+
+      var course = document.getElementById('courseSelect').value;
+      var semester = document.getElementById('semSelect').value;
+      var classType = document.getElementById('classTypeSelect').value;
+
+      var subject = "";
+      if (classType === 'Seminar') {
+        subject = document.getElementById('seminarTopicInput').value.trim();
+        if (!subject) {
+          alert("Please enter the Seminar Topic.");
+          document.getElementById('seminarTopicInput').focus();
+          return;
+        }
+      } else {
+        subject = document.getElementById('subjectSelect').value;
+        if (!subject) {
+          alert("Please select a Subject.");
+          return;
+        }
+      }
+
+      var logRes = await db.from('attendance_logs').insert([{
+        session_date: sessionDate,
+        course: course,
+        semester: semester,
+        subject: subject,
+        class_type: classType
+      }]).select().single();
+
+      if (logRes.error) {
+        alert("Failed to save log: " + logRes.error.message);
+        return;
+      }
+
+      var records = currentRoster.map(function(s) {
+        return {
+          log_id: logRes.data.id,
+          enrollment_no: s.enrollment_no,
+          status: attendanceState[s.enrollment_no] || 'Present'
+        };
+      });
+
+      var recRes = await db.from('attendance_records').insert(records);
+      if (recRes.error) {
+        alert("Failed saving student attendance: " + recRes.error.message);
+      } else {
+        alert("Attendance submitted successfully!");
+        document.getElementById('rosterContainer').innerHTML = '';
+        document.getElementById('submitAttendanceArea').style.display = 'none';
+        if (classType === 'Seminar') {
+          document.getElementById('seminarTopicInput').value = '';
+        }
+      }
+    }
+
+    async function renderLogs() {
+      if (!db) return;
+      var monthStr = document.getElementById('logMonthFilter').value;
+      var tbody = document.getElementById('logsTableBody');
+      tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-slate-400">Loading history...</td></tr>';
+
+      var res = await db.from('attendance_logs')
+        .select('*')
+        .order('session_date', { ascending: false })
+        .order('id', { ascending: false });
+
+      if (res.error) {
+        tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-red-500">' + res.error.message + '</td></tr>';
+        return;
+      }
+
+      var filtered = (res.data || []).filter(function(item) {
+        return item.session_date.startsWith(monthStr);
+      });
+
+      filtered.sort(function(a, b) {
+        if (b.session_date !== a.session_date) {
+          return b.session_date.localeCompare(a.session_date);
+        }
+        return (Number(b.id) || 0) - (Number(a.id) || 0);
+      });
+
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-slate-400">No logs for this month.</td></tr>';
+        return;
+      }
+
+      filtered.forEach(function(log) {
+        var tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50/50 transition";
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-mono font-medium">${formatDateToDMY(log.session_date)}</td>
+          <td class="py-3 px-3 font-medium text-slate-800">${log.subject}</td>
+          <td class="py-3 px-3 text-blue-600 font-semibold">${log.class_type}</td>
+          <td class="py-3 px-3 text-right"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold">● Logged</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function downloadFacultyMatrixExcel() {
+      if (!db) { alert("Please connect to Supabase first."); return; }
+      var course = document.getElementById('exportCourseSelect').value;
+      var sem = document.getElementById('exportSemSelect').value;
+      var month = document.getElementById('exportMonthSelect').value;
+      var currentMonth = getCurrentMonthString();
+
+      if (!month || month > currentMonth) {
+        alert("Cannot generate report for future months.");
+        document.getElementById('exportMonthSelect').value = currentMonth;
+        return;
+      }
+
+      var stRes = await db.from('students').select('*').eq('course', course).eq('semester', sem);
+      var students = stRes.data || [];
+      if (students.length === 0) {
+        alert("No students found for " + course + " (" + sem + ").");
+        return;
+      }
+
+      var logRes = await db.from('attendance_logs').select('*').eq('course', course).eq('semester', sem);
+      var filteredLogs = (logRes.data || []).filter(function(l) { return l.session_date.startsWith(month); });
+
+      if (filteredLogs.length === 0) {
+        alert("No attendance records found for " + course + " - " + sem + " in " + month);
+        return;
+      }
+
+      filteredLogs.sort(function(a, b) {
+        if (a.session_date !== b.session_date) {
+          return a.session_date.localeCompare(b.session_date);
+        }
+        return (Number(a.id) || 0) - (Number(b.id) || 0);
+      });
+
+      var recRes = await db.from('attendance_records').select('*');
+      var records = recRes.data || [];
+
+      var headerRow = ["Enrollment ID", "Student Name"];
+      filteredLogs.forEach(function(l) {
+        headerRow.push(formatDateToDMY(l.session_date) + " - " + l.subject + " (" + l.class_type + ")");
+      });
+      headerRow.push("Percentage");
+
+      var rows = [headerRow];
+
+      students.forEach(function(st) {
+        var row = [st.enrollment_no, st.name];
+        var attended = 0;
+
+        filteredLogs.forEach(function(l) {
+          var rec = records.find(function(r) { return r.log_id === l.id && r.enrollment_no === st.enrollment_no; });
+          var isPresent = rec && rec.status === 'Present';
+          if (isPresent) attended++;
+          row.push(isPresent ? "P" : "A");
+        });
+
+        var pct = filteredLogs.length > 0 ? ((attended / filteredLogs.length) * 100).toFixed(1) + "%" : "0.0%";
+        row.push(pct);
+        rows.push(row);
+      });
+
+      var ws = XLSX.utils.aoa_to_sheet(rows);
+      var wb = XLSX.utils.book_new();
+      var cleanSheetTitle = (course + "_" + sem).replace(/[\/\\?*:[\]]/g, '_').substring(0, 31);
+      XLSX.utils.book_append_sheet(wb, ws, cleanSheetTitle);
+      
+      var cleanFileName = ("Attendance_" + course + "_" + sem + "_" + month + ".xlsx").replace(/[\/\\?*:[\]\s]/g, '_');
+      XLSX.writeFile(wb, cleanFileName);
+    }
+
+    async function loadStudentPortalData() {
+      if (!db) return;
+      var res = await db.from('attendance_records').select('status, attendance_logs(*)').eq('enrollment_no', currentUser.enrollment_no);
+      if (res.error) return;
+
+      var records = res.data || [];
+      var total = records.length;
+      var attended = records.filter(function(r) { return r.status === 'Present'; }).length;
+      var pct = total > 0 ? Math.round((attended / total) * 100) : 0;
+
+      document.getElementById('studentPercentageRing').innerText = pct + '%';
+      document.getElementById('studentAttendanceFraction').innerText = attended + ' / ' + total;
+
+      records.sort(function(a, b) {
+        var dateA = (a.attendance_logs && a.attendance_logs.session_date) || '';
+        var dateB = (b.attendance_logs && b.attendance_logs.session_date) || '';
+        if (dateB !== dateA) {
+          return dateB.localeCompare(dateA);
+        }
+        var idA = (a.attendance_logs && Number(a.attendance_logs.id)) || 0;
+        var idB = (b.attendance_logs && Number(b.attendance_logs.id)) || 0;
+        return idB - idA;
+      });
+
+      var tbody = document.getElementById('studentLogsTableBody');
+      tbody.innerHTML = '';
+      records.forEach(function(rec) {
+        var log = rec.attendance_logs;
+        if (!log) return;
+        var tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-mono font-medium">${formatDateToDMY(log.session_date)}</td>
+          <td class="py-2.5 px-3 font-medium text-slate-800">${log.subject}</td>
+          <td class="py-2.5 px-3 text-blue-600 font-semibold">${log.class_type}</td>
+          <td class="py-2.5 px-3 text-right">
+            <span class="${rec.status === 'Present' ? 'text-emerald-600' : 'text-red-500'} font-bold">${rec.status}</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function downloadStudentReportExcel() {
+      if (!db) { alert("Please connect to Supabase first."); return; }
+      var month = document.getElementById('studentExportMonth').value;
+      var currentMonth = getCurrentMonthString();
+
+      if (!month || month > currentMonth) {
+        alert("Cannot generate report for future months.");
+        document.getElementById('studentExportMonth').value = currentMonth;
+        return;
+      }
+
+      var res = await db.from('attendance_records').select('status, attendance_logs(*)').eq('enrollment_no', currentUser.enrollment_no);
+      var records = res.data || [];
+
+      var filtered = records.filter(function(r) {
+        return r.attendance_logs && r.attendance_logs.session_date.startsWith(month);
+      });
+
+      filtered.sort(function(a, b) {
+        var dateA = (a.attendance_logs && a.attendance_logs.session_date) || '';
+        var dateB = (b.attendance_logs && b.attendance_logs.session_date) || '';
+        if (dateB !== dateA) {
+          return dateB.localeCompare(dateA);
+        }
+        var idA = (a.attendance_logs && Number(a.attendance_logs.id)) || 0;
+        var idB = (b.attendance_logs && Number(b.attendance_logs.id)) || 0;
+        return idB - idA;
+      });
+
+      var attendedCount = filtered.filter(function(r) { return r.status === 'Present'; }).length;
+      var pct = filtered.length > 0 ? ((attendedCount / filtered.length) * 100).toFixed(1) + "%" : "0.0%";
+
+      var sheetData = [
+        ["Date", "Subject / Topic", "Class Type", "Status"],
+        ...filtered.map(function(r) {
+          return [
+            formatDateToDMY(r.attendance_logs.session_date),
+            r.attendance_logs.subject,
+            r.attendance_logs.class_type,
+            r.status
+          ];
+        }),
+        [],
+        ["Total Classes", "", "", filtered.length],
+        ["Classes Attended", "", "", attendedCount],
+        ["Attendance Percentage", "", "", pct]
+      ];
+
+      var ws = XLSX.utils.aoa_to_sheet(sheetData);
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "My Attendance");
+      XLSX.writeFile(wb, "My_Attendance_" + currentUser.enrollment_no + "_" + month + ".xlsx");
+    }
+  </script>
+</body>
+</html>
