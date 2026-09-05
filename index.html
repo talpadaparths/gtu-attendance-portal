@@ -203,7 +203,7 @@
         </div>
       </section>
 
-      <!-- Faculty Panel: Attendance Logs (With Edit Button) -->
+      <!-- Faculty Panel: Attendance Logs -->
       <section id="attendanceLogsView" class="hidden w-full bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
           <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
@@ -247,12 +247,19 @@
           </div>
         </div>
 
-        <button onclick="downloadFacultyMatrixExcel()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-5 py-3 md:py-2.5 rounded-lg flex items-center justify-center gap-2 transition shadow-sm cursor-pointer">
-          <i class="fa-solid fa-download"></i> Download Excel Matrix (.xlsx)
-        </button>
+        <div class="flex flex-wrap items-center gap-3 pt-1">
+          <button onclick="downloadFacultyMatrixExcel()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-5 py-2.5 rounded-lg flex items-center justify-center gap-2 transition shadow-sm cursor-pointer">
+            <i class="fa-solid fa-download"></i> Download Excel Matrix (.xlsx)
+          </button>
+          
+          <!-- One-Click Defaulters List Export (< 75%) -->
+          <button onclick="downloadDefaultersExcel()" class="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs px-5 py-2.5 rounded-lg flex items-center justify-center gap-2 transition shadow-sm cursor-pointer">
+            <i class="fa-solid fa-triangle-exclamation"></i> Download Defaulters List (&lt; 75%)
+          </button>
+        </div>
       </section>
 
-      <!-- Student Dashboard (With Refresh Button & Instant Sync) -->
+      <!-- Student Dashboard (With 75% Defaulter Alert & Refresh Sync) -->
       <section id="studentDashboardView" class="hidden w-full space-y-4 md:space-y-5">
         <div class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100">
           <div class="flex items-center justify-between gap-3">
@@ -260,7 +267,7 @@
               <h2 class="text-base font-bold text-slate-900">Attendance Overview</h2>
               <p class="text-xs text-slate-400">Track your overall academic attendance.</p>
             </div>
-            <!-- Interactive Refresh Button -->
+            
             <div class="flex items-center gap-2">
               <span id="studentLastUpdated" class="hidden sm:inline text-[10px] text-slate-400 font-mono"></span>
               <button 
@@ -277,7 +284,7 @@
           </div>
 
           <div class="flex items-center gap-6 md:gap-8 mt-4 md:mt-5">
-            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-blue-600 flex items-center justify-center font-bold text-xs md:text-sm text-blue-600 shrink-0" id="studentPercentageRing">
+            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-blue-600 flex items-center justify-center font-bold text-xs md:text-sm text-blue-600 shrink-0 transition-colors" id="studentPercentageRing">
               0%
             </div>
             <div>
@@ -285,6 +292,9 @@
               <div id="studentAttendanceFraction" class="text-lg md:text-xl font-bold text-slate-800">0 / 0</div>
             </div>
           </div>
+
+          <!-- Dynamic 75% Attendance Defaulter Alert Banner -->
+          <div id="studentDefaulterAlert" class="mt-4 hidden p-3.5 rounded-xl border text-xs transition-all"></div>
         </div>
 
         <div class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
@@ -377,7 +387,6 @@
 
   <!-- Mobile Bottom Navigation Bar -->
   <nav id="mobileBottomNav" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-3 py-2 z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.04)]">
-    <!-- Faculty Mobile Bar -->
     <div id="facultyMobileNav" class="flex items-center justify-around text-center">
       <button onclick="navigateView('facultyDashboard')" id="mBtnDash" class="flex flex-col items-center gap-0.5 text-slate-500 mobile-nav-active cursor-pointer">
         <i class="fa-solid fa-gauge text-sm"></i>
@@ -397,7 +406,6 @@
       </button>
     </div>
 
-    <!-- Student Mobile Bar -->
     <div id="studentMobileNav" class="hidden flex items-center justify-around text-center">
       <button onclick="navigateView('studentDashboard')" class="flex flex-col items-center gap-0.5 text-blue-600 font-bold cursor-pointer">
         <i class="fa-solid fa-clipboard-user text-base"></i>
@@ -811,6 +819,9 @@
       });
     }
 
+    // -------------------------------------------------------------
+    // TAKE ATTENDANCE
+    // -------------------------------------------------------------
     async function loadStudentRoster() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var course = document.getElementById('courseSelect').value;
@@ -974,6 +985,9 @@
       }
     }
 
+    // -------------------------------------------------------------
+    // LOGS & EDITING SESSIONS
+    // -------------------------------------------------------------
     async function renderLogs() {
       if (!db) return;
       var monthStr = document.getElementById('logMonthFilter').value;
@@ -1161,6 +1175,9 @@
       document.getElementById('editAttendanceModal').classList.add('hidden');
     }
 
+    // -------------------------------------------------------------
+    // EXPORT MATRIX & DEFAULTER LIST (FACULTY)
+    // -------------------------------------------------------------
     async function downloadFacultyMatrixExcel() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var course = document.getElementById('exportCourseSelect').value;
@@ -1203,7 +1220,7 @@
       filteredLogs.forEach(function(l) {
         headerRow.push(formatDateToDMY(l.session_date) + " - " + l.subject + " (" + l.class_type + ")");
       });
-      headerRow.push("Percentage");
+      headerRow.push("Percentage", "Defaulter (<75%)");
 
       var rows = [headerRow];
 
@@ -1218,8 +1235,11 @@
           row.push(isPresent ? "P" : "A");
         });
 
-        var pct = filteredLogs.length > 0 ? ((attended / filteredLogs.length) * 100).toFixed(1) + "%" : "0.0%";
-        row.push(pct);
+        var pctNum = filteredLogs.length > 0 ? ((attended / filteredLogs.length) * 100) : 0;
+        var pctStr = pctNum.toFixed(1) + "%";
+        var isDefaulter = (pctNum < 75.0) ? "YES" : "NO";
+
+        row.push(pctStr, isDefaulter);
         rows.push(row);
       });
 
@@ -1232,8 +1252,85 @@
       XLSX.writeFile(wb, cleanFileName);
     }
 
+    // Dedicated Defaulters List Generator (< 75%)
+    async function downloadDefaultersExcel() {
+      if (!db) { alert("Please connect to Supabase first."); return; }
+      var course = document.getElementById('exportCourseSelect').value;
+      var sem = document.getElementById('exportSemSelect').value;
+      var month = document.getElementById('exportMonthSelect').value;
+      var currentMonth = getCurrentMonthString();
+
+      if (!month || month > currentMonth) {
+        alert("Cannot generate report for future months.");
+        document.getElementById('exportMonthSelect').value = currentMonth;
+        return;
+      }
+
+      var stRes = await db.from('students').select('*').eq('course', course).eq('semester', sem);
+      var students = stRes.data || [];
+      if (students.length === 0) {
+        alert("No students found for " + course + " (" + sem + ").");
+        return;
+      }
+
+      var logRes = await db.from('attendance_logs').select('*').eq('course', course).eq('semester', sem);
+      var filteredLogs = (logRes.data || []).filter(function(l) { return l.session_date.startsWith(month); });
+
+      if (filteredLogs.length === 0) {
+        alert("No logs recorded for " + course + " (" + sem + ") in " + month);
+        return;
+      }
+
+      var recRes = await db.from('attendance_records').select('*');
+      var records = recRes.data || [];
+      var totalClasses = filteredLogs.length;
+
+      var defaultersRows = [
+        ["GTU ATTENDANCE DEFAULTER LIST (< 75%)"],
+        ["Course: " + course, "Semester: " + sem, "Month: " + month, "Total Sessions Conducted: " + totalClasses],
+        [],
+        ["Enrollment ID", "Student Name", "Total Sessions", "Sessions Attended", "Attendance %", "Deficit to Reach 75%"]
+      ];
+
+      var defaulterCount = 0;
+
+      students.forEach(function(st) {
+        var attended = 0;
+        filteredLogs.forEach(function(l) {
+          var rec = records.find(function(r) { return r.log_id === l.id && r.enrollment_no === st.enrollment_no; });
+          if (rec && rec.status === 'Present') attended++;
+        });
+
+        var pctNum = (attended / totalClasses) * 100;
+        if (pctNum < 75.0) {
+          defaulterCount++;
+          // Classes needed to reach 75%: ceil( (0.75 * totalClasses - attended) / 0.25 )
+          var needed = Math.max(1, Math.ceil(0.75 * totalClasses) - attended);
+          defaultersRows.push([
+            st.enrollment_no,
+            st.name,
+            totalClasses,
+            attended,
+            pctNum.toFixed(1) + "%",
+            needed + " more classes needed"
+          ]);
+        }
+      });
+
+      if (defaulterCount === 0) {
+        alert("Good news! No students are below 75% in " + course + " (" + sem + ") for " + month + ".");
+        return;
+      }
+
+      var ws = XLSX.utils.aoa_to_sheet(defaultersRows);
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Defaulters");
+      var fileName = ("Defaulters_" + course + "_" + sem + "_" + month + ".xlsx").replace(/[\/\\?*:[\]\s]/g, '_');
+      XLSX.writeFile(wb, fileName);
+    }
+
     // -------------------------------------------------------------
-    // STUDENT PORTAL & REFRESH HANDLER
+    // STUDENT PORTAL: 75% DEFAULTER ALERTS & LIVE SYNC
     // -------------------------------------------------------------
     async function refreshStudentData(btn) {
       if (!currentUser || !db) return;
@@ -1274,10 +1371,55 @@
       var attended = records.filter(function(r) { return r.status === 'Present'; }).length;
       var pct = total > 0 ? Math.round((attended / total) * 100) : 0;
 
-      document.getElementById('studentPercentageRing').innerText = pct + '%';
-      document.getElementById('studentAttendanceFraction').innerText = attended + ' / ' + total;
+      var ring = document.getElementById('studentPercentageRing');
+      var fraction = document.getElementById('studentAttendanceFraction');
+      var alertBox = document.getElementById('studentDefaulterAlert');
 
-      // Update initial timestamp
+      ring.innerText = pct + '%';
+      fraction.innerText = attended + ' / ' + total;
+
+      // 75% Attendance Defaulter Alerts logic
+      if (total > 0 && pct < 75) {
+        // Red Defaulter State
+        ring.className = "w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-rose-600 text-rose-600 bg-rose-50 flex items-center justify-center font-bold text-xs md:text-sm shrink-0 transition-colors shadow-xs";
+        
+        var deficit = Math.max(1, Math.ceil(0.75 * total) - attended);
+        alertBox.className = "mt-4 p-3.5 rounded-xl border border-rose-200 bg-rose-50/90 text-rose-900 flex items-start gap-3 text-xs shadow-2xs";
+        alertBox.innerHTML = `
+          <div class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 mt-0.5">
+            <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+          </div>
+          <div>
+            <div class="font-bold text-rose-950 flex items-center gap-1.5">
+              <span>Attendance Defaulter Alert</span>
+              <span class="bg-rose-200/80 text-rose-800 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Critical</span>
+            </div>
+            <div class="text-[11px] text-rose-800 mt-1 leading-relaxed">
+              Your overall attendance is currently <strong>${pct}%</strong>, which is below Gujarat Technological University's mandatory <strong>75%</strong> threshold. You need to attend at least <strong>${deficit}</strong> upcoming consecutive sessions to become eligible for university exams.
+            </div>
+          </div>
+        `;
+        alertBox.classList.remove('hidden');
+      } else if (total > 0) {
+        // Compliant State (>= 75%)
+        ring.className = "w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-blue-600 text-blue-600 bg-blue-50/40 flex items-center justify-center font-bold text-xs md:text-sm shrink-0 transition-colors";
+        
+        alertBox.className = "mt-4 p-3 rounded-xl border border-emerald-200 bg-emerald-50/80 text-emerald-900 flex items-center gap-3 text-xs";
+        alertBox.innerHTML = `
+          <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-circle-check text-xs"></i>
+          </div>
+          <div class="text-[11px] font-medium text-emerald-800">
+            Your attendance is <strong>${pct}%</strong>. You are in <strong>Good Standing</strong> and compliant with GTU's 75% examination eligibility criteria.
+          </div>
+        `;
+        alertBox.classList.remove('hidden');
+      } else {
+        // No records yet
+        ring.className = "w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-slate-300 text-slate-400 flex items-center justify-center font-bold text-xs md:text-sm shrink-0";
+        alertBox.classList.add('hidden');
+      }
+
       var now = new Date();
       var timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       var lastUpEl = document.getElementById('studentLastUpdated');
@@ -1285,6 +1427,7 @@
         lastUpEl.innerText = 'Updated ' + timeStr;
       }
 
+      // Latest on top sorting
       records.sort(function(a, b) {
         var dateA = (a.attendance_logs && a.attendance_logs.session_date) || '';
         var dateB = (b.attendance_logs && b.attendance_logs.session_date) || '';
@@ -1344,7 +1487,8 @@
       });
 
       var attendedCount = filtered.filter(function(r) { return r.status === 'Present'; }).length;
-      var pct = filtered.length > 0 ? ((attendedCount / filtered.length) * 100).toFixed(1) + "%" : "0.0%";
+      var pctNum = filtered.length > 0 ? ((attendedCount / filtered.length) * 100) : 0;
+      var pctStr = pctNum.toFixed(1) + "%";
 
       var sheetData = [
         ["Date", "Subject / Topic", "Class Type", "Status"],
@@ -1359,7 +1503,8 @@
         [],
         ["Total Classes", "", "", filtered.length],
         ["Classes Attended", "", "", attendedCount],
-        ["Attendance Percentage", "", "", pct]
+        ["Attendance Percentage", "", "", pctStr],
+        ["Status (< 75%)", "", "", pctNum < 75.0 ? "DEFAULTER" : "ELIGIBLE"]
       ];
 
       var ws = XLSX.utils.aoa_to_sheet(sheetData);
