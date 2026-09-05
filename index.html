@@ -10,26 +10,31 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body { 
-      background-color: #f1f5f9; 
+      background-color: #f0f4f8; 
+      background-position: center center;
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
     }
-    .tab-active { background-color: #2563eb !important; color: white !important; }
-    .nav-active { background-color: #2563eb !important; color: white !important; font-weight: 600; }
-    .mobile-nav-active { color: #2563eb !important; font-weight: 700; }
+    .tab-active { background-color: #1d4ed8 !important; color: white !important; }
+    .nav-active { background-color: #1d4ed8 !important; color: white !important; font-weight: 600; }
+    .mobile-nav-active { color: #1d4ed8 !important; font-weight: 700; }
     
     .custom-scroll::-webkit-scrollbar { width: 6px; }
-    .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
     .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
-<body class="min-h-screen md:h-screen flex flex-col bg-slate-100 text-slate-800 md:overflow-hidden">
+<body class="min-h-screen md:h-screen flex flex-col text-slate-800 md:overflow-hidden">
 
   <!-- Header -->
-  <header class="bg-white border-b px-4 md:px-6 py-2.5 md:py-3 flex items-center justify-between shrink-0 sticky top-0 md:static z-40 shadow-xs">
-    <div class="flex items-center space-x-2.5 md:space-x-3 truncate">
+  <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 md:px-8 py-2.5 md:py-3 flex items-center justify-between shrink-0 sticky top-0 md:static z-40 shadow-xs">
+    <div class="flex items-center space-x-3 truncate">
       <div class="flex-shrink-0 flex items-center justify-center">
         <img 
+          id="collegeLogoImg"
           src="logo.png" 
           alt="College Logo" 
           class="w-10 h-10 md:w-12 md:h-12 rounded-lg border border-slate-200 bg-white p-0.5 shadow-sm"
@@ -43,14 +48,16 @@
       </div>
     </div>
 
-    <div id="userProfileBadge" class="hidden items-center space-x-2 md:space-x-4 shrink-0">
-      <div class="flex items-center space-x-2 text-right">
-        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
-          <i class="fa-solid fa-user text-xs md:text-sm"></i>
+    <div id="userProfileBadge" class="hidden items-center space-x-3 md:space-x-4 shrink-0">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center">
+          <i class="fa-solid fa-user text-sm"></i>
         </div>
         <div class="hidden sm:block text-left">
           <div id="displayUserName" class="text-xs font-bold leading-none text-slate-800"></div>
-          <div class="text-[10px] text-emerald-600 font-medium mt-0.5">Active Session</div>
+          <div class="text-[10px] text-emerald-600 font-medium mt-0.5 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active Session
+          </div>
         </div>
       </div>
       <button onclick="logout()" class="text-xs text-red-600 font-semibold border border-red-200 hover:bg-red-50 p-1.5 sm:px-2.5 sm:py-1 rounded-md transition cursor-pointer" title="Logout">
@@ -61,17 +68,17 @@
 
   <!-- Login Section -->
   <section id="authSection" class="flex-1 overflow-y-auto flex items-center justify-center py-8 md:py-16 px-4">
-    <div class="bg-white shadow-xl rounded-2xl p-6 md:p-8 max-w-md w-full border border-slate-100">
+    <div class="bg-white/95 backdrop-blur-md shadow-2xl rounded-3xl p-6 md:p-8 max-w-md w-full border border-white/60">
       <div class="text-center mb-6">
-        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl mx-auto flex items-center justify-center text-xl mb-3 shadow-inner">
+        <div class="w-12 h-12 bg-blue-50 text-blue-700 rounded-2xl mx-auto flex items-center justify-center text-xl mb-3 shadow-inner border border-blue-100">
           <i class="fa-solid fa-user-shield"></i>
         </div>
         <h2 class="text-lg md:text-xl font-bold text-slate-900">Welcome Back</h2>
-        <p class="text-xs text-slate-400 mt-1">Login to access GTU Attendance Portal</p>
+        <p class="text-xs text-slate-500 mt-1">Login to access GTU Attendance Portal</p>
       </div>
 
       <!-- Role Tabs -->
-      <div class="flex bg-slate-100 p-1 rounded-xl mb-6 text-xs font-semibold">
+      <div class="flex bg-slate-100/90 p-1 rounded-xl mb-6 text-xs font-semibold">
         <button id="tabStudent" type="button" onclick="switchLoginRole('student')" class="flex-1 py-2 rounded-lg text-slate-600 transition flex items-center justify-center gap-1.5 cursor-pointer">
           <i class="fa-solid fa-graduation-cap"></i> Student
         </button>
@@ -85,7 +92,7 @@
           <label id="loginIdLabel" class="block font-semibold text-slate-600 uppercase tracking-wider mb-1">Faculty ID</label>
           <div class="relative">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-id-badge"></i></span>
-            <input id="loginIdInput" type="text" placeholder="e.g. FAC01" class="w-full pl-9 pr-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-slate-50">
+            <input id="loginIdInput" type="text" placeholder="e.g. NTHAKORE" class="w-full pl-9 pr-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-slate-50/80">
           </div>
         </div>
 
@@ -93,11 +100,11 @@
           <label class="block font-semibold text-slate-600 uppercase tracking-wider mb-1">Password</label>
           <div class="relative">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-lock"></i></span>
-            <input id="loginPasswordInput" type="password" placeholder="••••••" class="w-full pl-9 pr-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-slate-50">
+            <input id="loginPasswordInput" type="password" placeholder="••••••" class="w-full pl-9 pr-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-slate-50/80">
           </div>
         </div>
 
-        <button id="btnLoginAction" type="button" onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg shadow-sm transition cursor-pointer">
+        <button id="btnLoginAction" type="button" onclick="handleLogin()" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2.5 rounded-lg shadow-sm transition cursor-pointer">
           Login to Portal <i class="fa-solid fa-arrow-right ml-1"></i>
         </button>
         <div id="loginError" class="text-xs text-red-500 text-center font-medium mt-2 hidden"></div>
@@ -110,15 +117,18 @@
     
     <!-- Desktop Locked Sidebar -->
     <aside class="hidden md:flex md:w-60 shrink-0 h-full flex-col justify-between select-none">
-      <div class="space-y-2">
+      <div class="space-y-2 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/70 shadow-xs">
         <div id="facultyNav" class="space-y-1">
           <button onclick="navigateView('facultyDashboard')" id="btnNavDash" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 transition nav-active cursor-pointer">
             <i class="fa-solid fa-gauge"></i> Dashboard
           </button>
-          <button onclick="navigateView('attendanceLogs')" id="btnNavLogs" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-200 transition cursor-pointer">
+          <button onclick="openTakeAttendanceModal()" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-blue-700 hover:bg-blue-50 font-semibold transition cursor-pointer">
+            <i class="fa-solid fa-circle-plus"></i> Take Attendance
+          </button>
+          <button onclick="navigateView('attendanceLogs')" id="btnNavLogs" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
             <i class="fa-solid fa-calendar-days"></i> Attendance Logs
           </button>
-          <button onclick="navigateView('reportsExport')" id="btnNavReports" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-200 transition cursor-pointer">
+          <button onclick="navigateView('reportsExport')" id="btnNavReports" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
             <i class="fa-solid fa-file-excel"></i> Reports & Export
           </button>
         </div>
@@ -131,12 +141,12 @@
       </div>
 
       <div class="pt-4 pb-1">
-        <div class="bg-blue-50/70 border border-blue-100/90 rounded-2xl p-4 text-center shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-          <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-2">
+        <div class="bg-white/90 backdrop-blur-md border border-white/70 rounded-2xl p-4 text-center shadow-xs">
+          <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-700 flex items-center justify-center mx-auto mb-2 border border-blue-100">
             <i class="fa-solid fa-headset text-sm"></i>
           </div>
           <div class="text-xs font-bold text-slate-800">Need Technical Support?</div>
-          <div class="text-[11px] text-slate-500 font-medium mt-1">Call / WhatsApp: +91 9054826042</div>
+          <div class="text-[11px] text-slate-600 font-medium mt-1">Call / WhatsApp: +91 9054826042</div>
           <div class="text-[10px] text-slate-500 font-medium mt-0.5 break-all">E Mail ID : talpadaparth1@gmail.com</div>
         </div>
       </div>
@@ -146,65 +156,109 @@
     <div class="flex-1 w-full md:h-full md:overflow-y-auto custom-scroll md:pr-1">
       
       <!-- Faculty Panel: Dashboard -->
-      <section id="facultyDashboardView" class="space-y-4">
-        <div class="bg-gradient-to-r from-slate-900 to-blue-950 text-white p-4 md:p-6 rounded-2xl shadow-sm">
-          <span class="text-[9px] md:text-[10px] bg-blue-700/80 px-2.5 py-0.5 rounded font-bold uppercase tracking-widest">Faculty Control Panel</span>
-          <h2 class="text-lg md:text-xl font-bold mt-1">Take New Attendance</h2>
+      <section id="facultyDashboardView" class="space-y-5">
+        <div class="bg-gradient-to-r from-blue-50/90 via-white/95 to-indigo-50/90 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+          <div class="flex items-center gap-4 z-10 w-full md:w-auto">
+            <div class="w-16 h-16 rounded-full bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center text-slate-400 text-3xl shrink-0">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div>
+              <h2 class="text-xl md:text-2xl font-bold text-slate-900 leading-tight">
+                Welcome, <span id="dashFacultyWelcomeName">Faculty</span>
+              </h2>
+              <p class="text-xs text-slate-500 mt-1">Here's an overview of your classes and attendance activities.</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-5 z-10 w-full md:w-auto justify-between md:justify-end">
+            <div class="hidden lg:block w-28 h-16 opacity-85">
+              <svg viewBox="0 0 160 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="25" y="10" width="110" height="70" rx="6" fill="#1e293b"/>
+                <rect x="30" y="15" width="100" height="60" rx="3" fill="#ffffff"/>
+                <circle cx="55" cy="45" r="16" stroke="#2563eb" stroke-width="4" stroke-dasharray="70 30" fill="none"/>
+                <rect x="80" y="30" width="40" height="4" rx="2" fill="#cbd5e1"/>
+                <rect x="80" y="40" width="30" height="4" rx="2" fill="#93c5fd"/>
+                <rect x="80" y="50" width="45" height="4" rx="2" fill="#e2e8f0"/>
+                <path d="M10 82C10 80.8954 10.8954 80 12 80H148C149.105 80 150 80.8954 150 82V86H10V82Z" fill="#64748b"/>
+                <rect x="68" y="80" width="24" height="2" rx="1" fill="#94a3b8"/>
+              </svg>
+            </div>
+
+            <button onclick="openTakeAttendanceModal()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm font-semibold px-5 py-3 rounded-2xl shadow-sm hover:shadow transition flex items-center gap-2 cursor-pointer shrink-0">
+              <i class="fa-solid fa-circle-plus text-base"></i> Take New Attendance
+            </button>
+          </div>
         </div>
 
-        <div class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100 space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 text-xs">
-            <div>
-              <label class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Session Date</label>
-              <input id="sessionDate" type="date" onchange="validateDate(this)" oninput="validateDate(this)" class="w-full border rounded-lg px-2.5 py-2 md:py-1.5 bg-slate-50">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-white/80 shadow-xs flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0 border border-blue-100">
+                <i class="fa-regular fa-calendar-check"></i>
+              </div>
+              <div>
+                <span class="text-xs font-medium text-slate-500">Total Classes Taken This Month</span>
+                <div id="statMonthlyClasses" class="text-2xl font-extrabold text-slate-900 leading-tight mt-0.5">0</div>
+                <div class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1 mt-0.5">
+                  <i class="fa-solid fa-arrow-trend-up"></i> Active academic sessions
+                </div>
+              </div>
             </div>
-            <div>
-              <label class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Course</label>
-              <select id="courseSelect" onchange="syncCourseSemesters()" class="w-full border rounded-lg px-2.5 py-2 md:py-1.5 bg-slate-50 font-medium"></select>
-            </div>
-            <div>
-              <label class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Semester / Year</label>
-              <select id="semSelect" onchange="syncSubjects()" class="w-full border rounded-lg px-2.5 py-2 md:py-1.5 bg-slate-50 font-medium"></select>
-            </div>
-            <div>
-              <label id="subjectFieldLabel" class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Subject</label>
-              <select id="subjectSelect" class="w-full border rounded-lg px-2.5 py-2 md:py-1.5 bg-slate-50 font-medium truncate" style="display: block;"></select>
-              <input id="seminarTopicInput" type="text" placeholder="Enter seminar topic..." class="w-full border rounded-lg px-2.5 py-2 md:py-1.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none" style="display: none;">
-            </div>
-            <div class="sm:col-span-2 md:col-span-1">
-              <label class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Class Type</label>
-              <select id="classTypeSelect" onchange="handleClassTypeChange()" class="w-full border rounded-lg px-2.5 py-2 md:py-1.5 bg-slate-50 font-medium">
-                <option value="Theory">Theory</option>
-                <option value="Practical">Practical</option>
-                <option value="Seminar">Seminar</option>
-              </select>
+            <div class="text-slate-200 text-3xl pr-2 hidden sm:block">
+              <i class="fa-solid fa-chart-simple"></i>
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2 pt-2 border-t">
-            <button onclick="loadStudentRoster()" class="flex-1 sm:flex-none justify-center bg-blue-600 hover:bg-blue-700 text-white text-xs px-4 py-2.5 md:py-2 rounded-lg font-semibold flex items-center gap-1.5 shadow-sm transition cursor-pointer">
-              <i class="fa-solid fa-users-viewfinder"></i> Load Roster
-            </button>
-            <button onclick="bulkMark('Present')" class="flex-1 sm:flex-none justify-center border border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-xs px-3 py-2.5 md:py-2 rounded-lg font-semibold flex items-center gap-1 transition cursor-pointer">
-              <i class="fa-solid fa-check"></i> All Present
-            </button>
-            <button onclick="bulkMark('Absent')" class="flex-1 sm:flex-none justify-center border border-red-500 text-red-600 hover:bg-red-50 text-xs px-3 py-2.5 md:py-2 rounded-lg font-semibold flex items-center gap-1 transition cursor-pointer">
-              <i class="fa-solid fa-xmark"></i> All Absent
-            </button>
+          <div class="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-white/80 shadow-xs flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0 border border-emerald-100">
+                <i class="fa-solid fa-users"></i>
+              </div>
+              <div>
+                <span class="text-xs font-medium text-slate-500">Average Class Attendance</span>
+                <div id="statAvgAttendance" class="text-2xl font-extrabold text-slate-900 leading-tight mt-0.5">0.0%</div>
+                <div class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1 mt-0.5">
+                  <i class="fa-solid fa-shield-halved"></i> GTU 75% standard
+                </div>
+              </div>
+            </div>
+            <div class="text-slate-200 text-3xl pr-2 hidden sm:block">
+              <i class="fa-solid fa-chart-pie"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white/95 backdrop-blur-md rounded-2xl border border-white/80 shadow-xs p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-slate-900 text-sm md:text-base">Recent Attendance Sessions</h3>
+            <span class="text-[11px] font-mono text-slate-400">Latest records</span>
           </div>
 
-          <div id="rosterContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-3"></div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs whitespace-nowrap">
+              <thead class="bg-slate-50/80 border-b border-slate-100 text-slate-400 font-semibold text-[10px] uppercase tracking-wider">
+                <tr>
+                  <th class="py-3 px-3">Date</th>
+                  <th class="py-3 px-3">Semester</th>
+                  <th class="py-3 px-3">Subject</th>
+                  <th class="py-3 px-3">Class Type</th>
+                  <th class="py-3 px-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="dashRecentSessionsTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+            </table>
+          </div>
 
-          <div id="submitAttendanceArea" style="display: none; text-align: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid #e2e8f0; width: 100%;">
-            <button type="button" onclick="commitAttendance()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-sm px-8 py-3 rounded-xl font-bold shadow-md hover:shadow-lg transition inline-flex items-center justify-center gap-2 cursor-pointer mx-auto">
-              <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Submit Attendance Record
+          <div class="text-center pt-2">
+            <button onclick="navigateView('attendanceLogs')" class="text-xs font-semibold text-blue-600 hover:text-blue-800 transition inline-flex items-center gap-1.5 cursor-pointer">
+              View All Sessions <i class="fa-solid fa-chevron-down text-[10px]"></i>
             </button>
           </div>
         </div>
       </section>
 
       <!-- Faculty Panel: Attendance Logs -->
-      <section id="attendanceLogsView" class="hidden w-full bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100">
+      <section id="attendanceLogsView" class="hidden w-full bg-white/95 backdrop-blur-md p-4 md:p-5 rounded-2xl shadow-xs border border-white/80">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
           <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
             <i class="fa-solid fa-calendar-check text-blue-600"></i> Monthly Session History
@@ -227,7 +281,7 @@
       </section>
 
       <!-- Faculty Panel: Reports & Export -->
-      <section id="reportsExportView" class="hidden w-full bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+      <section id="reportsExportView" class="hidden w-full bg-white/95 backdrop-blur-md p-4 md:p-5 rounded-2xl shadow-xs border border-white/80 space-y-4">
         <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
           <i class="fa-solid fa-file-excel text-emerald-600"></i> Export Attendance Reports (.xlsx)
         </h3>
@@ -251,23 +305,20 @@
           <button onclick="downloadFacultyMatrixExcel()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-5 py-2.5 rounded-lg flex items-center justify-center gap-2 transition shadow-sm cursor-pointer">
             <i class="fa-solid fa-download"></i> Download Excel Matrix (.xlsx)
           </button>
-          
-          <!-- One-Click Defaulters List Export (< 75%) -->
           <button onclick="downloadDefaultersExcel()" class="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs px-5 py-2.5 rounded-lg flex items-center justify-center gap-2 transition shadow-sm cursor-pointer">
             <i class="fa-solid fa-triangle-exclamation"></i> Download Defaulters List (&lt; 75%)
           </button>
         </div>
       </section>
 
-      <!-- Student Dashboard (With 75% Defaulter Alert & Refresh Sync) -->
+      <!-- Student Dashboard -->
       <section id="studentDashboardView" class="hidden w-full space-y-4 md:space-y-5">
-        <div class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100">
+        <div class="bg-white/95 backdrop-blur-md p-4 md:p-5 rounded-2xl shadow-xs border border-white/80">
           <div class="flex items-center justify-between gap-3">
             <div>
               <h2 class="text-base font-bold text-slate-900">Attendance Overview</h2>
               <p class="text-xs text-slate-400">Track your overall academic attendance.</p>
             </div>
-            
             <div class="flex items-center gap-2">
               <span id="studentLastUpdated" class="hidden sm:inline text-[10px] text-slate-400 font-mono"></span>
               <button 
@@ -293,11 +344,10 @@
             </div>
           </div>
 
-          <!-- Dynamic 75% Attendance Defaulter Alert Banner -->
           <div id="studentDefaulterAlert" class="mt-4 hidden p-3.5 rounded-xl border text-xs transition-all"></div>
         </div>
 
-        <div class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div class="bg-white/95 backdrop-blur-md p-4 md:p-5 rounded-2xl shadow-xs border border-white/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
             <h3 class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
               <i class="fa-solid fa-file-excel text-emerald-600"></i> Download My Attendance Report
@@ -312,7 +362,7 @@
           </div>
         </div>
 
-        <div class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100">
+        <div class="bg-white/95 backdrop-blur-md p-4 md:p-5 rounded-2xl shadow-xs border border-white/80">
           <h3 class="font-bold text-slate-800 text-xs mb-3">Recent Class Logs</h3>
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs whitespace-nowrap">
@@ -333,9 +383,74 @@
     </div>
   </main>
 
-  <!-- Edit Attendance Modal for Faculty -->
-  <div id="editAttendanceModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-3 md:p-4">
-    <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden">
+  <!-- Modal: Take Attendance -->
+  <div id="takeAttendanceModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 md:p-4">
+    <div class="bg-white rounded-3xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden">
+      <div class="px-5 py-4 border-b flex items-center justify-between bg-gradient-to-r from-slate-900 to-blue-950 text-white">
+        <div>
+          <span class="text-[9px] bg-blue-700 px-2 py-0.5 rounded font-bold uppercase tracking-widest">Faculty Action</span>
+          <h3 class="text-base font-bold mt-0.5">Record New Attendance Session</h3>
+        </div>
+        <button onclick="closeTakeAttendanceModal()" class="text-slate-300 hover:text-white p-1.5 rounded-lg transition cursor-pointer">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto custom-scroll space-y-4 flex-1">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 text-xs">
+          <div>
+            <label class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Session Date</label>
+            <input id="sessionDate" type="date" onchange="validateDate(this)" oninput="validateDate(this)" class="w-full border rounded-lg px-2.5 py-2 bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Course</label>
+            <select id="courseSelect" onchange="syncCourseSemesters()" class="w-full border rounded-lg px-2.5 py-2 bg-slate-50 font-medium"></select>
+          </div>
+          <div>
+            <label class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Semester / Year</label>
+            <select id="semSelect" onchange="syncSubjects()" class="w-full border rounded-lg px-2.5 py-2 bg-slate-50 font-medium"></select>
+          </div>
+          <div>
+            <label id="subjectFieldLabel" class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Subject</label>
+            <select id="subjectSelect" class="w-full border rounded-lg px-2.5 py-2 bg-slate-50 font-medium truncate" style="display: block;"></select>
+            <input id="seminarTopicInput" type="text" placeholder="Enter seminar topic..." class="w-full border rounded-lg px-2.5 py-2 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none" style="display: none;">
+          </div>
+          <div>
+            <label class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Class Type</label>
+            <select id="classTypeSelect" onchange="handleClassTypeChange()" class="w-full border rounded-lg px-2.5 py-2 bg-slate-50 font-medium">
+              <option value="Theory">Theory</option>
+              <option value="Practical">Practical</option>
+              <option value="Seminar">Seminar</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 pt-2 border-t">
+          <button onclick="loadStudentRoster()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-4 py-2 rounded-lg font-semibold flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+            <i class="fa-solid fa-users-viewfinder"></i> Load Roster
+          </button>
+          <button onclick="bulkMark('Present')" class="border border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-xs px-3 py-2 rounded-lg font-semibold flex items-center gap-1 transition cursor-pointer">
+            <i class="fa-solid fa-check"></i> Mark All Present
+          </button>
+          <button onclick="bulkMark('Absent')" class="border border-red-500 text-red-600 hover:bg-red-50 text-xs px-3 py-2 rounded-lg font-semibold flex items-center gap-1 transition cursor-pointer">
+            <i class="fa-solid fa-xmark"></i> Mark All Absent
+          </button>
+        </div>
+
+        <div id="rosterContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2"></div>
+
+        <div id="submitAttendanceArea" style="display: none; text-align: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+          <button type="button" onclick="commitAttendance()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-sm px-8 py-3 rounded-xl font-bold shadow-md hover:shadow-lg transition inline-flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Submit Attendance Record
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Edit Attendance -->
+  <div id="editAttendanceModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 md:p-4">
+    <div class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden">
       <div class="p-4 md:p-5 border-b flex items-center justify-between bg-slate-50/80">
         <div>
           <span class="text-[10px] font-bold text-blue-600 uppercase tracking-wider">Edit Attendance Session</span>
@@ -369,13 +484,13 @@
     </div>
   </div>
 
-  <!-- Mobile Technical Support Modal -->
+  <!-- Modal: Mobile Support -->
   <div id="mobileSupportModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
     <div class="bg-white rounded-2xl w-full max-w-sm p-5 border border-slate-100 shadow-2xl text-center relative">
       <button onclick="toggleMobileSupport(false)" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
         <i class="fa-solid fa-xmark text-base"></i>
       </button>
-      <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-2.5">
+      <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-2.5">
         <i class="fa-solid fa-headset text-base"></i>
       </div>
       <div class="text-sm font-bold text-slate-800">Need Technical Support?</div>
@@ -385,12 +500,16 @@
     </div>
   </div>
 
-  <!-- Mobile Bottom Navigation Bar -->
-  <nav id="mobileBottomNav" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-3 py-2 z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.04)]">
+  <!-- Mobile Bottom Nav -->
+  <nav id="mobileBottomNav" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-2 z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.04)]">
     <div id="facultyMobileNav" class="flex items-center justify-around text-center">
       <button onclick="navigateView('facultyDashboard')" id="mBtnDash" class="flex flex-col items-center gap-0.5 text-slate-500 mobile-nav-active cursor-pointer">
         <i class="fa-solid fa-gauge text-sm"></i>
         <span class="text-[10px]">Dashboard</span>
+      </button>
+      <button onclick="openTakeAttendanceModal()" class="flex flex-col items-center gap-0.5 text-blue-600 font-bold cursor-pointer">
+        <i class="fa-solid fa-circle-plus text-base"></i>
+        <span class="text-[10px]">Take New</span>
       </button>
       <button onclick="navigateView('attendanceLogs')" id="mBtnLogs" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
         <i class="fa-solid fa-calendar-days text-sm"></i>
@@ -418,15 +537,54 @@
     </div>
   </nav>
 
-  <!-- Bottom Developer Credit -->
-  <footer class="shrink-0 py-2 border-t border-slate-200 bg-white/70 text-center select-none z-30">
+  <!-- Developer Credit -->
+  <footer class="shrink-0 py-2 border-t border-slate-200/80 bg-white/80 backdrop-blur-xs text-center select-none z-30">
     <span class="text-[10px] md:text-[11px] font-mono font-medium text-slate-500 hover:text-blue-600 transition cursor-default">
       &lt;/&gt; Developed by Parth S Talpada
     </span>
   </footer>
 
-  <!-- JAVASCRIPT LOGIC -->
+  <!-- JAVASCRIPT -->
   <script>
+    // =========================================================================
+    // ⚙️ CONFIGURATION & IMAGE PATH PLACEHOLDERS
+    // =========================================================================
+
+    // 1. SUPABASE CREDENTIALS
+    var SUPABASE_URL = "https://ierhattpsvizmajwtcol.supabase.co";
+    var SUPABASE_ANON_KEY = "sb_publishable_rZKrmVTYtxm0KLvFqoI_AQ__hTETjXH";
+
+    // 2. BACKGROUND IMAGE CONFIGURATION PLACEHOLDER
+    var LOCAL_BG_IMAGE_PATH  = "bg.png"; 
+    var ONLINE_BG_IMAGE_NAME = "bg.png"; 
+
+    // 3. LOGO CONFIGURATION PLACEHOLDER
+    var LOCAL_LOGO_PATH  = "logo.png";
+    var ONLINE_LOGO_NAME = "logo.png";
+
+    // =========================================================================
+    // AUTOMATIC LOCAL VS ONLINE RESOLVER
+    // =========================================================================
+    var IS_LOCAL_ENV = window.location.protocol === 'file:' || 
+                       window.location.hostname === 'localhost' || 
+                       window.location.hostname === '127.0.0.1';
+
+    var rawBgPath = IS_LOCAL_ENV ? LOCAL_BG_IMAGE_PATH : ONLINE_BG_IMAGE_NAME;
+    var resolvedBgPath = rawBgPath.replace(/\\/g, '/');
+
+    var rawLogoPath = IS_LOCAL_ENV ? LOCAL_LOGO_PATH : ONLINE_LOGO_NAME;
+    var resolvedLogoPath = rawLogoPath.replace(/\\/g, '/');
+
+    document.body.style.backgroundImage = "linear-gradient(rgba(241, 245, 249, 0.82), rgba(241, 245, 249, 0.86)), url('" + resolvedBgPath + "')";
+
+    window.addEventListener('DOMContentLoaded', function() {
+      var logoEl = document.getElementById('collegeLogoImg');
+      if (logoEl) logoEl.src = resolvedLogoPath;
+    });
+
+    // =========================================================================
+    // GLOBAL STATE & DATABASE INIT
+    // =========================================================================
     var currentRole = 'faculty';
     var currentUser = null;
     var currentRoster = [];
@@ -437,9 +595,6 @@
     var currentEditLogId = null;
     var editAttendanceState = {};
     var editStudentList = [];
-
-    var SUPABASE_URL = "https://ierhattpsvizmajwtcol.supabase.co";
-    var SUPABASE_ANON_KEY = "sb_publishable_rZKrmVTYtxm0KLvFqoI_AQ__hTETjXH";
 
     try {
       if (typeof supabase !== 'undefined' && SUPABASE_URL && SUPABASE_URL !== "YOUR_SUPABASE_URL") {
@@ -502,6 +657,37 @@
         }
       }
     };
+
+    // Auto-fit Column Widths Engine
+    function autoFitColumns(ws, dataRows) {
+      if (!dataRows || !dataRows.length) return;
+      var maxCols = 0;
+      dataRows.forEach(function(r) { 
+        if (Array.isArray(r) && r.length > maxCols) maxCols = r.length; 
+      });
+      
+      var colWidths = new Array(maxCols).fill(10);
+
+      dataRows.forEach(function(row) {
+        if (!Array.isArray(row)) return;
+        if (row.length === 1 && maxCols > 2) return;
+
+        row.forEach(function(cell, colIdx) {
+          var str = cell !== null && cell !== undefined ? String(cell) : '';
+          var len = str.length;
+          if (str.indexOf('\n') !== -1) {
+            len = Math.max.apply(Math, str.split('\n').map(function(l) { return l.length; }));
+          }
+          if (len > colWidths[colIdx]) {
+            colWidths[colIdx] = len;
+          }
+        });
+      });
+
+      ws['!cols'] = colWidths.map(function(w) {
+        return { wch: Math.min(Math.max((w || 0) + 4, 12), 50) };
+      });
+    }
 
     function formatDateToDMY(dateStr) {
       if (!dateStr) return '';
@@ -577,6 +763,14 @@
       else modal.classList.add('hidden');
     }
 
+    function openTakeAttendanceModal() {
+      document.getElementById('takeAttendanceModal').classList.remove('hidden');
+    }
+
+    function closeTakeAttendanceModal() {
+      document.getElementById('takeAttendanceModal').classList.add('hidden');
+    }
+
     function handleClassTypeChange() {
       var classType = document.getElementById('classTypeSelect').value;
       var label = document.getElementById('subjectFieldLabel');
@@ -614,7 +808,7 @@
         tabFaculty.classList.add('tab-active');
         tabStudent.classList.remove('tab-active');
         loginIdLabel.innerText = 'Faculty ID';
-        loginIdInput.placeholder = 'e.g. FAC01';
+        loginIdInput.placeholder = 'e.g. NTHAKORE';
       }
     }
 
@@ -684,9 +878,12 @@
       document.getElementById('userProfileBadge').classList.remove('hidden');
       document.getElementById('userProfileBadge').classList.add('flex');
       document.getElementById('displayUserName').innerText = currentUser.name;
+      document.getElementById('dashFacultyWelcomeName').innerText = currentUser.name;
       document.getElementById('facultyNav').classList.remove('hidden');
       document.getElementById('studentNav').classList.add('hidden');
+      
       navigateView('facultyDashboard');
+      loadFacultyDashboardMetrics();
     }
 
     function setupStudentSession() {
@@ -736,6 +933,7 @@
         document.getElementById('facultyDashboardView').classList.remove('hidden');
         document.getElementById('btnNavDash')?.classList.add('nav-active');
         document.getElementById('mBtnDash')?.classList.add('mobile-nav-active');
+        loadFacultyDashboardMetrics();
       } else if (viewName === 'attendanceLogs') {
         document.getElementById('attendanceLogsView').classList.remove('hidden');
         document.getElementById('btnNavLogs')?.classList.add('nav-active');
@@ -819,15 +1017,121 @@
       });
     }
 
-    // -------------------------------------------------------------
-    // TAKE ATTENDANCE
-    // -------------------------------------------------------------
+    // Faculty Dashboard Metrics & Recent Sessions
+    async function loadFacultyDashboardMetrics() {
+      if (!db) return;
+      var thisMonth = getCurrentMonthString();
+
+      var { data: allLogs } = await db.from('attendance_logs')
+        .select('*')
+        .order('session_date', { ascending: false })
+        .order('id', { ascending: false });
+
+      var logs = allLogs || [];
+      var monthlyLogs = logs.filter(function(l) { return l.session_date.startsWith(thisMonth); });
+
+      document.getElementById('statMonthlyClasses').innerText = monthlyLogs.length;
+
+      var { data: allRecords } = await db.from('attendance_records').select('log_id, status');
+      var records = allRecords || [];
+
+      var monthlyLogIds = new Set(monthlyLogs.map(function(l) { return l.id; }));
+      var monthlyRecs = records.filter(function(r) { return monthlyLogIds.has(r.log_id); });
+
+      var avgPct = 0;
+      if (monthlyRecs.length > 0) {
+        var presentCount = monthlyRecs.filter(function(r) { return r.status === 'Present'; }).length;
+        avgPct = ((presentCount / monthlyRecs.length) * 100).toFixed(1);
+      }
+      document.getElementById('statAvgAttendance').innerText = avgPct + '%';
+
+      var tbody = document.getElementById('dashRecentSessionsTableBody');
+      tbody.innerHTML = '';
+
+      var recent6 = logs.slice(0, 6);
+      if (recent6.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-slate-400">No attendance sessions recorded yet.</td></tr>';
+        return;
+      }
+
+      recent6.forEach(function(log) {
+        var tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50/60 transition";
+
+        var badgeColor = "bg-blue-50 text-blue-700 border-blue-200";
+        if (log.class_type === 'Practical') badgeColor = "bg-purple-50 text-purple-700 border-purple-200";
+        if (log.class_type === 'Seminar') badgeColor = "bg-amber-50 text-amber-800 border-amber-200";
+
+        tr.innerHTML = `
+          <td class="py-3 px-3">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-xs">
+                <i class="fa-regular fa-calendar"></i>
+              </div>
+              <span class="font-medium text-slate-900">${formatDateToDMY(log.session_date)}</span>
+            </div>
+          </td>
+          <td class="py-3 px-3">
+            <div class="font-semibold text-slate-800">${log.semester}</div>
+            <div class="text-[10px] text-slate-400 font-mono">${log.course}</div>
+          </td>
+          <td class="py-3 px-3 font-medium text-slate-900 max-w-xs truncate">${log.subject}</td>
+          <td class="py-3 px-3">
+            <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold border ${badgeColor}">
+              ${log.class_type}
+            </span>
+          </td>
+          <td class="py-3 px-3 text-right">
+            <button 
+              onclick="exportSingleSessionExcel(${log.id})" 
+              class="inline-flex items-center gap-1.5 text-xs text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 px-3 py-1 rounded-lg font-semibold transition cursor-pointer shadow-2xs"
+            >
+              <i class="fa-solid fa-file-excel text-emerald-600"></i> Export Excel
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Export 1: Single Session Excel (Auto-Fitted)
+    async function exportSingleSessionExcel(logId) {
+      if (!db) return;
+      var { data: log } = await db.from('attendance_logs').select('*').eq('id', logId).single();
+      if (!log) return;
+
+      var { data: records } = await db.from('attendance_records').select('*').eq('log_id', logId);
+      var { data: students } = await db.from('students').select('*').eq('course', log.course).eq('semester', log.semester);
+
+      var sheetRows = [
+        ["GTU ATTENDANCE SESSION REPORT"],
+        ["Subject: " + log.subject, "Class Type: " + log.class_type],
+        ["Course: " + log.course, "Semester: " + log.semester, "Date: " + formatDateToDMY(log.session_date)],
+        [],
+        ["Enrollment ID", "Student Name", "Status"]
+      ];
+
+      (students || []).forEach(function(s) {
+        var rec = (records || []).find(function(r) { return r.enrollment_no === s.enrollment_no; });
+        sheetRows.push([s.enrollment_no, s.name, rec ? rec.status : 'Absent']);
+      });
+
+      var ws = XLSX.utils.aoa_to_sheet(sheetRows);
+      autoFitColumns(ws, sheetRows);
+
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Session");
+      var fileName = ("Session_" + log.session_date + "_" + log.course + "_" + log.semester + ".xlsx").replace(/[\/\\?*:[\]\s]/g, '_');
+      XLSX.writeFile(wb, fileName);
+    }
+
+    // Take Attendance
     async function loadStudentRoster() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var course = document.getElementById('courseSelect').value;
       var semester = document.getElementById('semSelect').value;
       var container = document.getElementById('rosterContainer');
-      container.innerHTML = '<div class="text-xs text-slate-400 p-2 col-span-2">Loading students...</div>';
+      container.innerHTML = '<div class="text-xs text-slate-400 p-2 col-span-2 text-center">Loading students...</div>';
 
       var res = await db.from('students').select('*').eq('course', course).eq('semester', semester);
       if (res.error) {
@@ -876,14 +1180,14 @@
       container.innerHTML = '';
 
       if (currentRoster.length === 0) {
-        container.innerHTML = '<div class="text-xs text-amber-600 p-2 col-span-2">No students registered under this Course & Semester.</div>';
+        container.innerHTML = '<div class="text-xs text-amber-600 p-2 col-span-2 text-center">No students registered under this Course & Semester.</div>';
         document.getElementById('submitAttendanceArea').style.display = 'none';
         return;
       }
 
       currentRoster.forEach(function(student) {
         var card = document.createElement('div');
-        card.className = "flex items-center justify-between px-3.5 py-3 bg-white border border-slate-200/90 rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.03)] hover:border-slate-300 transition";
+        card.className = "flex items-center justify-between px-3.5 py-3 bg-white border border-slate-200/90 rounded-xl shadow-2xs hover:border-slate-300 transition";
         card.innerHTML = `
           <div class="pr-2 truncate">
             <div class="text-xs font-bold text-slate-800 tracking-wide uppercase truncate">${student.name}</div>
@@ -982,12 +1286,12 @@
         if (classType === 'Seminar') {
           document.getElementById('seminarTopicInput').value = '';
         }
+        closeTakeAttendanceModal();
+        loadFacultyDashboardMetrics();
       }
     }
 
-    // -------------------------------------------------------------
-    // LOGS & EDITING SESSIONS
-    // -------------------------------------------------------------
+    // Attendance Logs & Editing
     async function renderLogs() {
       if (!db) return;
       var monthStr = document.getElementById('logMonthFilter').value;
@@ -1034,7 +1338,7 @@
           <td class="py-3 px-3 text-right">
             <button 
               onclick="openEditAttendanceModal(${log.id})" 
-              class="inline-flex items-center gap-1.5 text-xs bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border border-blue-200 px-3 py-1 rounded-lg font-semibold transition cursor-pointer shadow-2xs"
+              class="inline-flex items-center gap-1.5 text-xs bg-blue-50 text-blue-700 hover:bg-blue-700 hover:text-white border border-blue-200 px-3 py-1 rounded-lg font-semibold transition cursor-pointer shadow-2xs"
             >
               <i class="fa-solid fa-pen-to-square"></i> Edit
             </button>
@@ -1160,6 +1464,7 @@
         await Promise.all(updatePromises);
         alert("Attendance record updated successfully!");
         closeEditAttendanceModal();
+        loadFacultyDashboardMetrics();
       } catch (err) {
         alert("Error updating attendance: " + err.message);
       } finally {
@@ -1175,9 +1480,7 @@
       document.getElementById('editAttendanceModal').classList.add('hidden');
     }
 
-    // -------------------------------------------------------------
-    // EXPORT MATRIX & DEFAULTER LIST (FACULTY)
-    // -------------------------------------------------------------
+    // Export 2: Faculty Matrix Excel (Auto-Fitted)
     async function downloadFacultyMatrixExcel() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var course = document.getElementById('exportCourseSelect').value;
@@ -1244,6 +1547,8 @@
       });
 
       var ws = XLSX.utils.aoa_to_sheet(rows);
+      autoFitColumns(ws, rows);
+
       var wb = XLSX.utils.book_new();
       var cleanSheetTitle = (course + "_" + sem).replace(/[\/\\?*:[\]]/g, '_').substring(0, 31);
       XLSX.utils.book_append_sheet(wb, ws, cleanSheetTitle);
@@ -1252,7 +1557,7 @@
       XLSX.writeFile(wb, cleanFileName);
     }
 
-    // Dedicated Defaulters List Generator (< 75%)
+    // Export 3: Defaulters List Excel (Auto-Fitted)
     async function downloadDefaultersExcel() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var course = document.getElementById('exportCourseSelect').value;
@@ -1304,7 +1609,6 @@
         var pctNum = (attended / totalClasses) * 100;
         if (pctNum < 75.0) {
           defaulterCount++;
-          // Classes needed to reach 75%: ceil( (0.75 * totalClasses - attended) / 0.25 )
           var needed = Math.max(1, Math.ceil(0.75 * totalClasses) - attended);
           defaultersRows.push([
             st.enrollment_no,
@@ -1323,15 +1627,15 @@
       }
 
       var ws = XLSX.utils.aoa_to_sheet(defaultersRows);
+      autoFitColumns(ws, defaultersRows);
+
       var wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Defaulters");
       var fileName = ("Defaulters_" + course + "_" + sem + "_" + month + ".xlsx").replace(/[\/\\?*:[\]\s]/g, '_');
       XLSX.writeFile(wb, fileName);
     }
 
-    // -------------------------------------------------------------
-    // STUDENT PORTAL: 75% DEFAULTER ALERTS & LIVE SYNC
-    // -------------------------------------------------------------
+    // Student Refresh & Sync
     async function refreshStudentData(btn) {
       if (!currentUser || !db) return;
       var icon = btn ? btn.querySelector('i') : null;
@@ -1378,11 +1682,8 @@
       ring.innerText = pct + '%';
       fraction.innerText = attended + ' / ' + total;
 
-      // 75% Attendance Defaulter Alerts logic
       if (total > 0 && pct < 75) {
-        // Red Defaulter State
         ring.className = "w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-rose-600 text-rose-600 bg-rose-50 flex items-center justify-center font-bold text-xs md:text-sm shrink-0 transition-colors shadow-xs";
-        
         var deficit = Math.max(1, Math.ceil(0.75 * total) - attended);
         alertBox.className = "mt-4 p-3.5 rounded-xl border border-rose-200 bg-rose-50/90 text-rose-900 flex items-start gap-3 text-xs shadow-2xs";
         alertBox.innerHTML = `
@@ -1401,9 +1702,7 @@
         `;
         alertBox.classList.remove('hidden');
       } else if (total > 0) {
-        // Compliant State (>= 75%)
         ring.className = "w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-blue-600 text-blue-600 bg-blue-50/40 flex items-center justify-center font-bold text-xs md:text-sm shrink-0 transition-colors";
-        
         alertBox.className = "mt-4 p-3 rounded-xl border border-emerald-200 bg-emerald-50/80 text-emerald-900 flex items-center gap-3 text-xs";
         alertBox.innerHTML = `
           <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
@@ -1415,7 +1714,6 @@
         `;
         alertBox.classList.remove('hidden');
       } else {
-        // No records yet
         ring.className = "w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-slate-300 text-slate-400 flex items-center justify-center font-bold text-xs md:text-sm shrink-0";
         alertBox.classList.add('hidden');
       }
@@ -1423,17 +1721,12 @@
       var now = new Date();
       var timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       var lastUpEl = document.getElementById('studentLastUpdated');
-      if (lastUpEl) {
-        lastUpEl.innerText = 'Updated ' + timeStr;
-      }
+      if (lastUpEl) lastUpEl.innerText = 'Updated ' + timeStr;
 
-      // Latest on top sorting
       records.sort(function(a, b) {
         var dateA = (a.attendance_logs && a.attendance_logs.session_date) || '';
         var dateB = (b.attendance_logs && b.attendance_logs.session_date) || '';
-        if (dateB !== dateA) {
-          return dateB.localeCompare(dateA);
-        }
+        if (dateB !== dateA) return dateB.localeCompare(dateA);
         var idA = (a.attendance_logs && Number(a.attendance_logs.id)) || 0;
         var idB = (b.attendance_logs && Number(b.attendance_logs.id)) || 0;
         return idB - idA;
@@ -1457,6 +1750,7 @@
       });
     }
 
+    // Export 4: Student Attendance Report (Auto-Fitted)
     async function downloadStudentReportExcel() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var month = document.getElementById('studentExportMonth').value;
@@ -1478,9 +1772,7 @@
       filtered.sort(function(a, b) {
         var dateA = (a.attendance_logs && a.attendance_logs.session_date) || '';
         var dateB = (b.attendance_logs && b.attendance_logs.session_date) || '';
-        if (dateB !== dateA) {
-          return dateB.localeCompare(dateA);
-        }
+        if (dateB !== dateA) return dateB.localeCompare(dateA);
         var idA = (a.attendance_logs && Number(a.attendance_logs.id)) || 0;
         var idB = (b.attendance_logs && Number(b.attendance_logs.id)) || 0;
         return idB - idA;
@@ -1508,6 +1800,8 @@
       ];
 
       var ws = XLSX.utils.aoa_to_sheet(sheetData);
+      autoFitColumns(ws, sheetData);
+
       var wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "My Attendance");
       XLSX.writeFile(wb, "My_Attendance_" + currentUser.enrollment_no + "_" + month + ".xlsx");
