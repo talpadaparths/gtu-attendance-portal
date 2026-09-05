@@ -45,7 +45,7 @@
 
     <div id="userProfileBadge" class="hidden items-center space-x-2 md:space-x-4 shrink-0">
       <div class="flex items-center space-x-2 text-right">
-        <div class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
           <i class="fa-solid fa-user text-xs md:text-sm"></i>
         </div>
         <div class="hidden sm:block text-left">
@@ -108,7 +108,7 @@
   <!-- Main Workspace -->
   <main id="appContainer" class="hidden flex-1 md:overflow-hidden max-w-7xl w-full mx-auto p-3.5 md:p-6 flex flex-col md:flex-row gap-6 pb-24 md:pb-6">
     
-    <!-- Desktop Locked Sidebar (Hidden on Mobile) -->
+    <!-- Desktop Locked Sidebar -->
     <aside class="hidden md:flex md:w-60 shrink-0 h-full flex-col justify-between select-none">
       <div class="space-y-2">
         <div id="facultyNav" class="space-y-1">
@@ -203,7 +203,7 @@
         </div>
       </section>
 
-      <!-- Faculty Panel: Attendance Logs -->
+      <!-- Faculty Panel: Attendance Logs (With Edit Button) -->
       <section id="attendanceLogsView" class="hidden w-full bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
           <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
@@ -218,7 +218,7 @@
                 <th class="py-3 px-3">Date Taken</th>
                 <th class="py-3 px-3">Subject & Details</th>
                 <th class="py-3 px-3">Class Type</th>
-                <th class="py-3 px-3 text-right">Status</th>
+                <th class="py-3 px-3 text-right">Action</th>
               </tr>
             </thead>
             <tbody id="logsTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
@@ -252,11 +252,30 @@
         </button>
       </section>
 
-      <!-- Student Dashboard -->
+      <!-- Student Dashboard (With Refresh Button & Instant Sync) -->
       <section id="studentDashboardView" class="hidden w-full space-y-4 md:space-y-5">
         <div class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-100">
-          <h2 class="text-base font-bold text-slate-900">Attendance Overview</h2>
-          <p class="text-xs text-slate-400">Track your overall academic attendance.</p>
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">Attendance Overview</h2>
+              <p class="text-xs text-slate-400">Track your overall academic attendance.</p>
+            </div>
+            <!-- Interactive Refresh Button -->
+            <div class="flex items-center gap-2">
+              <span id="studentLastUpdated" class="hidden sm:inline text-[10px] text-slate-400 font-mono"></span>
+              <button 
+                type="button" 
+                onclick="refreshStudentData(this)" 
+                id="btnStudentRefresh" 
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white active:scale-95 transition-all text-xs font-semibold cursor-pointer shadow-2xs"
+                title="Fetch latest attendance without logging out"
+              >
+                <i class="fa-solid fa-arrows-rotate text-xs"></i>
+                <span id="btnStudentRefreshText">Refresh</span>
+              </button>
+            </div>
+          </div>
+
           <div class="flex items-center gap-6 md:gap-8 mt-4 md:mt-5">
             <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-blue-600 flex items-center justify-center font-bold text-xs md:text-sm text-blue-600 shrink-0" id="studentPercentageRing">
               0%
@@ -304,10 +323,46 @@
     </div>
   </main>
 
+  <!-- Edit Attendance Modal for Faculty -->
+  <div id="editAttendanceModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-3 md:p-4">
+    <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden">
+      <div class="p-4 md:p-5 border-b flex items-center justify-between bg-slate-50/80">
+        <div>
+          <span class="text-[10px] font-bold text-blue-600 uppercase tracking-wider">Edit Attendance Session</span>
+          <h3 id="editModalSessionTitle" class="text-xs md:text-sm font-bold text-slate-900 leading-snug"></h3>
+          <div id="editModalSessionSub" class="text-[11px] text-slate-500 font-mono mt-0.5"></div>
+        </div>
+        <button onclick="closeEditAttendanceModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition cursor-pointer">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="px-4 md:px-5 py-2.5 bg-white border-b flex items-center gap-2">
+        <button onclick="bulkMarkEdit('Present')" class="border border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1 transition cursor-pointer">
+          <i class="fa-solid fa-check"></i> Mark All Present
+        </button>
+        <button onclick="bulkMarkEdit('Absent')" class="border border-red-500 text-red-600 hover:bg-red-50 text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1 transition cursor-pointer">
+          <i class="fa-solid fa-xmark"></i> Mark All Absent
+        </button>
+      </div>
+
+      <div id="editRosterContainer" class="p-4 md:p-5 overflow-y-auto custom-scroll space-y-2.5 flex-1 bg-slate-50/40"></div>
+
+      <div class="p-4 border-t bg-white flex items-center justify-end gap-2.5">
+        <button onclick="closeEditAttendanceModal()" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+          Cancel
+        </button>
+        <button id="btnSaveEditedAttendance" onclick="saveEditedAttendance()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-6 py-2 rounded-lg font-bold shadow transition flex items-center gap-1.5 cursor-pointer">
+          <i class="fa-solid fa-check-double"></i> Update Attendance
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Mobile Technical Support Modal -->
   <div id="mobileSupportModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
     <div class="bg-white rounded-2xl w-full max-w-sm p-5 border border-slate-100 shadow-2xl text-center relative">
-      <button onclick="toggleMobileSupport(false)" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 p-1">
+      <button onclick="toggleMobileSupport(false)" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
         <i class="fa-solid fa-xmark text-base"></i>
       </button>
       <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-2.5">
@@ -316,27 +371,27 @@
       <div class="text-sm font-bold text-slate-800">Need Technical Support?</div>
       <div class="text-xs text-slate-600 font-semibold mt-2">Call / WhatsApp: +91 9054826042</div>
       <div class="text-[11px] text-slate-500 font-medium mt-1 break-all">E Mail ID : talpadaparth1@gmail.com</div>
-      <button onclick="toggleMobileSupport(false)" class="w-full mt-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold py-2 rounded-lg transition">Close</button>
+      <button onclick="toggleMobileSupport(false)" class="w-full mt-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold py-2 rounded-lg transition cursor-pointer">Close</button>
     </div>
   </div>
 
-  <!-- Mobile Bottom Navigation Bar (Hidden on Desktop) -->
+  <!-- Mobile Bottom Navigation Bar -->
   <nav id="mobileBottomNav" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-3 py-2 z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.04)]">
     <!-- Faculty Mobile Bar -->
     <div id="facultyMobileNav" class="flex items-center justify-around text-center">
-      <button onclick="navigateView('facultyDashboard')" id="mBtnDash" class="flex flex-col items-center gap-0.5 text-slate-500 mobile-nav-active">
+      <button onclick="navigateView('facultyDashboard')" id="mBtnDash" class="flex flex-col items-center gap-0.5 text-slate-500 mobile-nav-active cursor-pointer">
         <i class="fa-solid fa-gauge text-sm"></i>
         <span class="text-[10px]">Dashboard</span>
       </button>
-      <button onclick="navigateView('attendanceLogs')" id="mBtnLogs" class="flex flex-col items-center gap-0.5 text-slate-500">
+      <button onclick="navigateView('attendanceLogs')" id="mBtnLogs" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
         <i class="fa-solid fa-calendar-days text-sm"></i>
         <span class="text-[10px]">Logs</span>
       </button>
-      <button onclick="navigateView('reportsExport')" id="mBtnReports" class="flex flex-col items-center gap-0.5 text-slate-500">
+      <button onclick="navigateView('reportsExport')" id="mBtnReports" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
         <i class="fa-solid fa-file-excel text-sm"></i>
         <span class="text-[10px]">Export</span>
       </button>
-      <button onclick="toggleMobileSupport(true)" class="flex flex-col items-center gap-0.5 text-slate-500">
+      <button onclick="toggleMobileSupport(true)" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
         <i class="fa-solid fa-headset text-sm"></i>
         <span class="text-[10px]">Support</span>
       </button>
@@ -344,11 +399,11 @@
 
     <!-- Student Mobile Bar -->
     <div id="studentMobileNav" class="hidden flex items-center justify-around text-center">
-      <button onclick="navigateView('studentDashboard')" class="flex flex-col items-center gap-0.5 text-blue-600 font-bold">
+      <button onclick="navigateView('studentDashboard')" class="flex flex-col items-center gap-0.5 text-blue-600 font-bold cursor-pointer">
         <i class="fa-solid fa-clipboard-user text-base"></i>
         <span class="text-[10px]">My Attendance</span>
       </button>
-      <button onclick="toggleMobileSupport(true)" class="flex flex-col items-center gap-0.5 text-slate-500">
+      <button onclick="toggleMobileSupport(true)" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
         <i class="fa-solid fa-headset text-base"></i>
         <span class="text-[10px]">Support</span>
       </button>
@@ -369,6 +424,11 @@
     var currentRoster = [];
     var attendanceState = {}; 
     var db = null;
+
+    var logsCache = {};
+    var currentEditLogId = null;
+    var editAttendanceState = {};
+    var editStudentList = [];
 
     var SUPABASE_URL = "https://ierhattpsvizmajwtcol.supabase.co";
     var SUPABASE_ANON_KEY = "sb_publishable_rZKrmVTYtxm0KLvFqoI_AQ__hTETjXH";
@@ -942,6 +1002,7 @@
       });
 
       tbody.innerHTML = '';
+      logsCache = {};
 
       if (filtered.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-slate-400">No logs for this month.</td></tr>';
@@ -949,16 +1010,155 @@
       }
 
       filtered.forEach(function(log) {
+        logsCache[log.id] = log;
         var tr = document.createElement('tr');
         tr.className = "hover:bg-slate-50/50 transition";
         tr.innerHTML = `
           <td class="py-3 px-3 font-mono font-medium">${formatDateToDMY(log.session_date)}</td>
           <td class="py-3 px-3 font-medium text-slate-800">${log.subject}</td>
           <td class="py-3 px-3 text-blue-600 font-semibold">${log.class_type}</td>
-          <td class="py-3 px-3 text-right"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold">● Logged</span></td>
+          <td class="py-3 px-3 text-right">
+            <button 
+              onclick="openEditAttendanceModal(${log.id})" 
+              class="inline-flex items-center gap-1.5 text-xs bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border border-blue-200 px-3 py-1 rounded-lg font-semibold transition cursor-pointer shadow-2xs"
+            >
+              <i class="fa-solid fa-pen-to-square"></i> Edit
+            </button>
+          </td>
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    async function openEditAttendanceModal(logId) {
+      var log = logsCache[logId];
+      if (!log || !db) return;
+
+      currentEditLogId = logId;
+      editAttendanceState = {};
+      editStudentList = [];
+
+      document.getElementById('editModalSessionTitle').innerText = log.subject + " (" + log.class_type + ")";
+      document.getElementById('editModalSessionSub').innerText = formatDateToDMY(log.session_date) + " • " + log.course + " • " + log.semester;
+
+      var container = document.getElementById('editRosterContainer');
+      container.innerHTML = '<div class="text-xs text-slate-400 p-4 text-center">Fetching student records...</div>';
+      document.getElementById('editAttendanceModal').classList.remove('hidden');
+
+      var recRes = await db.from('attendance_records').select('*').eq('log_id', logId);
+      var records = recRes.data || [];
+
+      var stRes = await db.from('students').select('enrollment_no, name').eq('course', log.course).eq('semester', log.semester);
+      var students = stRes.data || [];
+
+      if (students.length === 0) {
+        students = records.map(function(r) {
+          return { enrollment_no: r.enrollment_no, name: "Enrollment: " + r.enrollment_no };
+        });
+      }
+
+      editStudentList = students;
+      container.innerHTML = '';
+
+      if (editStudentList.length === 0) {
+        container.innerHTML = '<div class="text-xs text-amber-600 p-4 text-center">No students found for this session log.</div>';
+        return;
+      }
+
+      editStudentList.forEach(function(student) {
+        var existing = records.find(function(r) { return r.enrollment_no === student.enrollment_no; });
+        var status = existing ? existing.status : 'Present';
+        editAttendanceState[student.enrollment_no] = status;
+
+        var card = document.createElement('div');
+        card.className = "flex items-center justify-between px-3.5 py-2.5 bg-white border border-slate-200/90 rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.02)]";
+        card.innerHTML = `
+          <div class="truncate pr-2">
+            <div class="text-xs font-bold text-slate-800 uppercase truncate">${student.name}</div>
+            <div class="text-[10px] text-slate-400 font-mono tracking-tight">${student.enrollment_no}</div>
+          </div>
+          <div class="flex items-center space-x-1.5 shrink-0">
+            <button 
+              type="button" 
+              id="badge_edit_present_${student.enrollment_no}" 
+              onclick="setEditStudentStatus('${student.enrollment_no}', 'Present')"
+              class="px-2.5 py-1 rounded-full text-[11px] font-medium border ${status === 'Present' ? 'border-emerald-300 bg-emerald-50 text-emerald-700' : 'border-emerald-200 bg-white text-emerald-400'} flex items-center gap-1 transition cursor-pointer"
+            >
+              <i class="${status === 'Present' ? 'fa-solid fa-circle-dot text-emerald-600' : 'fa-regular fa-circle text-emerald-300'} text-[10px]"></i> Present
+            </button>
+            <button 
+              type="button" 
+              id="badge_edit_absent_${student.enrollment_no}" 
+              onclick="setEditStudentStatus('${student.enrollment_no}', 'Absent')"
+              class="px-2.5 py-1 rounded-full text-[11px] font-medium border ${status === 'Absent' ? 'border-rose-400 bg-rose-50 text-rose-700' : 'border-rose-200 bg-white text-rose-400'} flex items-center gap-1 transition cursor-pointer"
+            >
+              <i class="${status === 'Absent' ? 'fa-solid fa-circle-dot text-rose-600' : 'fa-regular fa-circle text-rose-300'} text-[10px]"></i> Absent
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function setEditStudentStatus(enrollmentNo, status) {
+      editAttendanceState[enrollmentNo] = status;
+      var btnPresent = document.getElementById('badge_edit_present_' + enrollmentNo);
+      var btnAbsent = document.getElementById('badge_edit_absent_' + enrollmentNo);
+
+      if (!btnPresent || !btnAbsent) return;
+
+      if (status === 'Present') {
+        btnPresent.className = "px-2.5 py-1 rounded-full text-[11px] font-medium border border-emerald-300 bg-emerald-50 text-emerald-700 flex items-center gap-1 transition cursor-pointer";
+        btnPresent.innerHTML = '<i class="fa-solid fa-circle-dot text-emerald-600 text-[10px]"></i> Present';
+        btnAbsent.className = "px-2.5 py-1 rounded-full text-[11px] font-medium border border-rose-200 bg-white text-rose-400 flex items-center gap-1 transition cursor-pointer";
+        btnAbsent.innerHTML = '<i class="fa-regular fa-circle text-rose-300 text-[10px]"></i> Absent';
+      } else {
+        btnPresent.className = "px-2.5 py-1 rounded-full text-[11px] font-medium border border-emerald-200 bg-white text-emerald-400 flex items-center gap-1 transition cursor-pointer";
+        btnPresent.innerHTML = '<i class="fa-regular fa-circle text-emerald-300 text-[10px]"></i> Present';
+        btnAbsent.className = "px-2.5 py-1 rounded-full text-[11px] font-medium border border-rose-400 bg-rose-50 text-rose-700 flex items-center gap-1 transition cursor-pointer";
+        btnAbsent.innerHTML = '<i class="fa-solid fa-circle-dot text-rose-600 text-[10px]"></i> Absent';
+      }
+    }
+
+    function bulkMarkEdit(status) {
+      editStudentList.forEach(function(s) {
+        setEditStudentStatus(s.enrollment_no, status);
+      });
+    }
+
+    async function saveEditedAttendance() {
+      if (!currentEditLogId || !db) return;
+
+      var btn = document.getElementById('btnSaveEditedAttendance');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+      try {
+        var enrollmentKeys = Object.keys(editAttendanceState);
+        var updatePromises = enrollmentKeys.map(function(enNo) {
+          return db
+            .from('attendance_records')
+            .update({ status: editAttendanceState[enNo] })
+            .eq('log_id', currentEditLogId)
+            .eq('enrollment_no', enNo);
+        });
+
+        await Promise.all(updatePromises);
+        alert("Attendance record updated successfully!");
+        closeEditAttendanceModal();
+      } catch (err) {
+        alert("Error updating attendance: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-check-double"></i> Update Attendance';
+      }
+    }
+
+    function closeEditAttendanceModal() {
+      currentEditLogId = null;
+      editAttendanceState = {};
+      editStudentList = [];
+      document.getElementById('editAttendanceModal').classList.add('hidden');
     }
 
     async function downloadFacultyMatrixExcel() {
@@ -993,7 +1193,7 @@
         if (a.session_date !== b.session_date) {
           return a.session_date.localeCompare(b.session_date);
         }
-        return (Number(a.id) || 0) - (Number(b.id) || 0);
+        return (Number(a.id) || 0) - (Number(a.id) || 0);
       });
 
       var recRes = await db.from('attendance_records').select('*');
@@ -1032,8 +1232,40 @@
       XLSX.writeFile(wb, cleanFileName);
     }
 
+    // -------------------------------------------------------------
+    // STUDENT PORTAL & REFRESH HANDLER
+    // -------------------------------------------------------------
+    async function refreshStudentData(btn) {
+      if (!currentUser || !db) return;
+      var icon = btn ? btn.querySelector('i') : null;
+      var textSpan = document.getElementById('btnStudentRefreshText');
+
+      if (icon) icon.classList.add('fa-spin');
+      if (btn) btn.disabled = true;
+      if (textSpan) textSpan.innerText = 'Syncing...';
+
+      try {
+        await loadStudentPortalData();
+        var now = new Date();
+        var timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        var lastUpEl = document.getElementById('studentLastUpdated');
+        if (lastUpEl) {
+          lastUpEl.innerText = 'Updated ' + timeStr;
+          lastUpEl.classList.remove('hidden');
+        }
+      } catch(e) {
+        console.error("Refresh error:", e);
+      } finally {
+        setTimeout(function() {
+          if (icon) icon.classList.remove('fa-spin');
+          if (textSpan) textSpan.innerText = 'Refresh';
+          if (btn) btn.disabled = false;
+        }, 400);
+      }
+    }
+
     async function loadStudentPortalData() {
-      if (!db) return;
+      if (!db || !currentUser) return;
       var res = await db.from('attendance_records').select('status, attendance_logs(*)').eq('enrollment_no', currentUser.enrollment_no);
       if (res.error) return;
 
@@ -1044,6 +1276,14 @@
 
       document.getElementById('studentPercentageRing').innerText = pct + '%';
       document.getElementById('studentAttendanceFraction').innerText = attended + ' / ' + total;
+
+      // Update initial timestamp
+      var now = new Date();
+      var timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      var lastUpEl = document.getElementById('studentLastUpdated');
+      if (lastUpEl) {
+        lastUpEl.innerText = 'Updated ' + timeStr;
+      }
 
       records.sort(function(a, b) {
         var dateA = (a.attendance_logs && a.attendance_logs.session_date) || '';
