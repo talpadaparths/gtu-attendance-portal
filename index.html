@@ -50,18 +50,15 @@
 
     <!-- Right Header Utilities -->
     <div id="userProfileBadge" class="hidden items-center space-x-4 shrink-0">
-      <!-- Notification Icon -->
       <div class="relative cursor-pointer p-1.5 text-slate-500 hover:text-slate-800 transition">
         <i class="fa-regular fa-bell text-base"></i>
         <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white"></span>
       </div>
 
-      <!-- Calendar Header Icon -->
       <div class="hidden sm:flex items-center text-slate-500 p-1.5" title="Academic Session">
         <i class="fa-regular fa-calendar text-base"></i>
       </div>
 
-      <!-- Faculty Profile Pill -->
       <div class="flex items-center space-x-2.5 border-l border-slate-200 pl-3">
         <div class="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center">
           <i class="fa-solid fa-user text-sm"></i>
@@ -74,7 +71,6 @@
         </div>
       </div>
 
-      <!-- Logout Button -->
       <button onclick="logout()" class="text-xs text-red-600 font-semibold border border-red-200 hover:bg-red-50 p-1.5 sm:px-2.5 sm:py-1 rounded-md transition cursor-pointer" title="Logout">
         <i class="fa-solid fa-arrow-right-from-bracket sm:mr-1"></i><span class="hidden sm:inline">Logout</span>
       </button>
@@ -92,7 +88,6 @@
         <p class="text-xs text-slate-500 mt-1">Login to access GTU Attendance Portal</p>
       </div>
 
-      <!-- Role Tabs -->
       <div class="flex bg-slate-100/90 p-1 rounded-xl mb-6 text-xs font-semibold">
         <button id="tabStudent" type="button" onclick="switchLoginRole('student')" class="flex-1 py-2 rounded-lg text-slate-600 transition flex items-center justify-center gap-1.5 cursor-pointer">
           <i class="fa-solid fa-graduation-cap"></i> Student
@@ -133,6 +128,7 @@
     <!-- Left Navigation Sidebar -->
     <aside class="hidden md:flex md:w-60 shrink-0 h-full flex-col justify-between select-none">
       <div class="space-y-2 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/70 shadow-xs">
+        <!-- Faculty Navigation -->
         <div id="facultyNav" class="space-y-1">
           <button onclick="navigateView('facultyDashboard')" id="btnNavDash" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 transition nav-active cursor-pointer">
             <i class="fa-solid fa-house"></i> Dashboard
@@ -146,14 +142,24 @@
           <button onclick="navigateView('reportsExport')" id="btnNavReports" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
             <i class="fa-solid fa-chart-column"></i> Reports & Export
           </button>
-          <button onclick="alert('GTU Pharmacy Curriculum is synced with Gujarat Technological University regulation guidelines.')" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
-            <i class="fa-solid fa-book-open"></i> My Classes
+          <button onclick="navigateView('timetableView')" id="btnNavTimetable" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <i class="fa-solid fa-calendar-days"></i> Timetable
+          </button>
+          <button onclick="navigateView('syllabusView')" id="btnNavSyllabus" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <i class="fa-solid fa-book-bookmark"></i> Syllabus
           </button>
         </div>
 
+        <!-- Student Navigation -->
         <div id="studentNav" class="hidden space-y-1">
-          <button class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 nav-active cursor-pointer">
+          <button onclick="navigateView('studentDashboard')" id="btnNavStudentDash" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 nav-active cursor-pointer">
             <i class="fa-solid fa-clipboard-user"></i> My Attendance
+          </button>
+          <button onclick="navigateView('timetableView')" id="btnNavStudentTimetable" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <i class="fa-solid fa-calendar-days"></i> Timetable
+          </button>
+          <button onclick="navigateView('syllabusView')" id="btnNavStudentSyllabus" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <i class="fa-solid fa-book-bookmark"></i> Syllabus
           </button>
         </div>
       </div>
@@ -175,14 +181,13 @@
     <div class="flex-1 w-full md:h-full md:overflow-y-auto custom-scroll md:pr-1">
       
       <!-- ========================================================= -->
-      <!-- FACULTY DASHBOARD VIEW (MATCHES USER SCREENSHOT SPEC)      -->
+      <!-- FACULTY DASHBOARD VIEW                                    -->
       <!-- ========================================================= -->
       <section id="facultyDashboardView" class="space-y-5">
         
-        <!-- 1. Hero Welcome Card -->
+        <!-- Hero Welcome Card -->
         <div class="bg-gradient-to-r from-blue-50/90 via-white/95 to-indigo-50/90 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
           <div class="flex items-center gap-4 z-10 w-full md:w-auto">
-            <!-- Large Profile Avatar Icon -->
             <div class="w-16 h-16 rounded-full bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center text-slate-400 text-3xl shrink-0">
               <i class="fa-solid fa-user"></i>
             </div>
@@ -194,9 +199,7 @@
             </div>
           </div>
 
-          <!-- Illustration & Call To Action -->
           <div class="flex items-center gap-5 z-10 w-full md:w-auto justify-between md:justify-end">
-            <!-- Laptop SVG Graphic (as seen in screenshot) -->
             <div class="hidden lg:block w-28 h-16 opacity-85">
               <svg viewBox="0 0 160 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="25" y="10" width="110" height="70" rx="6" fill="#1e293b"/>
@@ -210,16 +213,14 @@
               </svg>
             </div>
 
-            <!-- Primary Action Button: Take New Attendance -->
             <button onclick="openTakeAttendanceModal()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm font-semibold px-5 py-3 rounded-2xl shadow-sm hover:shadow transition flex items-center gap-2 cursor-pointer shrink-0">
               <i class="fa-solid fa-circle-plus text-base"></i> Take New Attendance
             </button>
           </div>
         </div>
 
-        <!-- 2. Dual KPI Statistic Cards -->
+        <!-- KPI Statistic Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Card 1: Total Classes Taken This Month -->
           <div class="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-white/80 shadow-xs flex items-center justify-between">
             <div class="flex items-center gap-4">
               <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0 border border-blue-100">
@@ -233,13 +234,11 @@
                 </div>
               </div>
             </div>
-            <!-- Decorative Bar Chart Icon -->
             <div class="text-slate-200 text-3xl pr-2 hidden sm:block">
               <i class="fa-solid fa-chart-simple"></i>
             </div>
           </div>
 
-          <!-- Card 2: Average Class Attendance -->
           <div class="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-white/80 shadow-xs flex items-center justify-between">
             <div class="flex items-center gap-4">
               <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0 border border-emerald-100">
@@ -253,14 +252,13 @@
                 </div>
               </div>
             </div>
-            <!-- Decorative Pie Chart Icon -->
             <div class="text-slate-200 text-3xl pr-2 hidden sm:block">
               <i class="fa-solid fa-chart-pie"></i>
             </div>
           </div>
         </div>
 
-        <!-- 3. Recent Attendance Sessions Table -->
+        <!-- Recent Attendance Sessions Table -->
         <div class="bg-white/95 backdrop-blur-md rounded-2xl border border-white/80 shadow-xs p-5 space-y-4">
           <div class="flex items-center justify-between">
             <h3 class="font-bold text-slate-900 text-sm md:text-base">Recent Attendance Sessions</h3>
@@ -278,20 +276,16 @@
                   <th class="py-3 px-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody id="dashRecentSessionsTableBody" class="divide-y divide-slate-100 text-slate-700">
-                <!-- Dynamically populated from Supabase -->
-              </tbody>
+              <tbody id="dashRecentSessionsTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
             </table>
           </div>
 
-          <!-- Bottom View All Link -->
           <div class="text-center pt-2">
             <button onclick="navigateView('attendanceLogs')" class="text-xs font-semibold text-blue-600 hover:text-blue-800 transition inline-flex items-center gap-1.5 cursor-pointer">
               View All Sessions <i class="fa-solid fa-chevron-down text-[10px]"></i>
             </button>
           </div>
         </div>
-
       </section>
 
       <!-- Faculty Panel: Attendance Logs -->
@@ -346,6 +340,76 @@
             <i class="fa-solid fa-triangle-exclamation"></i> Download Defaulters List (&lt; 75%)
           </button>
         </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- NEW TAB 1: TIMETABLE VIEW                                 -->
+      <!-- ========================================================= -->
+      <section id="timetableView" class="hidden w-full bg-white/95 backdrop-blur-md p-5 md:p-6 rounded-3xl shadow-xs border border-white/80 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+          <div>
+            <div class="flex items-center gap-2 text-blue-600 font-bold text-xs uppercase tracking-wider">
+              <i class="fa-solid fa-calendar-days"></i> Academic Schedule
+            </div>
+            <h2 class="text-base md:text-lg font-bold text-slate-900 mt-0.5">Class & Laboratory Timetable</h2>
+          </div>
+          <span class="text-[11px] font-mono text-slate-400">GTU Pharmacy Division</span>
+        </div>
+
+        <!-- Controls: Course & Semester Selection -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-2xl text-xs">
+          <div>
+            <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Select Course</label>
+            <select id="ttCourseSelect" onchange="syncTTSemesters()" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
+          </div>
+          <div>
+            <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Select Semester / Year</label>
+            <select id="ttSemSelect" onkeydown="if(event.key==='Enter') renderComingSoon('timetable');" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
+          </div>
+          <div class="flex items-end">
+            <button type="button" onclick="renderComingSoon('timetable')" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-semibold text-xs px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 transition cursor-pointer shadow-sm">
+              <i class="fa-solid fa-magnifying-glass"></i> View Timetable
+            </button>
+          </div>
+        </div>
+
+        <!-- Timetable Result / Coming Soon Container -->
+        <div id="ttResultContainer" class="pt-2"></div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- NEW TAB 2: SYLLABUS VIEW                                  -->
+      <!-- ========================================================= -->
+      <section id="syllabusView" class="hidden w-full bg-white/95 backdrop-blur-md p-5 md:p-6 rounded-3xl shadow-xs border border-white/80 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+          <div>
+            <div class="flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-wider">
+              <i class="fa-solid fa-book-bookmark"></i> Curriculum & Regulations
+            </div>
+            <h2 class="text-base md:text-lg font-bold text-slate-900 mt-0.5">Course Syllabus & Subject Modules</h2>
+          </div>
+          <span class="text-[11px] font-mono text-slate-400">PCI & GTU Scheme</span>
+        </div>
+
+        <!-- Controls: Course & Semester Selection -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-2xl text-xs">
+          <div>
+            <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Select Course</label>
+            <select id="sylCourseSelect" onchange="syncSylSemesters()" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
+          </div>
+          <div>
+            <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Select Semester / Year</label>
+            <select id="sylSemSelect" onkeydown="if(event.key==='Enter') renderComingSoon('syllabus');" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
+          </div>
+          <div class="flex items-end">
+            <button type="button" onclick="renderComingSoon('syllabus')" class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold text-xs px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 transition cursor-pointer shadow-sm">
+              <i class="fa-solid fa-magnifying-glass"></i> View Syllabus
+            </button>
+          </div>
+        </div>
+
+        <!-- Syllabus Result / Coming Soon Container -->
+        <div id="sylResultContainer" class="pt-2"></div>
       </section>
 
       <!-- Student Dashboard View -->
@@ -420,12 +484,9 @@
     </div>
   </main>
 
-  <!-- ========================================================= -->
-  <!-- MODAL: TAKE NEW ATTENDANCE (LAUNCHED VIA BLUE BUTTON)      -->
-  <!-- ========================================================= -->
+  <!-- Modal: Take Attendance -->
   <div id="takeAttendanceModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 md:p-4">
     <div class="bg-white rounded-3xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden">
-      <!-- Modal Header -->
       <div class="px-5 py-4 border-b flex items-center justify-between bg-gradient-to-r from-slate-900 to-blue-950 text-white">
         <div>
           <span class="text-[9px] bg-blue-700 px-2 py-0.5 rounded font-bold uppercase tracking-widest">Faculty Action</span>
@@ -436,7 +497,6 @@
         </button>
       </div>
 
-      <!-- Controls Form -->
       <div class="p-5 overflow-y-auto custom-scroll space-y-4 flex-1">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 text-xs">
           <div>
@@ -478,10 +538,8 @@
           </button>
         </div>
 
-        <!-- Student Roster Grid -->
         <div id="rosterContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2"></div>
 
-        <!-- Submit Button in Modal -->
         <div id="submitAttendanceArea" style="display: none; text-align: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
           <button type="button" onclick="commitAttendance()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-sm px-8 py-3 rounded-xl font-bold shadow-md hover:shadow-lg transition inline-flex items-center justify-center gap-2 cursor-pointer">
             <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Submit Attendance Record
@@ -569,9 +627,17 @@
     </div>
 
     <div id="studentMobileNav" class="hidden flex items-center justify-around text-center">
-      <button onclick="navigateView('studentDashboard')" class="flex flex-col items-center gap-0.5 text-blue-600 font-bold cursor-pointer">
+      <button onclick="navigateView('studentDashboard')" id="mBtnStudentDash" class="flex flex-col items-center gap-0.5 text-blue-600 font-bold cursor-pointer">
         <i class="fa-solid fa-clipboard-user text-base"></i>
-        <span class="text-[10px]">My Attendance</span>
+        <span class="text-[10px]">Attendance</span>
+      </button>
+      <button onclick="navigateView('timetableView')" id="mBtnStudentTT" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
+        <i class="fa-solid fa-calendar-days text-base"></i>
+        <span class="text-[10px]">Timetable</span>
+      </button>
+      <button onclick="navigateView('syllabusView')" id="mBtnStudentSyl" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
+        <i class="fa-solid fa-book-bookmark text-base"></i>
+        <span class="text-[10px]">Syllabus</span>
       </button>
       <button onclick="toggleMobileSupport(true)" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
         <i class="fa-solid fa-headset text-base"></i>
@@ -595,7 +661,7 @@
 
     // 1. SUPABASE CREDENTIALS
     var SUPABASE_URL = "https://ierhattpsvizmajwtcol.supabase.co";
-    var SUPABASE_ANON_KEY = "sb_publishable_2LgqZ63nSvxD-pYqPWxXmA_6UnfFZHr";
+    var SUPABASE_ANON_KEY = "sb_publishable_rZKrmVTYtxm0KLvFqoI_AQ__hTETjXH";
 
     // 2. BACKGROUND IMAGE CONFIGURATION PLACEHOLDER
     var LOCAL_BG_IMAGE_PATH  = "bg.png"; 
@@ -798,6 +864,8 @@
       populateCourseDropdowns();
       syncCourseSemesters();
       syncExportSemesters();
+      syncTTSemesters();
+      syncSylSemesters();
     });
 
     function toggleMobileSupport(show) {
@@ -941,6 +1009,24 @@
       document.getElementById('displayUserName').innerText = currentUser.name;
       document.getElementById('facultyNav').classList.add('hidden');
       document.getElementById('studentNav').classList.remove('hidden');
+
+      // Pre-select student's registered course and semester in Timetable & Syllabus
+      if (currentUser.course) {
+        var ttC = document.getElementById('ttCourseSelect');
+        var sylC = document.getElementById('sylCourseSelect');
+        if (ttC) ttC.value = currentUser.course;
+        if (sylC) sylC.value = currentUser.course;
+        syncTTSemesters();
+        syncSylSemesters();
+
+        if (currentUser.semester) {
+          var ttS = document.getElementById('ttSemSelect');
+          var sylS = document.getElementById('sylSemSelect');
+          if (ttS) ttS.value = currentUser.semester;
+          if (sylS) sylS.value = currentUser.semester;
+        }
+      }
+
       navigateView('studentDashboard');
       loadStudentPortalData();
     }
@@ -956,20 +1042,29 @@
     }
 
     function navigateView(viewName) {
-      ['facultyDashboardView', 'attendanceLogsView', 'reportsExportView', 'studentDashboardView'].forEach(function(id) {
+      // Hide all content panels
+      ['facultyDashboardView', 'attendanceLogsView', 'reportsExportView', 'timetableView', 'syllabusView', 'studentDashboardView'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.classList.add('hidden');
       });
-      ['btnNavDash', 'btnNavLogs', 'btnNavReports'].forEach(function(id) {
+
+      // Clear desktop active states
+      ['btnNavDash', 'btnNavLogs', 'btnNavReports', 'btnNavTimetable', 'btnNavSyllabus', 'btnNavStudentDash', 'btnNavStudentTimetable', 'btnNavStudentSyllabus'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) {
           el.classList.remove('nav-active');
           el.classList.add('text-slate-600');
         }
       });
-      ['mBtnDash', 'mBtnLogs', 'mBtnReports'].forEach(function(id) {
+
+      // Clear mobile active states
+      ['mBtnDash', 'mBtnLogs', 'mBtnReports', 'mBtnStudentDash', 'mBtnStudentTT', 'mBtnStudentSyl'].forEach(function(id) {
         var el = document.getElementById(id);
-        if (el) el.classList.remove('mobile-nav-active');
+        if (el) {
+          el.classList.remove('mobile-nav-active');
+          el.classList.remove('text-blue-600', 'font-bold');
+          el.classList.add('text-slate-500');
+        }
       });
 
       if (viewName === 'facultyDashboard') {
@@ -987,30 +1082,50 @@
         document.getElementById('btnNavReports')?.classList.add('nav-active');
         document.getElementById('mBtnReports')?.classList.add('mobile-nav-active');
         syncExportSemesters();
+      } else if (viewName === 'timetableView') {
+        document.getElementById('timetableView').classList.remove('hidden');
+        document.getElementById('btnNavTimetable')?.classList.add('nav-active');
+        document.getElementById('btnNavStudentTimetable')?.classList.add('nav-active');
+        var mBtnTT = document.getElementById('mBtnStudentTT');
+        if (mBtnTT) {
+          mBtnTT.classList.remove('text-slate-500');
+          mBtnTT.classList.add('text-blue-600', 'font-bold');
+        }
+        syncTTSemesters();
+      } else if (viewName === 'syllabusView') {
+        document.getElementById('syllabusView').classList.remove('hidden');
+        document.getElementById('btnNavSyllabus')?.classList.add('nav-active');
+        document.getElementById('btnNavStudentSyllabus')?.classList.add('nav-active');
+        var mBtnSyl = document.getElementById('mBtnStudentSyl');
+        if (mBtnSyl) {
+          mBtnSyl.classList.remove('text-slate-500');
+          mBtnSyl.classList.add('text-blue-600', 'font-bold');
+        }
+        syncSylSemesters();
       } else if (viewName === 'studentDashboard') {
         document.getElementById('studentDashboardView').classList.remove('hidden');
+        document.getElementById('btnNavStudentDash')?.classList.add('nav-active');
+        var mBtnSD = document.getElementById('mBtnStudentDash');
+        if (mBtnSD) {
+          mBtnSD.classList.remove('text-slate-500');
+          mBtnSD.classList.add('text-blue-600', 'font-bold');
+        }
       }
     }
 
     function populateCourseDropdowns() {
-      var courseSelect = document.getElementById('courseSelect');
-      var exportCourseSelect = document.getElementById('exportCourseSelect');
+      var dropdownIds = ['courseSelect', 'exportCourseSelect', 'ttCourseSelect', 'sylCourseSelect'];
       
-      if (courseSelect) courseSelect.innerHTML = '';
-      if (exportCourseSelect) exportCourseSelect.innerHTML = '';
-
-      Object.keys(ACADEMIC_MAP).forEach(function(c) {
-        if (courseSelect) {
-          var opt = document.createElement('option');
-          opt.value = c;
-          opt.innerText = c;
-          courseSelect.appendChild(opt);
-        }
-        if (exportCourseSelect) {
-          var opt2 = document.createElement('option');
-          opt2.value = c;
-          opt2.innerText = c;
-          exportCourseSelect.appendChild(opt2);
+      dropdownIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.innerHTML = '';
+          Object.keys(ACADEMIC_MAP).forEach(function(c) {
+            var opt = document.createElement('option');
+            opt.value = c;
+            opt.innerText = c;
+            el.appendChild(opt);
+          });
         }
       });
     }
@@ -1061,13 +1176,88 @@
     }
 
     // -------------------------------------------------------------
-    // FACULTY DASHBOARD: METRICS & RECENT TABLE ENGINE
+    // TIMETABLE & SYLLABUS SYNC & COMING SOON RENDERER
+    // -------------------------------------------------------------
+    function syncTTSemesters() {
+      var cSelect = document.getElementById('ttCourseSelect');
+      var sSelect = document.getElementById('ttSemSelect');
+      if (!cSelect || !sSelect) return;
+      var course = cSelect.value;
+      sSelect.innerHTML = '';
+      if (!ACADEMIC_MAP[course]) return;
+      ACADEMIC_MAP[course].semesters.forEach(function(s) {
+        var opt = document.createElement('option');
+        opt.value = s;
+        opt.innerText = s;
+        sSelect.appendChild(opt);
+      });
+    }
+
+    function syncSylSemesters() {
+      var cSelect = document.getElementById('sylCourseSelect');
+      var sSelect = document.getElementById('sylSemSelect');
+      if (!cSelect || !sSelect) return;
+      var course = cSelect.value;
+      sSelect.innerHTML = '';
+      if (!ACADEMIC_MAP[course]) return;
+      ACADEMIC_MAP[course].semesters.forEach(function(s) {
+        var opt = document.createElement('option');
+        opt.value = s;
+        opt.innerText = s;
+        sSelect.appendChild(opt);
+      });
+    }
+
+    function renderComingSoon(type) {
+      var isTT = type === 'timetable';
+      var courseId = isTT ? 'ttCourseSelect' : 'sylCourseSelect';
+      var semId = isTT ? 'ttSemSelect' : 'sylSemSelect';
+      var containerId = isTT ? 'ttResultContainer' : 'sylResultContainer';
+
+      var course = document.getElementById(courseId)?.value || 'Selected Course';
+      var sem = document.getElementById(semId)?.value || 'Selected Term';
+      var container = document.getElementById(containerId);
+      if (!container) return;
+
+      var typeTitle = isTT ? 'Academic Timetable' : 'Course Syllabus';
+      var iconClass = isTT ? 'fa-solid fa-calendar-days' : 'fa-solid fa-book-open';
+      var accentColor = isTT ? 'blue' : 'indigo';
+
+      container.innerHTML = `
+        <div class="rounded-3xl border border-${accentColor}-100/90 bg-gradient-to-br from-${accentColor}-50/60 via-white/90 to-slate-50/70 p-6 md:p-10 text-center shadow-xs relative overflow-hidden transition-all">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-${accentColor}-100/80 text-${accentColor}-700 text-[10px] md:text-[11px] font-bold tracking-wider uppercase mb-3 shadow-2xs">
+            <span class="w-2 h-2 rounded-full bg-${accentColor}-600 animate-ping"></span> Under Academic Review
+          </div>
+          
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-3xl bg-${accentColor}-600/10 text-${accentColor}-600 border border-${accentColor}-200/80 flex items-center justify-center mx-auto mb-3 text-2xl md:text-3xl shadow-inner">
+            <i class="${iconClass}"></i>
+          </div>
+
+          <h3 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Coming Soon</h3>
+          <div class="text-xs md:text-sm font-semibold text-${accentColor}-700 mt-1">
+            ${course} • ${sem} • ${typeTitle}
+          </div>
+
+          <p class="text-xs text-slate-500 max-w-md mx-auto mt-2 leading-relaxed">
+            The digitized ${typeTitle.toLowerCase()} for this curriculum is currently being finalized in accordance with Gujarat Technological University and Pharmacy Council of India regulations. It will appear here shortly.
+          </p>
+
+          <div class="inline-flex flex-wrap items-center justify-center gap-3 md:gap-4 mt-5 pt-5 border-t border-slate-200/70 text-[11px] text-slate-400 font-mono">
+            <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-500"></i> GTU Syllabus Compliance</span>
+            <span>•</span>
+            <span>Academic Session 2026-2027</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // -------------------------------------------------------------
+    // FACULTY DASHBOARD: METRICS & RECENT SESSIONS TABLE
     // -------------------------------------------------------------
     async function loadFacultyDashboardMetrics() {
       if (!db) return;
       var thisMonth = getCurrentMonthString();
 
-      // Fetch all attendance logs ordered descending (latest on top)
       var { data: allLogs } = await db.from('attendance_logs')
         .select('*')
         .order('session_date', { ascending: false })
@@ -1076,10 +1266,8 @@
       var logs = allLogs || [];
       var monthlyLogs = logs.filter(function(l) { return l.session_date.startsWith(thisMonth); });
 
-      // KPI Card 1: Count of monthly classes
       document.getElementById('statMonthlyClasses').innerText = monthlyLogs.length;
 
-      // KPI Card 2: Average attendance percentage across all monthly sessions
       var { data: allRecords } = await db.from('attendance_records').select('log_id, status');
       var records = allRecords || [];
 
@@ -1093,7 +1281,6 @@
       }
       document.getElementById('statAvgAttendance').innerText = avgPct + '%';
 
-      // Render Recent Attendance Sessions Table (Matched to screenshot format)
       var tbody = document.getElementById('dashRecentSessionsTableBody');
       tbody.innerHTML = '';
 
@@ -1146,7 +1333,6 @@
       });
     }
 
-    // Export 1: Single Session Excel (Auto-Fitted Widths)
     async function exportSingleSessionExcel(logId) {
       if (!db) return;
       var { data: log } = await db.from('attendance_logs').select('*').eq('id', logId).single();
@@ -1177,7 +1363,9 @@
       XLSX.writeFile(wb, fileName);
     }
 
-    // Take Attendance
+    // -------------------------------------------------------------
+    // TAKE ATTENDANCE IN MODAL
+    // -------------------------------------------------------------
     async function loadStudentRoster() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var course = document.getElementById('courseSelect').value;
@@ -1343,7 +1531,9 @@
       }
     }
 
-    // Attendance Logs & Editing
+    // -------------------------------------------------------------
+    // ATTENDANCE LOGS & EDITING SESSIONS
+    // -------------------------------------------------------------
     async function renderLogs() {
       if (!db) return;
       var monthStr = document.getElementById('logMonthFilter').value;
@@ -1532,7 +1722,7 @@
       document.getElementById('editAttendanceModal').classList.add('hidden');
     }
 
-    // Export 2: Faculty Matrix Excel (Auto-Fitted Widths)
+    // Export 2: Faculty Matrix Excel
     async function downloadFacultyMatrixExcel() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var course = document.getElementById('exportCourseSelect').value;
@@ -1609,7 +1799,7 @@
       XLSX.writeFile(wb, cleanFileName);
     }
 
-    // Export 3: Defaulters List Excel (Auto-Fitted Widths)
+    // Export 3: Defaulters List Excel
     async function downloadDefaultersExcel() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var course = document.getElementById('exportCourseSelect').value;
@@ -1687,7 +1877,9 @@
       XLSX.writeFile(wb, fileName);
     }
 
-    // Student Refresh & Sync
+    // -------------------------------------------------------------
+    // STUDENT PORTAL REFRESH & EXPORT
+    // -------------------------------------------------------------
     async function refreshStudentData(btn) {
       if (!currentUser || !db) return;
       var icon = btn ? btn.querySelector('i') : null;
@@ -1802,7 +1994,6 @@
       });
     }
 
-    // Export 4: Student Attendance Report (Auto-Fitted Widths)
     async function downloadStudentReportExcel() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var month = document.getElementById('studentExportMonth').value;
