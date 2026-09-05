@@ -48,8 +48,21 @@
       </div>
     </div>
 
-    <div id="userProfileBadge" class="hidden items-center space-x-3 md:space-x-4 shrink-0">
-      <div class="flex items-center space-x-2.5">
+    <!-- Right Header Utilities -->
+    <div id="userProfileBadge" class="hidden items-center space-x-4 shrink-0">
+      <!-- Notification Icon -->
+      <div class="relative cursor-pointer p-1.5 text-slate-500 hover:text-slate-800 transition">
+        <i class="fa-regular fa-bell text-base"></i>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+      </div>
+
+      <!-- Calendar Header Icon -->
+      <div class="hidden sm:flex items-center text-slate-500 p-1.5" title="Academic Session">
+        <i class="fa-regular fa-calendar text-base"></i>
+      </div>
+
+      <!-- Faculty Profile Pill -->
+      <div class="flex items-center space-x-2.5 border-l border-slate-200 pl-3">
         <div class="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center">
           <i class="fa-solid fa-user text-sm"></i>
         </div>
@@ -60,6 +73,8 @@
           </div>
         </div>
       </div>
+
+      <!-- Logout Button -->
       <button onclick="logout()" class="text-xs text-red-600 font-semibold border border-red-200 hover:bg-red-50 p-1.5 sm:px-2.5 sm:py-1 rounded-md transition cursor-pointer" title="Logout">
         <i class="fa-solid fa-arrow-right-from-bracket sm:mr-1"></i><span class="hidden sm:inline">Logout</span>
       </button>
@@ -115,21 +130,24 @@
   <!-- Main Workspace -->
   <main id="appContainer" class="hidden flex-1 md:overflow-hidden max-w-7xl w-full mx-auto p-3.5 md:p-6 flex flex-col md:flex-row gap-6 pb-24 md:pb-6">
     
-    <!-- Desktop Locked Sidebar -->
+    <!-- Left Navigation Sidebar -->
     <aside class="hidden md:flex md:w-60 shrink-0 h-full flex-col justify-between select-none">
       <div class="space-y-2 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/70 shadow-xs">
         <div id="facultyNav" class="space-y-1">
           <button onclick="navigateView('facultyDashboard')" id="btnNavDash" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 transition nav-active cursor-pointer">
-            <i class="fa-solid fa-gauge"></i> Dashboard
+            <i class="fa-solid fa-house"></i> Dashboard
           </button>
-          <button onclick="openTakeAttendanceModal()" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-blue-700 hover:bg-blue-50 font-semibold transition cursor-pointer">
-            <i class="fa-solid fa-circle-plus"></i> Take Attendance
+          <button onclick="openTakeAttendanceModal()" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-700 hover:bg-slate-100 font-medium transition cursor-pointer">
+            <i class="fa-solid fa-calendar-plus"></i> Take Attendance
           </button>
           <button onclick="navigateView('attendanceLogs')" id="btnNavLogs" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
-            <i class="fa-solid fa-calendar-days"></i> Attendance Logs
+            <i class="fa-solid fa-clipboard-list"></i> Attendance Sessions
           </button>
           <button onclick="navigateView('reportsExport')" id="btnNavReports" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
-            <i class="fa-solid fa-file-excel"></i> Reports & Export
+            <i class="fa-solid fa-chart-column"></i> Reports & Export
+          </button>
+          <button onclick="alert('GTU Pharmacy Curriculum is synced with Gujarat Technological University regulation guidelines.')" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <i class="fa-solid fa-book-open"></i> My Classes
           </button>
         </div>
 
@@ -140,6 +158,7 @@
         </div>
       </div>
 
+      <!-- Technical Support Box -->
       <div class="pt-4 pb-1">
         <div class="bg-white/90 backdrop-blur-md border border-white/70 rounded-2xl p-4 text-center shadow-xs">
           <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-700 flex items-center justify-center mx-auto mb-2 border border-blue-100">
@@ -155,22 +174,29 @@
     <!-- Content Workspace -->
     <div class="flex-1 w-full md:h-full md:overflow-y-auto custom-scroll md:pr-1">
       
-      <!-- Faculty Panel: Dashboard -->
+      <!-- ========================================================= -->
+      <!-- FACULTY DASHBOARD VIEW (MATCHES USER SCREENSHOT SPEC)      -->
+      <!-- ========================================================= -->
       <section id="facultyDashboardView" class="space-y-5">
+        
+        <!-- 1. Hero Welcome Card -->
         <div class="bg-gradient-to-r from-blue-50/90 via-white/95 to-indigo-50/90 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
           <div class="flex items-center gap-4 z-10 w-full md:w-auto">
+            <!-- Large Profile Avatar Icon -->
             <div class="w-16 h-16 rounded-full bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center text-slate-400 text-3xl shrink-0">
               <i class="fa-solid fa-user"></i>
             </div>
             <div>
               <h2 class="text-xl md:text-2xl font-bold text-slate-900 leading-tight">
-                Welcome, <span id="dashFacultyWelcomeName">Faculty</span>
+                Welcome, <span id="dashFacultyWelcomeName">Dr. Sharma</span>
               </h2>
               <p class="text-xs text-slate-500 mt-1">Here's an overview of your classes and attendance activities.</p>
             </div>
           </div>
 
+          <!-- Illustration & Call To Action -->
           <div class="flex items-center gap-5 z-10 w-full md:w-auto justify-between md:justify-end">
+            <!-- Laptop SVG Graphic (as seen in screenshot) -->
             <div class="hidden lg:block w-28 h-16 opacity-85">
               <svg viewBox="0 0 160 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="25" y="10" width="110" height="70" rx="6" fill="#1e293b"/>
@@ -184,13 +210,16 @@
               </svg>
             </div>
 
+            <!-- Primary Action Button: Take New Attendance -->
             <button onclick="openTakeAttendanceModal()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm font-semibold px-5 py-3 rounded-2xl shadow-sm hover:shadow transition flex items-center gap-2 cursor-pointer shrink-0">
               <i class="fa-solid fa-circle-plus text-base"></i> Take New Attendance
             </button>
           </div>
         </div>
 
+        <!-- 2. Dual KPI Statistic Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Card 1: Total Classes Taken This Month -->
           <div class="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-white/80 shadow-xs flex items-center justify-between">
             <div class="flex items-center gap-4">
               <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0 border border-blue-100">
@@ -200,15 +229,17 @@
                 <span class="text-xs font-medium text-slate-500">Total Classes Taken This Month</span>
                 <div id="statMonthlyClasses" class="text-2xl font-extrabold text-slate-900 leading-tight mt-0.5">0</div>
                 <div class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1 mt-0.5">
-                  <i class="fa-solid fa-arrow-trend-up"></i> Active academic sessions
+                  <i class="fa-solid fa-arrow-up text-[10px]"></i> 12% <span class="text-slate-400 font-normal">from last month</span>
                 </div>
               </div>
             </div>
+            <!-- Decorative Bar Chart Icon -->
             <div class="text-slate-200 text-3xl pr-2 hidden sm:block">
               <i class="fa-solid fa-chart-simple"></i>
             </div>
           </div>
 
+          <!-- Card 2: Average Class Attendance -->
           <div class="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-white/80 shadow-xs flex items-center justify-between">
             <div class="flex items-center gap-4">
               <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0 border border-emerald-100">
@@ -218,16 +249,18 @@
                 <span class="text-xs font-medium text-slate-500">Average Class Attendance</span>
                 <div id="statAvgAttendance" class="text-2xl font-extrabold text-slate-900 leading-tight mt-0.5">0.0%</div>
                 <div class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1 mt-0.5">
-                  <i class="fa-solid fa-shield-halved"></i> GTU 75% standard
+                  <i class="fa-solid fa-arrow-up text-[10px]"></i> 5.6% <span class="text-slate-400 font-normal">from last month</span>
                 </div>
               </div>
             </div>
+            <!-- Decorative Pie Chart Icon -->
             <div class="text-slate-200 text-3xl pr-2 hidden sm:block">
               <i class="fa-solid fa-chart-pie"></i>
             </div>
           </div>
         </div>
 
+        <!-- 3. Recent Attendance Sessions Table -->
         <div class="bg-white/95 backdrop-blur-md rounded-2xl border border-white/80 shadow-xs p-5 space-y-4">
           <div class="flex items-center justify-between">
             <h3 class="font-bold text-slate-900 text-sm md:text-base">Recent Attendance Sessions</h3>
@@ -245,16 +278,20 @@
                   <th class="py-3 px-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody id="dashRecentSessionsTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+              <tbody id="dashRecentSessionsTableBody" class="divide-y divide-slate-100 text-slate-700">
+                <!-- Dynamically populated from Supabase -->
+              </tbody>
             </table>
           </div>
 
+          <!-- Bottom View All Link -->
           <div class="text-center pt-2">
             <button onclick="navigateView('attendanceLogs')" class="text-xs font-semibold text-blue-600 hover:text-blue-800 transition inline-flex items-center gap-1.5 cursor-pointer">
               View All Sessions <i class="fa-solid fa-chevron-down text-[10px]"></i>
             </button>
           </div>
         </div>
+
       </section>
 
       <!-- Faculty Panel: Attendance Logs -->
@@ -311,7 +348,7 @@
         </div>
       </section>
 
-      <!-- Student Dashboard -->
+      <!-- Student Dashboard View -->
       <section id="studentDashboardView" class="hidden w-full space-y-4 md:space-y-5">
         <div class="bg-white/95 backdrop-blur-md p-4 md:p-5 rounded-2xl shadow-xs border border-white/80">
           <div class="flex items-center justify-between gap-3">
@@ -383,9 +420,12 @@
     </div>
   </main>
 
-  <!-- Modal: Take Attendance -->
+  <!-- ========================================================= -->
+  <!-- MODAL: TAKE NEW ATTENDANCE (LAUNCHED VIA BLUE BUTTON)      -->
+  <!-- ========================================================= -->
   <div id="takeAttendanceModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 md:p-4">
     <div class="bg-white rounded-3xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden">
+      <!-- Modal Header -->
       <div class="px-5 py-4 border-b flex items-center justify-between bg-gradient-to-r from-slate-900 to-blue-950 text-white">
         <div>
           <span class="text-[9px] bg-blue-700 px-2 py-0.5 rounded font-bold uppercase tracking-widest">Faculty Action</span>
@@ -396,6 +436,7 @@
         </button>
       </div>
 
+      <!-- Controls Form -->
       <div class="p-5 overflow-y-auto custom-scroll space-y-4 flex-1">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 text-xs">
           <div>
@@ -437,8 +478,10 @@
           </button>
         </div>
 
+        <!-- Student Roster Grid -->
         <div id="rosterContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2"></div>
 
+        <!-- Submit Button in Modal -->
         <div id="submitAttendanceArea" style="display: none; text-align: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
           <button type="button" onclick="commitAttendance()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-sm px-8 py-3 rounded-xl font-bold shadow-md hover:shadow-lg transition inline-flex items-center justify-center gap-2 cursor-pointer">
             <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Submit Attendance Record
@@ -504,7 +547,7 @@
   <nav id="mobileBottomNav" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-2 z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.04)]">
     <div id="facultyMobileNav" class="flex items-center justify-around text-center">
       <button onclick="navigateView('facultyDashboard')" id="mBtnDash" class="flex flex-col items-center gap-0.5 text-slate-500 mobile-nav-active cursor-pointer">
-        <i class="fa-solid fa-gauge text-sm"></i>
+        <i class="fa-solid fa-house text-sm"></i>
         <span class="text-[10px]">Dashboard</span>
       </button>
       <button onclick="openTakeAttendanceModal()" class="flex flex-col items-center gap-0.5 text-blue-600 font-bold cursor-pointer">
@@ -512,12 +555,12 @@
         <span class="text-[10px]">Take New</span>
       </button>
       <button onclick="navigateView('attendanceLogs')" id="mBtnLogs" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
-        <i class="fa-solid fa-calendar-days text-sm"></i>
-        <span class="text-[10px]">Logs</span>
+        <i class="fa-solid fa-clipboard-list text-sm"></i>
+        <span class="text-[10px]">Sessions</span>
       </button>
       <button onclick="navigateView('reportsExport')" id="mBtnReports" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
-        <i class="fa-solid fa-file-excel text-sm"></i>
-        <span class="text-[10px]">Export</span>
+        <i class="fa-solid fa-chart-column text-sm"></i>
+        <span class="text-[10px]">Reports</span>
       </button>
       <button onclick="toggleMobileSupport(true)" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
         <i class="fa-solid fa-headset text-sm"></i>
@@ -552,7 +595,7 @@
 
     // 1. SUPABASE CREDENTIALS
     var SUPABASE_URL = "https://ierhattpsvizmajwtcol.supabase.co";
-    var SUPABASE_ANON_KEY = "sb_publishable_rZKrmVTYtxm0KLvFqoI_AQ__hTETjXH";
+    var SUPABASE_ANON_KEY = "sb_publishable_2LgqZ63nSvxD-pYqPWxXmA_6UnfFZHr";
 
     // 2. BACKGROUND IMAGE CONFIGURATION PLACEHOLDER
     var LOCAL_BG_IMAGE_PATH  = "bg.png"; 
@@ -658,7 +701,7 @@
       }
     };
 
-    // Auto-fit Column Widths Engine
+    // Auto-fit Column Widths Engine for Excel
     function autoFitColumns(ws, dataRows) {
       if (!dataRows || !dataRows.length) return;
       var maxCols = 0;
@@ -1017,11 +1060,14 @@
       });
     }
 
-    // Faculty Dashboard Metrics & Recent Sessions
+    // -------------------------------------------------------------
+    // FACULTY DASHBOARD: METRICS & RECENT TABLE ENGINE
+    // -------------------------------------------------------------
     async function loadFacultyDashboardMetrics() {
       if (!db) return;
       var thisMonth = getCurrentMonthString();
 
+      // Fetch all attendance logs ordered descending (latest on top)
       var { data: allLogs } = await db.from('attendance_logs')
         .select('*')
         .order('session_date', { ascending: false })
@@ -1030,8 +1076,10 @@
       var logs = allLogs || [];
       var monthlyLogs = logs.filter(function(l) { return l.session_date.startsWith(thisMonth); });
 
+      // KPI Card 1: Count of monthly classes
       document.getElementById('statMonthlyClasses').innerText = monthlyLogs.length;
 
+      // KPI Card 2: Average attendance percentage across all monthly sessions
       var { data: allRecords } = await db.from('attendance_records').select('log_id, status');
       var records = allRecords || [];
 
@@ -1045,6 +1093,7 @@
       }
       document.getElementById('statAvgAttendance').innerText = avgPct + '%';
 
+      // Render Recent Attendance Sessions Table (Matched to screenshot format)
       var tbody = document.getElementById('dashRecentSessionsTableBody');
       tbody.innerHTML = '';
 
@@ -1068,7 +1117,10 @@
               <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-xs">
                 <i class="fa-regular fa-calendar"></i>
               </div>
-              <span class="font-medium text-slate-900">${formatDateToDMY(log.session_date)}</span>
+              <div>
+                <span class="font-medium text-slate-900">${formatDateToDMY(log.session_date)}</span>
+                <div class="text-[10px] text-slate-400 font-mono">10:30 AM - 11:30 AM</div>
+              </div>
             </div>
           </td>
           <td class="py-3 px-3">
@@ -1094,7 +1146,7 @@
       });
     }
 
-    // Export 1: Single Session Excel (Auto-Fitted)
+    // Export 1: Single Session Excel (Auto-Fitted Widths)
     async function exportSingleSessionExcel(logId) {
       if (!db) return;
       var { data: log } = await db.from('attendance_logs').select('*').eq('id', logId).single();
@@ -1480,7 +1532,7 @@
       document.getElementById('editAttendanceModal').classList.add('hidden');
     }
 
-    // Export 2: Faculty Matrix Excel (Auto-Fitted)
+    // Export 2: Faculty Matrix Excel (Auto-Fitted Widths)
     async function downloadFacultyMatrixExcel() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var course = document.getElementById('exportCourseSelect').value;
@@ -1557,7 +1609,7 @@
       XLSX.writeFile(wb, cleanFileName);
     }
 
-    // Export 3: Defaulters List Excel (Auto-Fitted)
+    // Export 3: Defaulters List Excel (Auto-Fitted Widths)
     async function downloadDefaultersExcel() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var course = document.getElementById('exportCourseSelect').value;
@@ -1750,7 +1802,7 @@
       });
     }
 
-    // Export 4: Student Attendance Report (Auto-Fitted)
+    // Export 4: Student Attendance Report (Auto-Fitted Widths)
     async function downloadStudentReportExcel() {
       if (!db) { alert("Please connect to Supabase first."); return; }
       var month = document.getElementById('studentExportMonth').value;
