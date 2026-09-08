@@ -1158,71 +1158,71 @@
       }
     }
 
-    async function handleLogin() {
-      var id = document.getElementById('loginIdInput').value.trim();
-      var pwd = document.getElementById('loginPasswordInput').value.trim();
-      var errBox = document.getElementById('loginError');
-      errBox.classList.add('hidden');
+async function handleLogin() {
+  var id = document.getElementById('loginIdInput').value.trim();
+  var pwd = document.getElementById('loginPasswordInput').value.trim();
+  var errBox = document.getElementById('loginError');
+  errBox.classList.add('hidden');
 
-      if (!id || !pwd) {
-        showError("Please enter both ID and password.");
+  if (!id || !pwd) {
+    showError("Please enter both ID and password.");
+    return;
+  }
+
+  // 1. UNIVERSAL ADMIN AUTO-DETECT (Works regardless of which tab is active)
+  if (id.toUpperCase() === ADMIN_CONFIG.id.toUpperCase() && pwd === ADMIN_CONFIG.password) {
+    currentUser = {
+      id: ADMIN_CONFIG.id,
+      name: ADMIN_CONFIG.name,
+      role: 'admin'
+    };
+    setupAdminSession();
+    return;
+  } else if (currentRole === 'admin') {
+    showError("Invalid Admin Username or Password.");
+    return;
+  }
+
+  // 2. SUPABASE INITIALIZATION CHECK FOR FACULTY & STUDENTS
+  if (!db) {
+    try {
+      if (typeof supabase !== 'undefined' && SUPABASE_URL && SUPABASE_URL !== "YOUR_SUPABASE_URL") {
+        db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      } else {
+        showError("Please configure your Supabase credentials in the script tag.");
         return;
       }
-
-      // Check Admin Login (Single master credential)
-      if (currentRole === 'admin') {
-        if (id === ADMIN_CONFIG.id && pwd === ADMIN_CONFIG.password) {
-          currentUser = {
-            id: ADMIN_CONFIG.id,
-            name: ADMIN_CONFIG.name,
-            role: 'admin'
-          };
-          setupAdminSession();
-          return;
-        } else {
-          showError("Invalid Admin Username or Password.");
-          return;
-        }
-      }
-
-      if (!db) {
-        try {
-          if (typeof supabase !== 'undefined' && SUPABASE_URL && SUPABASE_URL !== "YOUR_SUPABASE_URL") {
-            db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-          } else {
-            showError("Please enter your Supabase URL & Anon Key in the script tag.");
-            return;
-          }
-        } catch (e) {
-          showError("Supabase connection failure: " + e.message);
-          return;
-        }
-      }
-
-      try {
-        if (currentRole === 'faculty') {
-          var res = await db.from('faculty').select('*').eq('faculty_id', id).eq('password', pwd);
-          if (res.error) throw res.error;
-          if (!res.data || res.data.length === 0) {
-            showError("Invalid Faculty ID or Password.");
-            return;
-          }
-          currentUser = res.data[0];
-          setupFacultySession();
-        } else {
-          var resStudent = await db.from('students').select('*').eq('enrollment_no', id).eq('password', pwd);
-          if (resStudent.error) throw resStudent.error;
-          if (!resStudent.data || resStudent.data.length === 0) {
-            showError("Invalid Enrollment ID or Password.");
-            return;
-          }
-          currentUser = resStudent.data[0];
-          setupStudentSession();
-        }
-      } catch (err) {
-        showError(err.message || "Database connection error.");
-      }
+    } catch (e) {
+      showError("Supabase connection failure: " + e.message);
+      return;
     }
+  }
+
+  // 3. FACULTY & STUDENT AUTHENTICATION
+  try {
+    if (currentRole === 'faculty') {
+      var res = await db.from('faculty').select('*').eq('faculty_id', id).eq('password', pwd);
+      if (res.error) throw res.error;
+      if (!res.data || res.data.length === 0) {
+        showError("Invalid Faculty ID or Password.");
+        return;
+      }
+      currentUser = res.data[0];
+      setupFacultySession();
+    } else {
+      var resStudent = await db.from('students').select('*').eq('enrollment_no', id).eq('password', pwd);
+      if (resStudent.error) throw resStudent.error;
+      if (!resStudent.data || resStudent.data.length === 0) {
+        showError("Invalid Enrollment ID or Password.");
+        return;
+      }
+      currentUser = resStudent.data[0];
+      setupStudentSession();
+    }
+  } catch (err) {
+    showError(err.message || "Database connection error.");
+  }
+}
 
     function showError(msg) {
       var errBox = document.getElementById('loginError');
