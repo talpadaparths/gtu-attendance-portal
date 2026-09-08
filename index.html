@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sardar Patel College of Pharmacy - Attendance Portal</title>
+  <title>Gujarat Technological University - Attendance Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
@@ -43,15 +43,13 @@
         >
       </div>
       <div class="truncate">
-        <h1 class="text-xs md:text-base font-bold tracking-tight text-slate-900 leading-tight uppercase truncate">Sardar Patel College of Pharmacy</h1>
-        <p class="hidden sm:block text-[9px] md:text-xs text-red-600 font-semibold tracking-wide uppercase truncate">Approved by PCI • Affiliated with GTU Established by Government of Gujarat</p>
+        <h1 class="text-xs md:text-base font-bold tracking-tight text-slate-900 leading-tight uppercase truncate">Gujarat Technological University</h1>
+        <p class="hidden sm:block text-[9px] md:text-xs text-red-600 font-semibold tracking-wide uppercase truncate">International Innovative University • Accredited with A+ Grade by NAAC</p>
       </div>
     </div>
 
     <!-- Right Header Utilities -->
     <div id="userProfileBadge" class="hidden items-center space-x-3 sm:space-x-4 shrink-0">
-      
-      <!-- Live Notification Button with Counter Badge -->
       <button 
         type="button" 
         id="topBarNotifBtn" 
@@ -63,7 +61,6 @@
         <span id="notifBadgeDot" class="hidden absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>
       </button>
 
-      <!-- Live Interactive Calendar Button -->
       <button 
         type="button" 
         id="topBarCalBtn" 
@@ -74,20 +71,18 @@
         <i class="fa-regular fa-calendar text-base"></i>
       </button>
 
-      <!-- User Profile Tag -->
       <div class="flex items-center space-x-2.5 border-l border-slate-200 pl-3">
-        <div class="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center">
+        <div id="userAvatarBox" class="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center">
           <i class="fa-solid fa-user text-sm"></i>
         </div>
         <div class="hidden sm:block text-left">
           <div id="displayUserName" class="text-xs font-bold leading-none text-slate-800"></div>
-          <div class="text-[10px] text-emerald-600 font-medium mt-0.5 flex items-center gap-1">
+          <div id="displayUserRoleStatus" class="text-[10px] text-emerald-600 font-medium mt-0.5 flex items-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active Session
           </div>
         </div>
       </div>
 
-      <!-- Logout Button -->
       <button onclick="logout()" class="text-xs text-red-600 font-semibold border border-red-200 hover:bg-red-50 p-1.5 sm:px-2.5 sm:py-1 rounded-md transition cursor-pointer" title="Logout">
         <i class="fa-solid fa-arrow-right-from-bracket sm:mr-1"></i><span class="hidden sm:inline">Logout</span>
       </button>
@@ -102,15 +97,19 @@
           <i class="fa-solid fa-user-shield"></i>
         </div>
         <h2 class="text-lg md:text-xl font-bold text-slate-900">Welcome Back</h2>
-        <p class="text-xs text-slate-500 mt-1">Login to access SPCP Attendance Portal</p>
+        <p class="text-xs text-slate-500 mt-1">Login to access GTU Attendance Portal</p>
       </div>
 
-      <div class="flex bg-slate-100/90 p-1 rounded-xl mb-6 text-xs font-semibold">
-        <button id="tabStudent" type="button" onclick="switchLoginRole('student')" class="flex-1 py-2 rounded-lg text-slate-600 transition flex items-center justify-center gap-1.5 cursor-pointer">
+      <!-- Role Tabs (Student / Faculty / Admin) -->
+      <div class="flex bg-slate-100/90 p-1 rounded-xl mb-6 text-xs font-semibold gap-1">
+        <button id="tabStudent" type="button" onclick="switchLoginRole('student')" class="flex-1 py-2 rounded-lg text-slate-600 transition flex items-center justify-center gap-1 cursor-pointer">
           <i class="fa-solid fa-graduation-cap"></i> Student
         </button>
-        <button id="tabFaculty" type="button" onclick="switchLoginRole('faculty')" class="flex-1 py-2 rounded-lg text-slate-600 transition flex items-center justify-center gap-1.5 tab-active cursor-pointer">
+        <button id="tabFaculty" type="button" onclick="switchLoginRole('faculty')" class="flex-1 py-2 rounded-lg text-slate-600 transition flex items-center justify-center gap-1 tab-active cursor-pointer">
           <i class="fa-solid fa-chalkboard-user"></i> Faculty
+        </button>
+        <button id="tabAdmin" type="button" onclick="switchLoginRole('admin')" class="flex-1 py-2 rounded-lg text-slate-600 transition flex items-center justify-center gap-1 cursor-pointer">
+          <i class="fa-solid fa-shield-halved"></i> Admin
         </button>
       </div>
 
@@ -145,6 +144,23 @@
     <!-- Left Navigation Sidebar -->
     <aside class="hidden md:flex md:w-60 shrink-0 h-full flex-col justify-between select-none">
       <div class="space-y-2 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/70 shadow-xs">
+        
+        <!-- Admin Navigation -->
+        <div id="adminNav" class="hidden space-y-1">
+          <button onclick="navigateView('adminDashboardView')" id="btnNavAdminDash" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 transition nav-active cursor-pointer">
+            <i class="fa-solid fa-shield-halved"></i> Admin Control
+          </button>
+          <button onclick="navigateView('reportsExport')" id="btnNavAdminReports" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <i class="fa-solid fa-chart-column"></i> Attendance Matrix
+          </button>
+          <button onclick="navigateView('timetableView')" id="btnNavAdminTimetable" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <i class="fa-solid fa-calendar-days"></i> Timetable
+          </button>
+          <button onclick="navigateView('syllabusView')" id="btnNavAdminSyllabus" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <i class="fa-solid fa-book-bookmark"></i> Syllabus
+          </button>
+        </div>
+
         <!-- Faculty Navigation -->
         <div id="facultyNav" class="space-y-1">
           <button onclick="navigateView('facultyDashboard')" id="btnNavDash" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 transition nav-active cursor-pointer">
@@ -197,6 +213,108 @@
     <!-- Content Workspace -->
     <div class="flex-1 w-full md:h-full md:overflow-y-auto custom-scroll md:pr-1">
       
+      <!-- ========================================================= -->
+      <!-- ADMIN CONTROL DASHBOARD (ADD FACULTY & STUDENTS)          -->
+      <!-- ========================================================= -->
+      <section id="adminDashboardView" class="hidden space-y-6">
+        <!-- Hero Header -->
+        <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-bold tracking-widest uppercase mb-2 border border-blue-400/30">
+              <i class="fa-solid fa-shield-halved"></i> Master Administration
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold">University Roster & Faculty Management</h2>
+            <p class="text-xs text-slate-300 mt-1">Register new faculty members or enroll students into GTU courses.</p>
+          </div>
+          <div class="text-xs font-mono bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-slate-200">
+            Secure Admin Session
+          </div>
+        </div>
+
+        <!-- 2 Side-by-Side Cards: Add Faculty & Add Student -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- Card 1: Add New Faculty -->
+          <div class="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg border border-blue-100">
+                  <i class="fa-solid fa-chalkboard-user"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900">Register / Update Faculty</h3>
+                  <p class="text-[11px] text-slate-400">Add a professor or lecturer to the system</p>
+                </div>
+              </div>
+
+              <div class="space-y-3.5 text-xs">
+                <div>
+                  <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Faculty ID (Unique)</label>
+                  <input id="adminFacultyId" type="text" placeholder="e.g. NTHAKORE" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Faculty Full Name</label>
+                  <input id="adminFacultyName" type="text" placeholder="e.g. Ms. Nikita Thakore" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Default Password</label>
+                  <input id="adminFacultyPassword" type="text" placeholder="e.g. Nikita123@SPCP" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+              </div>
+            </div>
+
+            <button type="button" id="btnAdminSaveFaculty" onclick="adminCreateFaculty()" class="mt-6 w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+              <i class="fa-solid fa-user-plus"></i> Save Faculty Member
+            </button>
+          </div>
+
+          <!-- Card 2: Add New Student -->
+          <div class="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg border border-emerald-100">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900">Enroll / Update Student</h3>
+                  <p class="text-[11px] text-slate-400">Assign student to Course & Semester</p>
+                </div>
+              </div>
+
+              <div class="space-y-3.5 text-xs">
+                <div>
+                  <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Enrollment Number (12 Digits)</label>
+                  <input id="adminStudentEnroll" type="text" placeholder="e.g. 252440888017" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Student Full Name</label>
+                  <input id="adminStudentName" type="text" placeholder="e.g. Rahul Sharma" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Degree Course</label>
+                    <select id="adminStudentCourse" onchange="syncAdminStudentSemesters()" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
+                  </div>
+                  <div>
+                    <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Semester / Year</label>
+                    <select id="adminStudentSem" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Student Password</label>
+                  <input id="adminStudentPassword" type="text" placeholder="e.g. RAHUL017@SPCP" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                </div>
+              </div>
+            </div>
+
+            <button type="button" id="btnAdminSaveStudent" onclick="adminCreateStudent()" class="mt-6 w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+              <i class="fa-solid fa-user-check"></i> Enroll Student
+            </button>
+          </div>
+
+        </div>
+      </section>
+
       <!-- Faculty Dashboard View -->
       <section id="facultyDashboardView" class="space-y-5">
         <div class="bg-gradient-to-r from-blue-50/90 via-white/95 to-indigo-50/90 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
@@ -322,7 +440,7 @@
         </div>
       </section>
 
-      <!-- Faculty Panel: Reports & Export -->
+      <!-- Reports & Export -->
       <section id="reportsExportView" class="hidden w-full bg-white/95 backdrop-blur-md p-4 md:p-5 rounded-2xl shadow-xs border border-white/80 space-y-4">
         <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
           <i class="fa-solid fa-file-excel text-emerald-600"></i> Export Attendance Reports (.xlsx)
@@ -487,12 +605,9 @@
     </div>
   </main>
 
-  <!-- ========================================================= -->
-  <!-- MODAL: NOTIFICATIONS & ANNOUNCEMENTS (DUAL FACULTY/STUDENT) -->
-  <!-- ========================================================= -->
+  <!-- Modal: Notifications -->
   <div id="notificationModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 md:p-4">
     <div class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden">
-      <!-- Modal Header -->
       <div class="px-5 py-4 border-b flex items-center justify-between bg-gradient-to-r from-slate-900 to-blue-950 text-white">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-full bg-blue-600/30 flex items-center justify-center text-blue-300">
@@ -508,7 +623,6 @@
         </button>
       </div>
 
-      <!-- FACULTY VIEW: TABS TO SEND OR VIEW HISTORY -->
       <div id="facultyNotifTabs" class="hidden px-5 pt-3 border-b bg-slate-50/70 flex gap-2 text-xs font-semibold">
         <button id="tabBtnSendNotice" onclick="switchFacultyNotifTab('send')" class="px-4 py-2 border-b-2 border-blue-600 text-blue-600 cursor-pointer">
           <i class="fa-solid fa-paper-plane mr-1.5"></i> Send Announcement
@@ -518,10 +632,7 @@
         </button>
       </div>
 
-      <!-- Modal Body -->
       <div class="p-5 overflow-y-auto custom-scroll flex-1 space-y-4">
-        
-        <!-- Faculty Form: Send Announcement -->
         <div id="facultySendNoticeForm" class="hidden space-y-3.5 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
@@ -536,12 +647,12 @@
 
           <div>
             <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Announcement Title</label>
-            <input id="notifTitleInput" type="text" placeholder="e.g. Practical Exam Schedule / Class Postponement" class="w-full border rounded-xl px-3 py-2 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
+            <input id="notifTitleInput" type="text" placeholder="e.g. Practical Exam Schedule" class="w-full border rounded-xl px-3 py-2 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
           </div>
 
           <div>
             <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Notice Content / Instructions</label>
-            <textarea id="notifMessageInput" rows="4" placeholder="Type instructions or message for students of the selected class..." class="w-full border rounded-xl p-3 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none"></textarea>
+            <textarea id="notifMessageInput" rows="4" placeholder="Type instructions or message for students..." class="w-full border rounded-xl p-3 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none"></textarea>
           </div>
 
           <button id="btnSendNotifAction" onclick="sendFacultyNotification()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
@@ -549,26 +660,15 @@
           </button>
         </div>
 
-        <!-- Faculty Sent History List -->
-        <div id="facultyNoticeHistoryContainer" class="hidden space-y-3">
-          <!-- Injected via JavaScript -->
-        </div>
-
-        <!-- Student View: Received Notifications List -->
-        <div id="studentNotificationsContainer" class="hidden space-y-3">
-          <!-- Injected via JavaScript -->
-        </div>
-
+        <div id="facultyNoticeHistoryContainer" class="hidden space-y-3"></div>
+        <div id="studentNotificationsContainer" class="hidden space-y-3"></div>
       </div>
     </div>
   </div>
 
-  <!-- ========================================================= -->
-  <!-- MODAL: INTERACTIVE REAL ACADEMIC CALENDAR                 -->
-  <!-- ========================================================= -->
+  <!-- Modal: Calendar -->
   <div id="calendarModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 md:p-4">
     <div class="bg-white rounded-3xl w-full max-w-md flex flex-col shadow-2xl border border-slate-100 overflow-hidden">
-      <!-- Calendar Header -->
       <div class="px-5 py-4 border-b flex items-center justify-between bg-gradient-to-r from-blue-700 to-indigo-800 text-white">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white">
@@ -584,7 +684,6 @@
         </button>
       </div>
 
-      <!-- Calendar Controls: Month/Year navigation -->
       <div class="px-5 py-3 border-b flex items-center justify-between bg-slate-50/70">
         <button onclick="changeCalendarMonth(-1)" class="w-8 h-8 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center text-xs text-slate-600 transition cursor-pointer">
           <i class="fa-solid fa-chevron-left"></i>
@@ -595,19 +694,13 @@
         </button>
       </div>
 
-      <!-- Calendar Body -->
       <div class="p-5">
-        <!-- Day Names -->
         <div class="grid grid-cols-7 gap-1 text-center font-bold text-[11px] text-slate-400 mb-2">
           <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
         </div>
-        <!-- Days Grid -->
-        <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1 text-xs">
-          <!-- Injected via JavaScript -->
-        </div>
+        <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1 text-xs"></div>
       </div>
 
-      <!-- Calendar Footer -->
       <div class="px-5 py-3 border-t bg-slate-50 flex items-center justify-between text-xs">
         <div class="flex items-center gap-2 text-slate-500 font-medium">
           <span class="w-3 h-3 rounded-full bg-blue-600 ring-2 ring-blue-200 inline-block"></span>
@@ -792,7 +885,7 @@
   <!-- JAVASCRIPT -->
   <script>
     // =========================================================================
-    // ⚙️ CONFIGURATION & IMAGE PATH PLACEHOLDERS
+    // ⚙️ CONFIGURATION & CREDENTIALS
     // =========================================================================
     var SUPABASE_URL = "https://ierhattpsvizmajwtcol.supabase.co";
     var SUPABASE_ANON_KEY = "sb_publishable_rZKrmVTYtxm0KLvFqoI_AQ__hTETjXH";
@@ -803,9 +896,14 @@
     var LOCAL_LOGO_PATH  = "SPCP.png";
     var ONLINE_LOGO_NAME = "SPCP.png";
 
-    // =========================================================================
-    // AUTOMATIC LOCAL VS ONLINE RESOLVER
-    // =========================================================================
+    // 🔒 SINGLE MASTER ADMIN CREDENTIALS
+    var ADMIN_CONFIG = {
+      id: "ADMIN",
+      password: "Admin1@SPCP2026",
+      name: "System Administrator"
+    };
+
+    // Auto-resolve image paths
     var IS_LOCAL_ENV = window.location.protocol === 'file:' || 
                        window.location.hostname === 'localhost' || 
                        window.location.hostname === '127.0.0.1';
@@ -837,7 +935,6 @@
     var editAttendanceState = {};
     var editStudentList = [];
 
-    // Calendar state
     var calendarViewDate = new Date();
 
     try {
@@ -910,20 +1007,16 @@
       });
       
       var colWidths = new Array(maxCols).fill(10);
-
       dataRows.forEach(function(row) {
         if (!Array.isArray(row)) return;
         if (row.length === 1 && maxCols > 2) return;
-
         row.forEach(function(cell, colIdx) {
           var str = cell !== null && cell !== undefined ? String(cell) : '';
           var len = str.length;
           if (str.indexOf('\n') !== -1) {
             len = Math.max.apply(Math, str.split('\n').map(function(l) { return l.length; }));
           }
-          if (len > colWidths[colIdx]) {
-            colWidths[colIdx] = len;
-          }
+          if (len > colWidths[colIdx]) colWidths[colIdx] = len;
         });
       });
 
@@ -1001,6 +1094,7 @@
       syncTTSemesters();
       syncSylSemesters();
       syncNotifSemesters();
+      syncAdminStudentSemesters();
     });
 
     function toggleMobileSupport(show) {
@@ -1035,6 +1129,7 @@
       }
     }
 
+    // Role switcher including Admin
     function switchLoginRole(role) {
       currentRole = role;
       var errBox = document.getElementById('loginError');
@@ -1042,19 +1137,24 @@
 
       var tabStudent = document.getElementById('tabStudent');
       var tabFaculty = document.getElementById('tabFaculty');
+      var tabAdmin = document.getElementById('tabAdmin');
       var loginIdLabel = document.getElementById('loginIdLabel');
       var loginIdInput = document.getElementById('loginIdInput');
 
+      [tabStudent, tabFaculty, tabAdmin].forEach(function(btn) { btn?.classList.remove('tab-active'); });
+
       if (role === 'student') {
         tabStudent.classList.add('tab-active');
-        tabFaculty.classList.remove('tab-active');
         loginIdLabel.innerText = 'Enrollment Number';
         loginIdInput.placeholder = 'e.g. 252440888001';
-      } else {
+      } else if (role === 'faculty') {
         tabFaculty.classList.add('tab-active');
-        tabStudent.classList.remove('tab-active');
         loginIdLabel.innerText = 'Faculty ID';
         loginIdInput.placeholder = 'e.g. NTHAKORE';
+      } else if (role === 'admin') {
+        tabAdmin.classList.add('tab-active');
+        loginIdLabel.innerText = 'Admin Username';
+        loginIdInput.placeholder = 'e.g. ADMIN';
       }
     }
 
@@ -1067,6 +1167,22 @@
       if (!id || !pwd) {
         showError("Please enter both ID and password.");
         return;
+      }
+
+      // Check Admin Login (Single master credential)
+      if (currentRole === 'admin') {
+        if (id === ADMIN_CONFIG.id && pwd === ADMIN_CONFIG.password) {
+          currentUser = {
+            id: ADMIN_CONFIG.id,
+            name: ADMIN_CONFIG.name,
+            role: 'admin'
+          };
+          setupAdminSession();
+          return;
+        } else {
+          showError("Invalid Admin Username or Password.");
+          return;
+        }
       }
 
       if (!db) {
@@ -1114,6 +1230,25 @@
       errBox.classList.remove('hidden');
     }
 
+    // Admin Session Setup
+    function setupAdminSession() {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('appContainer').classList.remove('hidden');
+      document.getElementById('mobileBottomNav').classList.add('hidden'); // Admin works primarily on desktop/tablet
+
+      document.getElementById('userProfileBadge').classList.remove('hidden');
+      document.getElementById('userProfileBadge').classList.add('flex');
+      document.getElementById('displayUserName').innerText = currentUser.name;
+      document.getElementById('displayUserRoleStatus').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> Master Admin';
+
+      document.getElementById('facultyNav').classList.add('hidden');
+      document.getElementById('studentNav').classList.add('hidden');
+      document.getElementById('adminNav').classList.remove('hidden');
+
+      navigateView('adminDashboardView');
+      syncAdminStudentSemesters();
+    }
+
     function setupFacultySession() {
       document.getElementById('authSection').classList.add('hidden');
       document.getElementById('appContainer').classList.remove('hidden');
@@ -1125,6 +1260,9 @@
       document.getElementById('userProfileBadge').classList.add('flex');
       document.getElementById('displayUserName').innerText = currentUser.name;
       document.getElementById('dashFacultyWelcomeName').innerText = currentUser.name;
+      document.getElementById('displayUserRoleStatus').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active Session';
+
+      document.getElementById('adminNav').classList.add('hidden');
       document.getElementById('facultyNav').classList.remove('hidden');
       document.getElementById('studentNav').classList.add('hidden');
       
@@ -1143,6 +1281,9 @@
       document.getElementById('userProfileBadge').classList.remove('hidden');
       document.getElementById('userProfileBadge').classList.add('flex');
       document.getElementById('displayUserName').innerText = currentUser.name;
+      document.getElementById('displayUserRoleStatus').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active Session';
+
+      document.getElementById('adminNav').classList.add('hidden');
       document.getElementById('facultyNav').classList.add('hidden');
       document.getElementById('studentNav').classList.remove('hidden');
 
@@ -1178,12 +1319,12 @@
     }
 
     function navigateView(viewName) {
-      ['facultyDashboardView', 'attendanceLogsView', 'reportsExportView', 'timetableView', 'syllabusView', 'studentDashboardView'].forEach(function(id) {
+      ['adminDashboardView', 'facultyDashboardView', 'attendanceLogsView', 'reportsExportView', 'timetableView', 'syllabusView', 'studentDashboardView'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.classList.add('hidden');
       });
 
-      ['btnNavDash', 'btnNavLogs', 'btnNavReports', 'btnNavTimetable', 'btnNavSyllabus', 'btnNavStudentDash', 'btnNavStudentTimetable', 'btnNavStudentSyllabus'].forEach(function(id) {
+      ['btnNavAdminDash', 'btnNavAdminReports', 'btnNavAdminTimetable', 'btnNavAdminSyllabus', 'btnNavDash', 'btnNavLogs', 'btnNavReports', 'btnNavTimetable', 'btnNavSyllabus', 'btnNavStudentDash', 'btnNavStudentTimetable', 'btnNavStudentSyllabus'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) {
           el.classList.remove('nav-active');
@@ -1191,16 +1332,10 @@
         }
       });
 
-      ['mBtnDash', 'mBtnLogs', 'mBtnReports', 'mBtnStudentDash', 'mBtnStudentTT', 'mBtnStudentSyl'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) {
-          el.classList.remove('mobile-nav-active');
-          el.classList.remove('text-blue-600', 'font-bold');
-          el.classList.add('text-slate-500');
-        }
-      });
-
-      if (viewName === 'facultyDashboard') {
+      if (viewName === 'adminDashboardView') {
+        document.getElementById('adminDashboardView').classList.remove('hidden');
+        document.getElementById('btnNavAdminDash')?.classList.add('nav-active');
+      } else if (viewName === 'facultyDashboard') {
         document.getElementById('facultyDashboardView').classList.remove('hidden');
         document.getElementById('btnNavDash')?.classList.add('nav-active');
         document.getElementById('mBtnDash')?.classList.add('mobile-nav-active');
@@ -1213,41 +1348,28 @@
       } else if (viewName === 'reportsExport') {
         document.getElementById('reportsExportView').classList.remove('hidden');
         document.getElementById('btnNavReports')?.classList.add('nav-active');
-        document.getElementById('mBtnReports')?.classList.add('mobile-nav-active');
+        document.getElementById('btnNavAdminReports')?.classList.add('nav-active');
         syncExportSemesters();
       } else if (viewName === 'timetableView') {
         document.getElementById('timetableView').classList.remove('hidden');
         document.getElementById('btnNavTimetable')?.classList.add('nav-active');
+        document.getElementById('btnNavAdminTimetable')?.classList.add('nav-active');
         document.getElementById('btnNavStudentTimetable')?.classList.add('nav-active');
-        var mBtnTT = document.getElementById('mBtnStudentTT');
-        if (mBtnTT) {
-          mBtnTT.classList.remove('text-slate-500');
-          mBtnTT.classList.add('text-blue-600', 'font-bold');
-        }
         syncTTSemesters();
       } else if (viewName === 'syllabusView') {
         document.getElementById('syllabusView').classList.remove('hidden');
         document.getElementById('btnNavSyllabus')?.classList.add('nav-active');
+        document.getElementById('btnNavAdminSyllabus')?.classList.add('nav-active');
         document.getElementById('btnNavStudentSyllabus')?.classList.add('nav-active');
-        var mBtnSyl = document.getElementById('mBtnStudentSyl');
-        if (mBtnSyl) {
-          mBtnSyl.classList.remove('text-slate-500');
-          mBtnSyl.classList.add('text-blue-600', 'font-bold');
-        }
         syncSylSemesters();
       } else if (viewName === 'studentDashboard') {
         document.getElementById('studentDashboardView').classList.remove('hidden');
         document.getElementById('btnNavStudentDash')?.classList.add('nav-active');
-        var mBtnSD = document.getElementById('mBtnStudentDash');
-        if (mBtnSD) {
-          mBtnSD.classList.remove('text-slate-500');
-          mBtnSD.classList.add('text-blue-600', 'font-bold');
-        }
       }
     }
 
     function populateCourseDropdowns() {
-      var dropdownIds = ['courseSelect', 'exportCourseSelect', 'ttCourseSelect', 'sylCourseSelect', 'notifCourseSelect'];
+      var dropdownIds = ['courseSelect', 'exportCourseSelect', 'ttCourseSelect', 'sylCourseSelect', 'notifCourseSelect', 'adminStudentCourse'];
       dropdownIds.forEach(function(id) {
         var el = document.getElementById(id);
         if (el) {
@@ -1294,11 +1416,9 @@
       var exportCourseSelect = document.getElementById('exportCourseSelect');
       var semSelect = document.getElementById('exportSemSelect');
       if (!exportCourseSelect || !semSelect) return;
-      
       var course = exportCourseSelect.value;
       semSelect.innerHTML = '';
       if (!ACADEMIC_MAP[course]) return;
-
       ACADEMIC_MAP[course].semesters.forEach(function(s) {
         var opt = document.createElement('option');
         opt.value = s;
@@ -1352,6 +1472,103 @@
       });
     }
 
+    function syncAdminStudentSemesters() {
+      var cSelect = document.getElementById('adminStudentCourse');
+      var sSelect = document.getElementById('adminStudentSem');
+      if (!cSelect || !sSelect) return;
+      var course = cSelect.value;
+      sSelect.innerHTML = '';
+      if (!ACADEMIC_MAP[course]) return;
+      ACADEMIC_MAP[course].semesters.forEach(function(s) {
+        var opt = document.createElement('option');
+        opt.value = s;
+        opt.innerText = s;
+        sSelect.appendChild(opt);
+      });
+    }
+
+    // =========================================================================
+    // ADMIN ACTIONS: ADD / UPDATE FACULTY & STUDENTS DIRECTLY IN SUPABASE
+    // =========================================================================
+    async function adminCreateFaculty() {
+      if (!db) { alert("Supabase is not connected."); return; }
+      var fid = document.getElementById('adminFacultyId').value.trim();
+      var fname = document.getElementById('adminFacultyName').value.trim();
+      var fpwd = document.getElementById('adminFacultyPassword').value.trim();
+
+      if (!fid || !fname || !fpwd) {
+        alert("Please complete all Faculty fields (ID, Name, and Password).");
+        return;
+      }
+
+      var btn = document.getElementById('btnAdminSaveFaculty');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving to Database...';
+
+      try {
+        var { error } = await db.from('faculty').upsert([{
+          faculty_id: fid,
+          name: fname,
+          password: fpwd
+        }], { onConflict: 'faculty_id' });
+
+        if (error) throw error;
+
+        alert("Faculty member " + fname + " (" + fid + ") successfully added/updated!");
+        document.getElementById('adminFacultyId').value = '';
+        document.getElementById('adminFacultyName').value = '';
+        document.getElementById('adminFacultyPassword').value = '';
+      } catch (err) {
+        alert("Error saving faculty: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Save Faculty Member';
+      }
+    }
+
+    async function adminCreateStudent() {
+      if (!db) { alert("Supabase is not connected."); return; }
+      var enNo = document.getElementById('adminStudentEnroll').value.trim();
+      var sname = document.getElementById('adminStudentName').value.trim();
+      var scourse = document.getElementById('adminStudentCourse').value;
+      var ssem = document.getElementById('adminStudentSem').value;
+      var spwd = document.getElementById('adminStudentPassword').value.trim();
+
+      if (!enNo || !sname || !spwd) {
+        alert("Please complete all Student fields (Enrollment Number, Name, and Password).");
+        return;
+      }
+
+      var btn = document.getElementById('btnAdminSaveStudent');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enrolling Student...';
+
+      try {
+        var { error } = await db.from('students').upsert([{
+          enrollment_no: enNo,
+          name: sname,
+          course: scourse,
+          semester: ssem,
+          password: spwd
+        }], { onConflict: 'enrollment_no' });
+
+        if (error) throw error;
+
+        alert("Student " + sname + " (" + enNo + ") enrolled successfully into " + scourse + " " + ssem + "!");
+        document.getElementById('adminStudentEnroll').value = '';
+        document.getElementById('adminStudentName').value = '';
+        document.getElementById('adminStudentPassword').value = '';
+      } catch (err) {
+        alert("Error enrolling student: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Enroll Student';
+      }
+    }
+
+    // -------------------------------------------------------------
+    // COMING SOON RENDERER
+    // -------------------------------------------------------------
     function renderComingSoon(type) {
       var isTT = type === 'timetable';
       var courseId = isTT ? 'ttCourseSelect' : 'sylCourseSelect';
@@ -1395,11 +1612,11 @@
       `;
     }
 
-    // =========================================================================
-    // REAL-TIME NOTIFICATION SYSTEM (FACULTY & STUDENT)
-    // =========================================================================
+    // -------------------------------------------------------------
+    // NOTIFICATION ENGINE
+    // -------------------------------------------------------------
     async function checkUnreadNotifications() {
-      if (!db || !currentUser) return;
+      if (!db || !currentUser || currentUser.role === 'admin') return;
       try {
         var dot = document.getElementById('notifBadgeDot');
         if (currentRole === 'student') {
@@ -1427,8 +1644,8 @@
       var facultyHistory = document.getElementById('facultyNoticeHistoryContainer');
       var studentList = document.getElementById('studentNotificationsContainer');
 
-      if (currentRole === 'faculty') {
-        headerTitle.innerText = "Faculty Announcements Portal";
+      if (currentRole === 'faculty' || (currentUser && currentUser.role === 'admin')) {
+        headerTitle.innerText = "Broadcast Announcements Portal";
         facultyTabs.classList.remove('hidden');
         studentList.classList.add('hidden');
         switchFacultyNotifTab('send');
@@ -1485,7 +1702,7 @@
 
       try {
         var { error } = await db.from('notifications').insert([{
-          sender_id: currentUser.faculty_id,
+          sender_id: currentUser.faculty_id || currentUser.id || 'ADMIN',
           sender_name: currentUser.name,
           course: course,
           semester: sem,
@@ -1500,7 +1717,7 @@
         document.getElementById('notifMessageInput').value = '';
         switchFacultyNotifTab('history');
       } catch (err) {
-        alert("Failed to send notification: " + err.message + "\nMake sure you have executed the notifications SQL table code in Supabase.");
+        alert("Failed to send notification: " + err.message);
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Announcement to Class';
@@ -1510,12 +1727,13 @@
     async function loadFacultyNotificationHistory() {
       if (!db || !currentUser) return;
       var container = document.getElementById('facultyNoticeHistoryContainer');
-      container.innerHTML = '<div class="text-xs text-slate-400 p-4 text-center">Loading your announcement history...</div>';
+      container.innerHTML = '<div class="text-xs text-slate-400 p-4 text-center">Loading announcement history...</div>';
 
       try {
+        var senderId = currentUser.faculty_id || currentUser.id || 'ADMIN';
         var { data, error } = await db.from('notifications')
           .select('*')
-          .eq('sender_id', currentUser.faculty_id)
+          .eq('sender_id', senderId)
           .order('id', { ascending: false });
 
         if (error) throw error;
@@ -1596,19 +1814,18 @@
           container.appendChild(card);
         });
 
-        // Hide dot once viewed
         document.getElementById('notifBadgeDot')?.classList.add('hidden');
       } catch (err) {
         container.innerHTML = '<div class="text-xs text-red-500 p-4 text-center">' + err.message + '</div>';
       }
     }
 
-    // =========================================================================
-    // REAL INTERACTIVE ACADEMIC CALENDAR ENGINE
-    // =========================================================================
+    // -------------------------------------------------------------
+    // CALENDAR ENGINE
+    // -------------------------------------------------------------
     function openCalendarModal() {
       document.getElementById('calendarModal').classList.remove('hidden');
-      calendarViewDate = new Date(); // reset to current view
+      calendarViewDate = new Date();
       renderCalendar();
     }
 
@@ -1637,32 +1854,23 @@
 
       var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       monthYearLabel.innerText = monthNames[month] + " " + year;
-
       grid.innerHTML = '';
 
       var firstDayIndex = new Date(year, month, 1).getDay();
       var daysInMonth = new Date(year, month + 1, 0).getDate();
 
-      // Leading blank padding
       for (var b = 0; b < firstDayIndex; b++) {
         var blank = document.createElement('div');
         blank.className = "h-9 w-full";
         grid.appendChild(blank);
       }
 
-      // Populate day cells
       for (var day = 1; day <= daysInMonth; day++) {
-        var isToday = (
-          day === now.getDate() && 
-          month === now.getMonth() && 
-          year === now.getFullYear()
-        );
-
+        var isToday = (day === now.getDate() && month === now.getMonth() && year === now.getFullYear());
         var cell = document.createElement('div');
         cell.className = "h-9 w-full flex items-center justify-center font-medium rounded-xl transition cursor-pointer select-none text-xs";
 
         if (isToday) {
-          // Highlight today's date
           cell.className += " bg-blue-600 text-white font-bold shadow-md shadow-blue-500/30 scale-105 ring-2 ring-blue-300";
         } else {
           cell.className += " text-slate-700 hover:bg-blue-50 hover:text-blue-600";
