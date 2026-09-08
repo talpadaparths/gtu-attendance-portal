@@ -118,7 +118,7 @@
           <label id="loginIdLabel" class="block font-semibold text-slate-600 uppercase tracking-wider mb-1">Faculty ID</label>
           <div class="relative">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-id-badge"></i></span>
-            <input id="loginIdInput" type="text" placeholder="e.g. NTHAKORE" class="w-full pl-9 pr-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-slate-50/80">
+            <input id="loginIdInput" type="text" placeholder="Enter faculty ID" class="w-full pl-9 pr-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-slate-50/80">
           </div>
         </div>
 
@@ -126,7 +126,7 @@
           <label class="block font-semibold text-slate-600 uppercase tracking-wider mb-1">Password</label>
           <div class="relative">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-lock"></i></span>
-            <input id="loginPasswordInput" type="password" placeholder="••••••" class="w-full pl-9 pr-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-slate-50/80">
+            <input id="loginPasswordInput" type="password" placeholder="••••••••" class="w-full pl-9 pr-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-slate-50/80">
           </div>
         </div>
 
@@ -217,7 +217,6 @@
       <!-- ADMIN CONTROL DASHBOARD (ADD FACULTY & STUDENTS)          -->
       <!-- ========================================================= -->
       <section id="adminDashboardView" class="hidden space-y-6">
-        <!-- Hero Header -->
         <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-bold tracking-widest uppercase mb-2 border border-blue-400/30">
@@ -250,15 +249,15 @@
               <div class="space-y-3.5 text-xs">
                 <div>
                   <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Faculty ID (Unique)</label>
-                  <input id="adminFacultyId" type="text" placeholder="e.g. NTHAKORE" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                  <input id="adminFacultyId" type="text" placeholder="Enter faculty ID" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
                 </div>
                 <div>
                   <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Faculty Full Name</label>
-                  <input id="adminFacultyName" type="text" placeholder="e.g. Ms. Nikita Thakore" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                  <input id="adminFacultyName" type="text" placeholder="Enter full name" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
                 </div>
                 <div>
                   <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Default Password</label>
-                  <input id="adminFacultyPassword" type="text" placeholder="e.g. Nikita123@SPCP" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                  <input id="adminFacultyPassword" type="text" placeholder="Enter initial password" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
                 </div>
               </div>
             </div>
@@ -284,11 +283,11 @@
               <div class="space-y-3.5 text-xs">
                 <div>
                   <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Enrollment Number (12 Digits)</label>
-                  <input id="adminStudentEnroll" type="text" placeholder="e.g. 252440888017" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                  <input id="adminStudentEnroll" type="text" placeholder="Enter 12-digit enrollment number" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
                 </div>
                 <div>
                   <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Student Full Name</label>
-                  <input id="adminStudentName" type="text" placeholder="e.g. Rahul Sharma" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                  <input id="adminStudentName" type="text" placeholder="Enter full name" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
@@ -302,7 +301,7 @@
                 </div>
                 <div>
                   <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Student Password</label>
-                  <input id="adminStudentPassword" type="text" placeholder="e.g. RAHUL017@SPCP" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                  <input id="adminStudentPassword" type="text" placeholder="Enter initial password" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
                 </div>
               </div>
             </div>
@@ -324,7 +323,7 @@
             </div>
             <div>
               <h2 class="text-xl md:text-2xl font-bold text-slate-900 leading-tight">
-                Welcome, <span id="dashFacultyWelcomeName">Dr. Sharma</span>
+                Welcome, <span id="dashFacultyWelcomeName">Faculty</span>
               </h2>
               <p class="text-xs text-slate-500 mt-1">Here's an overview of your classes and attendance activities.</p>
             </div>
@@ -647,12 +646,12 @@
 
           <div>
             <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Announcement Title</label>
-            <input id="notifTitleInput" type="text" placeholder="e.g. Practical Exam Schedule" class="w-full border rounded-xl px-3 py-2 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
+            <input id="notifTitleInput" type="text" placeholder="Enter title" class="w-full border rounded-xl px-3 py-2 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
           </div>
 
           <div>
             <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Notice Content / Instructions</label>
-            <textarea id="notifMessageInput" rows="4" placeholder="Type instructions or message for students..." class="w-full border rounded-xl p-3 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none"></textarea>
+            <textarea id="notifMessageInput" rows="4" placeholder="Type announcement details here..." class="w-full border rounded-xl p-3 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none"></textarea>
           </div>
 
           <button id="btnSendNotifAction" onclick="sendFacultyNotification()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
@@ -896,14 +895,13 @@
     var LOCAL_LOGO_PATH  = "SPCP.png";
     var ONLINE_LOGO_NAME = "SPCP.png";
 
-    // 🔒 SINGLE MASTER ADMIN CREDENTIALS
+    // 🔒 MASTER ADMIN CREDENTIALS
     var ADMIN_CONFIG = {
       id: "ADMIN",
-      password: "Admin1@SPCP2026",
+      password: "Admin@SPCP2026",
       name: "System Administrator"
     };
 
-    // Auto-resolve image paths
     var IS_LOCAL_ENV = window.location.protocol === 'file:' || 
                        window.location.hostname === 'localhost' || 
                        window.location.hostname === '127.0.0.1';
@@ -1129,7 +1127,6 @@
       }
     }
 
-    // Role switcher including Admin
     function switchLoginRole(role) {
       currentRole = role;
       var errBox = document.getElementById('loginError');
@@ -1146,83 +1143,81 @@
       if (role === 'student') {
         tabStudent.classList.add('tab-active');
         loginIdLabel.innerText = 'Enrollment Number';
-        loginIdInput.placeholder = 'e.g. 252440888001';
+        loginIdInput.placeholder = 'Enter enrollment number';
       } else if (role === 'faculty') {
         tabFaculty.classList.add('tab-active');
         loginIdLabel.innerText = 'Faculty ID';
-        loginIdInput.placeholder = 'e.g. NTHAKORE';
+        loginIdInput.placeholder = 'Enter faculty ID';
       } else if (role === 'admin') {
         tabAdmin.classList.add('tab-active');
         loginIdLabel.innerText = 'Admin Username';
-        loginIdInput.placeholder = 'e.g. ADMIN';
+        loginIdInput.placeholder = 'Enter admin username';
       }
     }
 
-async function handleLogin() {
-  var id = document.getElementById('loginIdInput').value.trim();
-  var pwd = document.getElementById('loginPasswordInput').value.trim();
-  var errBox = document.getElementById('loginError');
-  errBox.classList.add('hidden');
+    async function handleLogin() {
+      var id = document.getElementById('loginIdInput').value.trim();
+      var pwd = document.getElementById('loginPasswordInput').value.trim();
+      var errBox = document.getElementById('loginError');
+      errBox.classList.add('hidden');
 
-  if (!id || !pwd) {
-    showError("Please enter both ID and password.");
-    return;
-  }
-
-  // 1. UNIVERSAL ADMIN AUTO-DETECT (Works regardless of which tab is active)
-  if (id.toUpperCase() === ADMIN_CONFIG.id.toUpperCase() && pwd === ADMIN_CONFIG.password) {
-    currentUser = {
-      id: ADMIN_CONFIG.id,
-      name: ADMIN_CONFIG.name,
-      role: 'admin'
-    };
-    setupAdminSession();
-    return;
-  } else if (currentRole === 'admin') {
-    showError("Invalid Admin Username or Password.");
-    return;
-  }
-
-  // 2. SUPABASE INITIALIZATION CHECK FOR FACULTY & STUDENTS
-  if (!db) {
-    try {
-      if (typeof supabase !== 'undefined' && SUPABASE_URL && SUPABASE_URL !== "YOUR_SUPABASE_URL") {
-        db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      } else {
-        showError("Please configure your Supabase credentials in the script tag.");
+      if (!id || !pwd) {
+        showError("Please enter both ID and password.");
         return;
       }
-    } catch (e) {
-      showError("Supabase connection failure: " + e.message);
-      return;
+
+      // Universal Admin Auto-Detect
+      if (id.toUpperCase() === ADMIN_CONFIG.id.toUpperCase() && pwd === ADMIN_CONFIG.password) {
+        currentUser = {
+          id: ADMIN_CONFIG.id,
+          name: ADMIN_CONFIG.name,
+          role: 'admin'
+        };
+        setupAdminSession();
+        return;
+      } else if (currentRole === 'admin') {
+        showError("Invalid Admin Username or Password.");
+        return;
+      }
+
+      if (!db) {
+        try {
+          if (typeof supabase !== 'undefined' && SUPABASE_URL && SUPABASE_URL !== "YOUR_SUPABASE_URL") {
+            db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          } else {
+            showError("Please enter your Supabase URL & Anon Key in the script tag.");
+            return;
+          }
+        } catch (e) {
+          showError("Supabase connection failure: " + e.message);
+          return;
+        }
+      }
+
+      try {
+        if (currentRole === 'faculty') {
+          var res = await db.from('faculty').select('*').eq('faculty_id', id).eq('password', pwd);
+          if (res.error) throw res.error;
+          if (!res.data || res.data.length === 0) {
+            showError("Invalid Faculty ID or Password.");
+            return;
+          }
+          currentUser = res.data[0];
+          setupFacultySession();
+        } else {
+          var resStudent = await db.from('students').select('*').eq('enrollment_no', id).eq('password', pwd);
+          if (resStudent.error) throw resStudent.error;
+          if (!resStudent.data || resStudent.data.length === 0) {
+            showError("Invalid Enrollment ID or Password.");
+            return;
+          }
+          currentUser = resStudent.data[0];
+          setupStudentSession();
+        }
+      } catch (err) {
+        showError(err.message || "Database connection error.");
+      }
     }
-  }
-
-  // 3. FACULTY & STUDENT AUTHENTICATION
-  try {
-    if (currentRole === 'faculty') {
-      var res = await db.from('faculty').select('*').eq('faculty_id', id).eq('password', pwd);
-      if (res.error) throw res.error;
-      if (!res.data || res.data.length === 0) {
-        showError("Invalid Faculty ID or Password.");
-        return;
-      }
-      currentUser = res.data[0];
-      setupFacultySession();
-    } else {
-      var resStudent = await db.from('students').select('*').eq('enrollment_no', id).eq('password', pwd);
-      if (resStudent.error) throw resStudent.error;
-      if (!resStudent.data || resStudent.data.length === 0) {
-        showError("Invalid Enrollment ID or Password.");
-        return;
-      }
-      currentUser = resStudent.data[0];
-      setupStudentSession();
-    }
-  } catch (err) {
-    showError(err.message || "Database connection error.");
-  }
-}
 
     function showError(msg) {
       var errBox = document.getElementById('loginError');
@@ -1230,11 +1225,10 @@ async function handleLogin() {
       errBox.classList.remove('hidden');
     }
 
-    // Admin Session Setup
     function setupAdminSession() {
       document.getElementById('authSection').classList.add('hidden');
       document.getElementById('appContainer').classList.remove('hidden');
-      document.getElementById('mobileBottomNav').classList.add('hidden'); // Admin works primarily on desktop/tablet
+      document.getElementById('mobileBottomNav').classList.add('hidden');
 
       document.getElementById('userProfileBadge').classList.remove('hidden');
       document.getElementById('userProfileBadge').classList.add('flex');
@@ -1488,7 +1482,7 @@ async function handleLogin() {
     }
 
     // =========================================================================
-    // ADMIN ACTIONS: ADD / UPDATE FACULTY & STUDENTS DIRECTLY IN SUPABASE
+    // ADMIN ACTIONS: ADD / UPDATE FACULTY & STUDENTS
     // =========================================================================
     async function adminCreateFaculty() {
       if (!db) { alert("Supabase is not connected."); return; }
@@ -1566,9 +1560,6 @@ async function handleLogin() {
       }
     }
 
-    // -------------------------------------------------------------
-    // COMING SOON RENDERER
-    // -------------------------------------------------------------
     function renderComingSoon(type) {
       var isTT = type === 'timetable';
       var courseId = isTT ? 'ttCourseSelect' : 'sylCourseSelect';
@@ -1612,9 +1603,6 @@ async function handleLogin() {
       `;
     }
 
-    // -------------------------------------------------------------
-    // NOTIFICATION ENGINE
-    // -------------------------------------------------------------
     async function checkUnreadNotifications() {
       if (!db || !currentUser || currentUser.role === 'admin') return;
       try {
