@@ -135,7 +135,10 @@
           <label class="block font-semibold text-slate-600 uppercase tracking-wider mb-1">Password</label>
           <div class="relative">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-lock"></i></span>
-            <input id="loginPasswordInput" type="password" placeholder="••••••••" class="w-full pl-9 pr-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-slate-50/80">
+            <input id="loginPasswordInput" type="password" placeholder="••••••••" class="w-full pl-9 pr-10 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-slate-50/80">
+            <button type="button" onclick="togglePasswordVisibility('loginPasswordInput', 'loginEyeIcon')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition cursor-pointer" title="Show/Hide Password">
+              <i id="loginEyeIcon" class="fa-regular fa-eye text-sm"></i>
+            </button>
           </div>
         </div>
 
@@ -220,9 +223,11 @@
     </aside>
 
     <!-- Content Workspace -->
-    <div class="flex-1 w-full md:h-full md:overflow-y-auto custom-scroll md:pr-1">
+    <div class="flex-1 w-full md:h-full md:overflow-y-auto custom-scroll md:pr-1 space-y-6">
       
-      <!-- Admin Control Dashboard -->
+      <!-- ========================================================= -->
+      <!-- ADMIN CONTROL DASHBOARD                                   -->
+      <!-- ========================================================= -->
       <section id="adminDashboardView" class="hidden space-y-6">
         <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -230,13 +235,14 @@
               <i class="fa-solid fa-shield-halved"></i> Master Administration
             </div>
             <h2 class="text-xl md:text-2xl font-bold">University Roster & Faculty Management</h2>
-            <p class="text-xs text-slate-300 mt-1">Register new faculty members or enroll students into SPCP courses.</p>
+            <p class="text-xs text-slate-300 mt-1">Register faculty members, enroll individual students, or batch upload student rosters via CSV/Excel.</p>
           </div>
-          <div class="text-xs font-mono bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-slate-200">
+          <div class="text-xs font-mono bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-slate-200 shrink-0">
             Secure Admin Session
           </div>
         </div>
 
+        <!-- Row 1: Single Faculty & Single Student Forms -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
           <!-- Card 1: Add New Faculty -->
@@ -263,7 +269,12 @@
                 </div>
                 <div>
                   <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Default Password</label>
-                  <input id="adminFacultyPassword" type="text" placeholder="Enter initial password" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                  <div class="relative">
+                    <input id="adminFacultyPassword" type="password" placeholder="Enter initial password" class="w-full border rounded-xl pl-3 pr-10 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <button type="button" onclick="togglePasswordVisibility('adminFacultyPassword', 'adminFacultyEyeIcon')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition cursor-pointer" title="Show/Hide Password">
+                      <i id="adminFacultyEyeIcon" class="fa-regular fa-eye text-xs"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -273,7 +284,7 @@
             </button>
           </div>
 
-          <!-- Card 2: Add New Student -->
+          <!-- Card 2: Add Single Student -->
           <div class="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
@@ -282,7 +293,7 @@
                 </div>
                 <div>
                   <h3 class="text-sm font-bold text-slate-900">Enroll / Update Student</h3>
-                  <p class="text-[11px] text-slate-400">Assign student to Course & Semester</p>
+                  <p class="text-[11px] text-slate-400">Assign individual student to Course & Semester</p>
                 </div>
               </div>
 
@@ -307,7 +318,12 @@
                 </div>
                 <div>
                   <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Student Password</label>
-                  <input id="adminStudentPassword" type="text" placeholder="Enter initial password" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                  <div class="relative">
+                    <input id="adminStudentPassword" type="password" placeholder="Enter initial password" class="w-full border rounded-xl pl-3 pr-10 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                    <button type="button" onclick="togglePasswordVisibility('adminStudentPassword', 'adminStudentEyeIcon')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition cursor-pointer" title="Show/Hide Password">
+                      <i id="adminStudentEyeIcon" class="fa-regular fa-eye text-xs"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -317,6 +333,42 @@
             </button>
           </div>
 
+        </div>
+
+        <!-- Row 2: Batch Student CSV/Excel Upload Card -->
+        <div class="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg border border-indigo-100 shrink-0">
+                <i class="fa-solid fa-file-csv"></i>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Batch Student Enrollment (.csv / .xlsx)</h3>
+                <p class="text-[11px] text-slate-400">Enroll entire classes simultaneously by uploading a CSV or Excel spreadsheet</p>
+              </div>
+            </div>
+            <button type="button" onclick="downloadStudentBatchTemplate()" class="inline-flex items-center gap-2 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-3.5 py-2 rounded-xl transition cursor-pointer shadow-2xs shrink-0">
+              <i class="fa-solid fa-download"></i> Download CSV Template
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div class="md:col-span-2">
+              <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1.5">Select Roster File (.csv, .xlsx, .xls)</label>
+              <input type="file" id="batchStudentFileInput" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 border rounded-2xl p-1.5 bg-slate-50 cursor-pointer">
+              <p class="text-[10px] text-slate-400 mt-1.5 leading-relaxed">
+                Expected columns: <code class="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-700">enrollment_no</code>, <code class="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-700">name</code>, <code class="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-700">course</code>, <code class="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-700">semester</code>, <code class="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-700">password</code> (optional default: SPCP@enrollment).
+              </p>
+            </div>
+
+            <div class="flex items-end">
+              <button type="button" id="btnBatchEnroll" onclick="processBatchStudentUpload()" class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Upload & Enroll Students
+              </button>
+            </div>
+          </div>
+
+          <div id="batchUploadStatus" class="hidden text-xs p-3 rounded-xl border"></div>
         </div>
       </section>
 
@@ -936,6 +988,29 @@
     });
 
     // =========================================================================
+    // SHOW / HIDE PASSWORD TOGGLE UTILITY
+    // =========================================================================
+    function togglePasswordVisibility(inputId, iconId) {
+      var input = document.getElementById(inputId);
+      var icon = document.getElementById(iconId);
+      if (!input) return;
+
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) {
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        }
+      } else {
+        input.type = 'password';
+        if (icon) {
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+        }
+      }
+    }
+
+    // =========================================================================
     // GLOBAL STATE & DATABASE INIT
     // =========================================================================
     var currentRole = 'faculty';
@@ -1496,7 +1571,7 @@
     }
 
     // =========================================================================
-    // ADMIN ACTIONS: ADD / UPDATE FACULTY & STUDENTS
+    // ADMIN ACTIONS: ADD / UPDATE FACULTY & INDIVIDUAL STUDENT
     // =========================================================================
     async function adminCreateFaculty() {
       if (!db) { alert("Supabase is not connected."); return; }
@@ -1572,6 +1647,128 @@
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-user-check"></i> Enroll Student';
       }
+    }
+
+    // =========================================================================
+    // BATCH STUDENT CSV / EXCEL UPLOAD ENGINE
+    // =========================================================================
+    function downloadStudentBatchTemplate() {
+      var templateData = [
+        ["enrollment_no", "name", "course", "semester", "password"],
+        ["252440888001", "Student Name A", "B.Pharm", "Sem 1", "SPCP@252440888001"],
+        ["252440888002", "Student Name B", "B.Pharm", "Sem 1", "SPCP@252440888002"],
+        ["252440888003", "Student Name C", "Pharm. D", "Year 1", "SPCP@252440888003"]
+      ];
+
+      var ws = XLSX.utils.aoa_to_sheet(templateData);
+      autoFitColumns(ws, templateData);
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Template");
+      XLSX.writeFile(wb, "SPCP_Student_Enrollment_Template.csv");
+    }
+
+    async function processBatchStudentUpload() {
+      if (!db) { alert("Supabase is not connected."); return; }
+      var fileInput = document.getElementById('batchStudentFileInput');
+      var statusBox = document.getElementById('batchUploadStatus');
+      var btn = document.getElementById('btnBatchEnroll');
+
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert("Please select a CSV or Excel file to upload.");
+        return;
+      }
+
+      var file = fileInput.files[0];
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Roster...';
+
+      statusBox.className = "text-xs p-3.5 rounded-xl border bg-slate-50 text-slate-700 block";
+      statusBox.innerText = "Parsing spreadsheet data...";
+
+      var reader = new FileReader();
+      reader.onload = async function(e) {
+        try {
+          var data = new Uint8Array(e.target.result);
+          var workbook = XLSX.read(data, { type: 'array' });
+          var sheetName = workbook.SheetNames[0];
+          var worksheet = workbook.Sheets[sheetName];
+          var rows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+
+          if (!rows || rows.length === 0) {
+            throw new Error("The uploaded file contains no data rows.");
+          }
+
+          var validRecords = [];
+          for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var keys = Object.keys(row);
+
+            // Normalize header names
+            var enrollVal = "";
+            var nameVal = "";
+            var courseVal = "B.Pharm";
+            var semVal = "Sem 1";
+            var pwdVal = "";
+
+            keys.forEach(function(k) {
+              var cleanKey = k.trim().toLowerCase().replace(/[\s_-]/g, '');
+              if (cleanKey.indexOf("enroll") !== -1 || cleanKey === "id") enrollVal = String(row[k]).trim();
+              else if (cleanKey.indexOf("name") !== -1) nameVal = String(row[k]).trim();
+              else if (cleanKey.indexOf("course") !== -1 || cleanKey.indexOf("degree") !== -1) courseVal = String(row[k]).trim();
+              else if (cleanKey.indexOf("sem") !== -1 || cleanKey.indexOf("year") !== -1) semVal = String(row[k]).trim();
+              else if (cleanKey.indexOf("pass") !== -1 || cleanKey.indexOf("pwd") !== -1) pwdVal = String(row[k]).trim();
+            });
+
+            if (!enrollVal || !nameVal) continue; // Skip incomplete lines
+
+            if (!pwdVal) {
+              pwdVal = "SPCP@" + enrollVal.slice(-4);
+            }
+
+            validRecords.push({
+              enrollment_no: enrollVal,
+              name: nameVal,
+              course: courseVal,
+              semester: semVal,
+              password: pwdVal
+            });
+          }
+
+          if (validRecords.length === 0) {
+            throw new Error("No valid student records found. Ensure columns include 'enrollment_no' and 'name'.");
+          }
+
+          statusBox.innerText = "Saving " + validRecords.length + " students to database in batches...";
+
+          // Upsert in batches of 50 to ensure reliable network transport
+          var batchSize = 50;
+          for (var b = 0; b < validRecords.length; b += batchSize) {
+            var chunk = validRecords.slice(b, b + batchSize);
+            var { error } = await db.from('students').upsert(chunk, { onConflict: 'enrollment_no' });
+            if (error) throw error;
+          }
+
+          statusBox.className = "text-xs p-3.5 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 block";
+          statusBox.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i> Batch enrollment completed! <strong>' + validRecords.length + ' students</strong> registered or updated successfully.';
+          fileInput.value = "";
+          alert("Success! " + validRecords.length + " students enrolled into the portal.");
+        } catch (err) {
+          statusBox.className = "text-xs p-3.5 rounded-xl border border-rose-300 bg-rose-50 text-rose-800 block";
+          statusBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1.5"></i> Batch Upload Failed: ' + err.message;
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Upload & Enroll Students';
+        }
+      };
+
+      reader.onerror = function() {
+        statusBox.className = "text-xs p-3.5 rounded-xl border border-rose-300 bg-rose-50 text-rose-800 block";
+        statusBox.innerText = "Error reading the uploaded file.";
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Upload & Enroll Students';
+      };
+
+      reader.readAsArrayBuffer(file);
     }
 
     function renderComingSoon(type) {
@@ -1815,7 +2012,6 @@
           return;
         }
 
-        // Record highest ID in localStorage to track seen status
         var maxId = Math.max.apply(Math, data.map(function(item) { return Number(item.id) || 0; }));
         localStorage.setItem('gtu_last_seen_notif_' + currentUser.enrollment_no, maxId);
         document.getElementById('notifBadgeDot')?.classList.add('hidden');
@@ -2700,7 +2896,7 @@
 
       var wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "My Attendance");
-      XLSX.writeFile(wb, "SPCP_Attendance_" + currentUser.enrollment_no + "_" + month + ".xlsx");
+      XLSX.writeFile(wb, "SPCP_My_Attendance_" + currentUser.enrollment_no + "_" + month + ".xlsx");
     }
   </script>
 </body>
