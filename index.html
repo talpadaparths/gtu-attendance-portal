@@ -33,7 +33,7 @@
   <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-3 md:px-8 py-2 md:py-2.5 flex items-center justify-between shrink-0 sticky top-0 md:static z-40 shadow-xs">
     <div class="flex items-center space-x-2.5 sm:space-x-3 truncate">
       
-      <!-- Mobile Hamburger Button (Visible only when logged in on small screens) -->
+      <!-- Mobile Hamburger Button -->
       <button 
         type="button" 
         id="mobileMenuToggleBtn" 
@@ -177,7 +177,6 @@
         </button>
       </div>
 
-      <!-- Container that syncs with current role nav buttons -->
       <div id="mobileDrawerNavList" class="space-y-1.5 flex-1"></div>
 
       <div class="pt-4 border-t border-slate-100 text-center">
@@ -299,7 +298,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Card 1: Add Faculty -->
           <div class="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
@@ -338,7 +336,6 @@
             </button>
           </div>
 
-          <!-- Card 2: Add Student -->
           <div class="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
@@ -513,7 +510,7 @@
         </div>
       </section>
 
-      <!-- VIEW 5: HOLIDAY ANNOUNCEMENTS (ADMIN PUBLISH & USER VIEW) -->
+      <!-- VIEW 5: HOLIDAY ANNOUNCEMENTS -->
       <section id="holidayAnnounceView" class="hidden space-y-6">
         <div class="bg-gradient-to-r from-slate-900 via-amber-950 to-orange-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -568,7 +565,7 @@
           <div id="adminHolidayStatus" class="hidden text-xs p-3 rounded-xl border"></div>
         </div>
 
-        <!-- Holiday Announcements List (Visible to all) -->
+        <!-- Holiday Announcements List -->
         <div class="space-y-4">
           <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
             <i class="fa-solid fa-calendar-check text-amber-600"></i> Active & Past Holiday Circulars
@@ -871,7 +868,7 @@
           </div>
           <div>
             <span class="text-[9px] bg-blue-700 px-2 py-0.5 rounded font-bold uppercase tracking-widest">Notice Center</span>
-            <h3 id="notifModalHeaderTitle" class="text-sm font-bold">Announcements & Notifications</h3>
+            <h3 id="notifModalHeaderTitle" class="text-sm font-bold">Notice & Announcement Center</h3>
           </div>
         </div>
         <button onclick="closeNotificationModal()" class="text-slate-300 hover:text-white p-1.5 rounded-lg transition cursor-pointer">
@@ -879,16 +876,24 @@
         </button>
       </div>
 
-      <div id="facultyNotifTabs" class="hidden px-5 pt-3 border-b bg-slate-50/70 flex gap-2 text-xs font-semibold">
-        <button id="tabBtnSendNotice" onclick="switchFacultyNotifTab('send')" class="px-4 py-2 border-b-2 border-blue-600 text-blue-600 cursor-pointer">
-          <i class="fa-solid fa-paper-plane mr-1.5"></i> Send Announcement
+      <!-- Tabs for Faculty & Admin -->
+      <div id="facultyNotifTabs" class="hidden px-5 pt-3 border-b bg-slate-50/70 flex gap-2 text-xs font-semibold overflow-x-auto">
+        <button id="tabBtnReceivedNotice" onclick="switchFacultyNotifTab('inbox')" class="px-4 py-2 border-b-2 border-blue-600 text-blue-600 cursor-pointer whitespace-nowrap">
+          <i class="fa-solid fa-bell mr-1.5"></i> Received Notices
         </button>
-        <button id="tabBtnNoticeHistory" onclick="switchFacultyNotifTab('history')" class="px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer">
+        <button id="tabBtnSendNotice" onclick="switchFacultyNotifTab('send')" class="px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer whitespace-nowrap">
+          <i class="fa-solid fa-paper-plane mr-1.5"></i> Send Notice
+        </button>
+        <button id="tabBtnNoticeHistory" onclick="switchFacultyNotifTab('history')" class="px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer whitespace-nowrap">
           <i class="fa-solid fa-clock-rotate-left mr-1.5"></i> Sent History
         </button>
       </div>
 
       <div class="p-5 overflow-y-auto custom-scroll flex-1 space-y-4">
+        <!-- Faculty Received Notices List -->
+        <div id="facultyReceivedNoticesContainer" class="hidden space-y-3"></div>
+
+        <!-- Faculty Send Notice Form -->
         <div id="facultySendNoticeForm" class="hidden space-y-3.5 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
@@ -916,7 +921,10 @@
           </button>
         </div>
 
+        <!-- Faculty Sent History -->
         <div id="facultyNoticeHistoryContainer" class="hidden space-y-3"></div>
+
+        <!-- Student Notifications -->
         <div id="studentNotificationsContainer" class="hidden space-y-3"></div>
       </div>
     </div>
@@ -1084,7 +1092,7 @@
     // =========================================================================
     var SUPABASE_URL = "https://ierhattpsvizmajwtcol.supabase.co";
     var SUPABASE_ANON_KEY = "sb_publishable_rZKrmVTYtxm0KLvFqoI_AQ__hTETjXH";
-    
+
     var LOCAL_BG_IMAGE_PATH  = "bg.png"; 
     var ONLINE_BG_IMAGE_NAME = "bg.png"; 
 
@@ -1140,9 +1148,7 @@
       }
     }
 
-    // =========================================================================
-    // DIRECT BLOB FILE DOWNLOAD HELPER (FIXES CROSS-ORIGIN DOWNLOAD BEHAVIOR)
-    // =========================================================================
+    // Direct in-memory blob downloader (forces download instead of opening)
     async function forceDownloadBlob(fileUrl, fileName) {
       if (!fileUrl) return;
       try {
@@ -1161,14 +1167,11 @@
           document.body.removeChild(a);
         }, 1500);
       } catch (err) {
-        // Fallback: Open in new window if blob fetch is blocked
         window.open(fileUrl, '_blank');
       }
     }
 
-    // =========================================================================
-    // MOBILE DRAWER CONTROLLER
-    // =========================================================================
+    // Mobile Drawer Controller
     function toggleMobileDrawer(show) {
       var drawer = document.getElementById('mobileDrawerBackdrop');
       if (!drawer) return;
@@ -1195,11 +1198,9 @@
       var buttons = sourceNav.querySelectorAll('button');
       buttons.forEach(function(btn) {
         var clone = btn.cloneNode(true);
-        // Remove desktop specific ids on clones
         clone.removeAttribute('id');
         clone.className = "w-full text-left px-3.5 py-2.5 rounded-xl text-xs flex items-center justify-between text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition cursor-pointer";
         
-        // Wrap click to close drawer after navigation
         var originalOnClick = btn.getAttribute('onclick');
         clone.onclick = function() {
           toggleMobileDrawer(false);
@@ -1207,6 +1208,15 @@
         };
         listContainer.appendChild(clone);
       });
+    }
+
+    // Unified storage key resolver
+    function getUserStorageKey() {
+      if (!currentUser) return 'guest';
+      if (currentUser.enrollment_no) return String(currentUser.enrollment_no);
+      if (currentUser.faculty_id) return String(currentUser.faculty_id);
+      if (currentUser.id) return String(currentUser.id);
+      return 'ADMIN';
     }
 
     // =========================================================================
@@ -2067,7 +2077,7 @@
     }
 
     // =========================================================================
-    // ADMIN ACTIONS: UPLOAD TIMETABLE & SYLLABUS TO SUPABASE STORAGE
+    // ADMIN ACTIONS: UPLOAD TIMETABLE & SYLLABUS TO STORAGE
     // =========================================================================
     async function adminUploadTimetableAction() {
       if (!db) { alert("Supabase is not connected."); return; }
@@ -2189,7 +2199,7 @@
     }
 
     // =========================================================================
-    // HOLIDAY ANNOUNCEMENT ENGINE (PUBLISH, ALERTS, SEEN-DOTS)
+    // HOLIDAY ANNOUNCEMENTS (ADMIN PUBLISH & USER VIEW)
     // =========================================================================
     async function publishHolidayAction() {
       if (!db || !currentUser) { alert("Please login first."); return; }
@@ -2238,7 +2248,6 @@
 
         var adminDisplayName = currentUser.name || "System Administrator";
 
-        // 1. Insert into holidays table
         var { data: holidayData, error: holidayErr } = await db.from('holidays').insert([{
           admin_name: adminDisplayName,
           from_date: fromDate,
@@ -2251,17 +2260,23 @@
 
         if (holidayErr) throw holidayErr;
 
-        // 2. Broadcast general notice to Notifications center (WITHOUT letter, instructing users to view circular tab)
         var noticeMsg = "Official College Holiday announced from " + formatDateToDMY(fromDate) + " to " + formatDateToDMY(toDate) + ". Reason: " + reason + ". Visit the 'Holiday Announcement' tab to inspect and download the official sanction letter.";
         
-        await db.from('notifications').insert([{
+        var { data: createdNotif } = await db.from('notifications').insert([{
           sender_id: currentUser.faculty_id || currentUser.id || 'ADMIN',
           sender_name: adminDisplayName,
           course: 'ALL',
           semester: 'ALL',
           title: "College Holiday: " + reason,
           message: noticeMsg
-        }]);
+        }]).select().single();
+
+        // Mark as already seen by the authoring Admin so their own screen stays clean
+        localStorage.setItem('spcp_last_seen_holiday_' + getUserStorageKey(), holidayData.id);
+        if (createdNotif) {
+          localStorage.setItem('gtu_last_seen_notif_' + getUserStorageKey(), createdNotif.id);
+        }
+        document.getElementById('notifBadgeDot')?.classList.add('hidden');
 
         statusBox.className = "text-xs p-3.5 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 block";
         statusBox.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i> Holiday announced successfully and alert sent to all portal users!';
@@ -2321,7 +2336,6 @@
           var dateRangeText = isSingleDay ? fromFormatted : (fromFormatted + ' to ' + toFormatted);
 
           var hasFile = item.letter_file_url && item.letter_file_url.length > 0;
-          var isPdf = hasFile && item.letter_file_name.toLowerCase().endsWith('.pdf');
 
           card.innerHTML = `
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-100 pb-3">
@@ -2367,7 +2381,7 @@
         var { data } = await db.from('holidays').select('id').order('id', { ascending: false }).limit(1);
         if (data && data.length > 0) {
           var latestId = Number(data[0].id) || 0;
-          var storageKey = 'spcp_last_seen_holiday_' + (currentUser.enrollment_no || currentUser.faculty_id || 'ADMIN');
+          var storageKey = 'spcp_last_seen_holiday_' + getUserStorageKey();
           var lastSeenId = Number(localStorage.getItem(storageKey)) || 0;
 
           var shouldShow = latestId > lastSeenId;
@@ -2390,7 +2404,7 @@
         var { data } = await db.from('holidays').select('id').order('id', { ascending: false }).limit(1);
         if (data && data.length > 0) {
           var latestId = Number(data[0].id) || 0;
-          var storageKey = 'spcp_last_seen_holiday_' + (currentUser.enrollment_no || currentUser.faculty_id || 'ADMIN');
+          var storageKey = 'spcp_last_seen_holiday_' + getUserStorageKey();
           localStorage.setItem(storageKey, latestId);
 
           ['holidayBadgeDotAdmin', 'holidayBadgeDotFaculty', 'holidayBadgeDotStudent'].forEach(function(dotId) {
@@ -2569,7 +2583,7 @@
 
         if (data && data.length > 0) {
           var latestId = Number(data[0].id) || 0;
-          var storageKey = 'gtu_last_seen_notif_' + (currentUser.enrollment_no || currentUser.faculty_id || 'ADMIN');
+          var storageKey = 'gtu_last_seen_notif_' + getUserStorageKey();
           var lastSeenId = Number(localStorage.getItem(storageKey)) || 0;
 
           if (latestId > lastSeenId) {
@@ -2585,27 +2599,32 @@
       }
     }
 
-    function openNotificationModal() {
+    async function openNotificationModal() {
       var modal = document.getElementById('notificationModal');
       modal.classList.remove('hidden');
+
+      // Hide the badge dot immediately on opening
+      document.getElementById('notifBadgeDot')?.classList.add('hidden');
 
       var headerTitle = document.getElementById('notifModalHeaderTitle');
       var facultyTabs = document.getElementById('facultyNotifTabs');
       var facultyForm = document.getElementById('facultySendNoticeForm');
       var facultyHistory = document.getElementById('facultyNoticeHistoryContainer');
+      var facultyReceived = document.getElementById('facultyReceivedNoticesContainer');
       var studentList = document.getElementById('studentNotificationsContainer');
 
       if (currentRole === 'faculty' || (currentUser && currentUser.role === 'admin')) {
-        headerTitle.innerText = "Broadcast Announcements Portal";
+        headerTitle.innerText = "Notice & Announcement Center";
         facultyTabs.classList.remove('hidden');
         studentList.classList.add('hidden');
-        switchFacultyNotifTab('send');
+        switchFacultyNotifTab('inbox');
         syncNotifSemesters();
       } else {
         headerTitle.innerText = "Class Announcements & Notices";
         facultyTabs.classList.add('hidden');
         facultyForm.classList.add('hidden');
         facultyHistory.classList.add('hidden');
+        if (facultyReceived) facultyReceived.classList.add('hidden');
         studentList.classList.remove('hidden');
         loadStudentNotifications();
       }
@@ -2616,22 +2635,86 @@
     }
 
     function switchFacultyNotifTab(tab) {
+      var btnInbox = document.getElementById('tabBtnReceivedNotice');
       var btnSend = document.getElementById('tabBtnSendNotice');
       var btnHist = document.getElementById('tabBtnNoticeHistory');
+      var inbox = document.getElementById('facultyReceivedNoticesContainer');
       var form = document.getElementById('facultySendNoticeForm');
       var hist = document.getElementById('facultyNoticeHistoryContainer');
 
-      if (tab === 'send') {
-        btnSend.className = "px-4 py-2 border-b-2 border-blue-600 text-blue-600 cursor-pointer";
-        btnHist.className = "px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer";
-        form.classList.remove('hidden');
-        hist.classList.add('hidden');
-      } else {
-        btnHist.className = "px-4 py-2 border-b-2 border-blue-600 text-blue-600 cursor-pointer";
-        btnSend.className = "px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer";
-        form.classList.add('hidden');
-        hist.classList.remove('hidden');
+      [btnInbox, btnSend, btnHist].forEach(function(b) {
+        if (b) b.className = "px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer whitespace-nowrap";
+      });
+      [inbox, form, hist].forEach(function(c) {
+        if (c) c.classList.add('hidden');
+      });
+
+      if (tab === 'inbox') {
+        if (btnInbox) btnInbox.className = "px-4 py-2 border-b-2 border-blue-600 text-blue-600 cursor-pointer whitespace-nowrap";
+        if (inbox) inbox.classList.remove('hidden');
+        loadFacultyReceivedNotices();
+      } else if (tab === 'send') {
+        if (btnSend) btnSend.className = "px-4 py-2 border-b-2 border-blue-600 text-blue-600 cursor-pointer whitespace-nowrap";
+        if (form) form.classList.remove('hidden');
+      } else if (tab === 'history') {
+        if (btnHist) btnHist.className = "px-4 py-2 border-b-2 border-blue-600 text-blue-600 cursor-pointer whitespace-nowrap";
+        if (hist) hist.classList.remove('hidden');
         loadFacultyNotificationHistory();
+      }
+    }
+
+    async function loadFacultyReceivedNotices() {
+      if (!db || !currentUser) return;
+      var container = document.getElementById('facultyReceivedNoticesContainer');
+      container.innerHTML = '<div class="text-xs text-slate-400 p-4 text-center">Fetching notices...</div>';
+
+      try {
+        var { data, error } = await db.from('notifications')
+          .select('*')
+          .order('id', { ascending: false });
+
+        if (error) throw error;
+
+        container.innerHTML = '';
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="text-center p-8 border border-dashed border-slate-200 rounded-3xl bg-slate-50/50">
+              <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-2 text-xl">
+                <i class="fa-regular fa-bell-slash"></i>
+              </div>
+              <div class="text-xs font-bold text-slate-800">No New Notifications</div>
+              <p class="text-[11px] text-slate-400 mt-1">There are currently no circulars or announcements.</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Record highest ID in localStorage to permanently clear the red dot
+        var maxId = Math.max.apply(Math, data.map(function(item) { return Number(item.id) || 0; }));
+        localStorage.setItem('gtu_last_seen_notif_' + getUserStorageKey(), maxId);
+        document.getElementById('notifBadgeDot')?.classList.add('hidden');
+
+        data.forEach(function(item) {
+          var card = document.createElement('div');
+          card.className = "p-4 rounded-2xl border border-blue-100/90 bg-gradient-to-br from-blue-50/40 via-white to-slate-50/30 shadow-2xs text-xs space-y-2";
+          var dateFormatted = item.created_at ? new Date(item.created_at).toLocaleDateString() : '';
+          var timeFormatted = item.created_at ? new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
+          card.innerHTML = `
+            <div class="flex items-center justify-between text-[11px] text-slate-400 border-b border-slate-100 pb-1.5">
+              <span class="flex items-center gap-1.5 font-bold text-blue-700">
+                <i class="fa-solid fa-circle-info"></i> ${item.sender_name}
+              </span>
+              <span class="font-mono text-[10px]">${dateFormatted} at ${timeFormatted}</span>
+            </div>
+            <div class="font-bold text-slate-900 text-sm">${item.title}</div>
+            <p class="text-slate-700 leading-relaxed text-xs">${item.message}</p>
+            <div class="text-[10px] text-slate-400 font-medium">Target: ${item.course} (${item.semester})</div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        container.innerHTML = '<div class="text-xs text-red-500 p-4 text-center">' + err.message + '</div>';
       }
     }
 
@@ -2652,16 +2735,22 @@
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Broadcasting Notice...';
 
       try {
-        var { error } = await db.from('notifications').insert([{
+        var { data: createdNotice, error } = await db.from('notifications').insert([{
           sender_id: currentUser.faculty_id || currentUser.id || 'ADMIN',
           sender_name: currentUser.name,
           course: course,
           semester: sem,
           title: title,
           message: message
-        }]);
+        }]).select().single();
 
         if (error) throw error;
+
+        // Auto-mark as seen by the sender so the sender doesn't see an unread badge
+        if (createdNotice) {
+          localStorage.setItem('gtu_last_seen_notif_' + getUserStorageKey(), createdNotice.id);
+        }
+        document.getElementById('notifBadgeDot')?.classList.add('hidden');
 
         alert("Announcement sent successfully to all " + course + " (" + sem + ") students!");
         document.getElementById('notifTitleInput').value = '';
@@ -2746,8 +2835,7 @@
         }
 
         var maxId = Math.max.apply(Math, data.map(function(item) { return Number(item.id) || 0; }));
-        var storageKey = 'gtu_last_seen_notif_' + (currentUser.enrollment_no || currentUser.faculty_id || 'ADMIN');
-        localStorage.setItem(storageKey, maxId);
+        localStorage.setItem('gtu_last_seen_notif_' + getUserStorageKey(), maxId);
         document.getElementById('notifBadgeDot')?.classList.add('hidden');
 
         data.forEach(function(item) {
@@ -3626,13 +3714,4 @@
         ["Status (< 75%)", "", "", pctNum < 75.0 ? "DEFAULTER" : "ELIGIBLE"]
       ];
 
-      var ws = XLSX.utils.aoa_to_sheet(sheetData);
-      autoFitColumns(ws, sheetData);
-
-      var wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "My Attendance");
-      XLSX.writeFile(wb, "SPCP_My_Attendance_" + currentUser.enrollment_no + "_" + month + ".xlsx");
-    }
-  </script>
-</body>
-</html>
+      var wsI seem to be encountering an error. Can I try something else for you?
