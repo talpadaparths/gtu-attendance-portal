@@ -30,8 +30,20 @@
 <body class="min-h-screen md:h-screen flex flex-col text-slate-800 md:overflow-hidden select-none">
 
   <!-- Header -->
-  <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 md:px-8 py-2 md:py-2.5 flex items-center justify-between shrink-0 sticky top-0 md:static z-40 shadow-xs">
-    <div class="flex items-center space-x-3 truncate">
+  <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-3 md:px-8 py-2 md:py-2.5 flex items-center justify-between shrink-0 sticky top-0 md:static z-40 shadow-xs">
+    <div class="flex items-center space-x-2.5 sm:space-x-3 truncate">
+      
+      <!-- Mobile Hamburger Button (Visible only when logged in on small screens) -->
+      <button 
+        type="button" 
+        id="mobileMenuToggleBtn" 
+        onclick="toggleMobileDrawer(true)" 
+        class="hidden md:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 transition cursor-pointer shrink-0" 
+        title="Open Navigation Menu"
+      >
+        <i class="fa-solid fa-bars text-lg"></i>
+      </button>
+
       <div class="flex-shrink-0 flex items-center justify-center">
         <img 
           id="collegeLogoImg"
@@ -58,7 +70,7 @@
     </div>
 
     <!-- Right Header Utilities -->
-    <div id="userProfileBadge" class="hidden items-center space-x-3 sm:space-x-4 shrink-0">
+    <div id="userProfileBadge" class="hidden items-center space-x-2 sm:space-x-4 shrink-0">
       <button 
         type="button" 
         id="topBarNotifBtn" 
@@ -80,19 +92,19 @@
         <i class="fa-regular fa-calendar text-base"></i>
       </button>
 
-      <div class="flex items-center space-x-2.5 border-l border-slate-200 pl-3">
-        <div id="userAvatarBox" class="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center">
+      <div class="flex items-center space-x-2.5 border-l border-slate-200 pl-2 sm:pl-3">
+        <div id="userAvatarBox" class="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center shrink-0">
           <i class="fa-solid fa-user text-sm"></i>
         </div>
         <div class="hidden sm:block text-left">
-          <div id="displayUserName" class="text-xs font-bold leading-none text-slate-800"></div>
+          <div id="displayUserName" class="text-xs font-bold leading-none text-slate-800 truncate max-w-[120px]"></div>
           <div id="displayUserRoleStatus" class="text-[10px] text-emerald-600 font-medium mt-0.5 flex items-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active Session
           </div>
         </div>
       </div>
 
-      <button onclick="logout()" class="text-xs text-red-600 font-semibold border border-red-200 hover:bg-red-50 p-1.5 sm:px-2.5 sm:py-1 rounded-md transition cursor-pointer" title="Logout">
+      <button onclick="logout()" class="text-xs text-red-600 font-semibold border border-red-200 hover:bg-red-50 p-1.5 sm:px-2.5 sm:py-1 rounded-md transition cursor-pointer shrink-0" title="Logout">
         <i class="fa-solid fa-arrow-right-from-bracket sm:mr-1"></i><span class="hidden sm:inline">Logout</span>
       </button>
     </div>
@@ -150,14 +162,39 @@
     </div>
   </section>
 
+  <!-- Mobile Drawer Menu Modal -->
+  <div id="mobileDrawerBackdrop" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 transition-opacity">
+    <div class="fixed inset-y-0 left-0 w-72 max-w-[80vw] bg-white shadow-2xl flex flex-col p-4 z-50 overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs">
+            <i class="fa-solid fa-bars-staggered"></i>
+          </div>
+          <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Navigation Menu</span>
+        </div>
+        <button onclick="toggleMobileDrawer(false)" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 cursor-pointer">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
+
+      <!-- Container that syncs with current role nav buttons -->
+      <div id="mobileDrawerNavList" class="space-y-1.5 flex-1"></div>
+
+      <div class="pt-4 border-t border-slate-100 text-center">
+        <div class="text-[11px] font-bold text-slate-800">SPCP Technical Support</div>
+        <div class="text-[10px] text-slate-500 mt-0.5">+91 9054826042</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Main Workspace -->
-  <main id="appContainer" class="hidden flex-1 md:overflow-hidden max-w-7xl w-full mx-auto p-3.5 md:p-6 flex flex-col md:flex-row gap-6 pb-24 md:pb-6">
+  <main id="appContainer" class="hidden flex-1 md:overflow-hidden max-w-7xl w-full mx-auto p-3.5 md:p-6 flex flex-col md:flex-row gap-6 pb-20 md:pb-6">
     
-    <!-- Left Navigation Sidebar -->
+    <!-- Left Navigation Sidebar (Desktop) -->
     <aside class="hidden md:flex md:w-60 shrink-0 h-full flex-col justify-between select-none">
-      <div class="space-y-2 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/70 shadow-xs">
+      <div class="space-y-2 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/70 shadow-xs overflow-y-auto custom-scroll">
         
-        <!-- Admin Navigation -->
+        <!-- Admin Navigation Links -->
         <div id="adminNav" class="hidden space-y-1">
           <button onclick="navigateView('adminAddOneView')" id="btnNavAdminAddOne" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 transition nav-active cursor-pointer">
             <i class="fa-solid fa-user-plus"></i> Add 1 Candidate
@@ -171,6 +208,10 @@
           <button onclick="navigateView('adminUploadSyllabusView')" id="btnNavAdminUploadSyl" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
             <i class="fa-solid fa-file-circle-plus"></i> Upload Syllabus
           </button>
+          <button onclick="navigateView('holidayAnnounceView')" id="btnNavAdminHoliday" class="relative w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center justify-between text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-umbrella-beach"></i> Holiday Announcement</span>
+            <span id="holidayBadgeDotAdmin" class="hidden w-2 h-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+          </button>
           <button onclick="navigateView('reportsExport')" id="btnNavAdminReports" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
             <i class="fa-solid fa-chart-column"></i> Attendance Matrix
           </button>
@@ -182,7 +223,7 @@
           </button>
         </div>
 
-        <!-- Faculty Navigation -->
+        <!-- Faculty Navigation Links -->
         <div id="facultyNav" class="space-y-1">
           <button onclick="navigateView('facultyDashboard')" id="btnNavDash" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 transition nav-active cursor-pointer">
             <i class="fa-solid fa-house"></i> Dashboard
@@ -202,9 +243,13 @@
           <button onclick="navigateView('syllabusView')" id="btnNavSyllabus" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
             <i class="fa-solid fa-book-bookmark"></i> Syllabus
           </button>
+          <button onclick="navigateView('holidayAnnounceView')" id="btnNavFacultyHoliday" class="relative w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center justify-between text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-umbrella-beach"></i> Holiday Announcement</span>
+            <span id="holidayBadgeDotFaculty" class="hidden w-2 h-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+          </button>
         </div>
 
-        <!-- Student Navigation -->
+        <!-- Student Navigation Links -->
         <div id="studentNav" class="hidden space-y-1">
           <button onclick="navigateView('studentDashboard')" id="btnNavStudentDash" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 nav-active cursor-pointer">
             <i class="fa-solid fa-clipboard-user"></i> My Attendance
@@ -214,6 +259,10 @@
           </button>
           <button onclick="navigateView('syllabusView')" id="btnNavStudentSyllabus" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
             <i class="fa-solid fa-book-bookmark"></i> Syllabus
+          </button>
+          <button onclick="navigateView('holidayAnnounceView')" id="btnNavStudentHoliday" class="relative w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center justify-between text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-umbrella-beach"></i> Holiday Announcement</span>
+            <span id="holidayBadgeDotStudent" class="hidden w-2 h-2 rounded-full bg-red-500 ring-2 ring-white"></span>
           </button>
         </div>
       </div>
@@ -234,9 +283,7 @@
     <!-- Content Workspace -->
     <div class="flex-1 w-full md:h-full md:overflow-y-auto custom-scroll md:pr-1 space-y-6">
       
-      <!-- ========================================================= -->
-      <!-- ADMIN VIEW 1: ADD 1 CANDIDATE (INDIVIDUAL)               -->
-      <!-- ========================================================= -->
+      <!-- ADMIN VIEW 1: ADD 1 CANDIDATE -->
       <section id="adminAddOneView" class="hidden space-y-6">
         <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -278,7 +325,7 @@
                   <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Default Password</label>
                   <div class="relative">
                     <input id="adminFacultyPassword" type="password" placeholder="Enter initial password" class="w-full border rounded-xl pl-3 pr-10 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
-                    <button type="button" onclick="togglePasswordVisibility('adminFacultyPassword', 'adminFacultyEyeIcon')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition cursor-pointer">
+                    <button type="button" onclick="togglePasswordVisibility('adminFacultyPassword', 'adminFacultyEyeIcon')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition cursor-pointer" title="Show/Hide Password">
                       <i id="adminFacultyEyeIcon" class="fa-regular fa-eye text-xs"></i>
                     </button>
                   </div>
@@ -327,7 +374,7 @@
                   <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Student Password</label>
                   <div class="relative">
                     <input id="adminStudentPassword" type="password" placeholder="Enter initial password" class="w-full border rounded-xl pl-3 pr-10 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
-                    <button type="button" onclick="togglePasswordVisibility('adminStudentPassword', 'adminStudentEyeIcon')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition cursor-pointer">
+                    <button type="button" onclick="togglePasswordVisibility('adminStudentPassword', 'adminStudentEyeIcon')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition cursor-pointer" title="Show/Hide Password">
                       <i id="adminStudentEyeIcon" class="fa-regular fa-eye text-xs"></i>
                     </button>
                   </div>
@@ -342,9 +389,7 @@
         </div>
       </section>
 
-      <!-- ========================================================= -->
-      <!-- ADMIN VIEW 2: ADD MULTIPLE CANDIDATES (BATCH CSV)         -->
-      <!-- ========================================================= -->
+      <!-- ADMIN VIEW 2: ADD MULTIPLE CANDIDATES -->
       <section id="adminAddMultipleView" class="hidden space-y-6">
         <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -366,7 +411,7 @@
               <input type="file" id="batchStudentFileInput" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 border rounded-2xl p-2 bg-slate-50 cursor-pointer">
               <div class="bg-slate-50 p-3 rounded-xl border text-[11px] text-slate-500 space-y-1">
                 <div class="font-semibold text-slate-700">Supported Headers:</div>
-                <p><code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">enrollment_no</code> (or Enrollment / ID) • <code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">name</code> • <code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">course</code> • <code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">semester</code> • <code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">password</code></p>
+                <p><code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">enrollment_no</code> • <code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">name</code> • <code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">course</code> • <code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">semester</code> • <code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">password</code></p>
               </div>
             </div>
 
@@ -381,9 +426,7 @@
         </div>
       </section>
 
-      <!-- ========================================================= -->
-      <!-- ADMIN VIEW 3: UPLOAD TIMETABLE                            -->
-      <!-- ========================================================= -->
+      <!-- ADMIN VIEW 3: UPLOAD TIMETABLE -->
       <section id="adminUploadTimetableView" class="hidden space-y-6">
         <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-cyan-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -424,9 +467,7 @@
         </div>
       </section>
 
-      <!-- ========================================================= -->
-      <!-- ADMIN VIEW 4: UPLOAD SYLLABUS                             -->
-      <!-- ========================================================= -->
+      <!-- ADMIN VIEW 4: UPLOAD SYLLABUS -->
       <section id="adminUploadSyllabusView" class="hidden space-y-6">
         <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-purple-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -469,6 +510,72 @@
           </button>
 
           <div id="adminSylUploadStatus" class="hidden text-xs p-3 rounded-xl border"></div>
+        </div>
+      </section>
+
+      <!-- VIEW 5: HOLIDAY ANNOUNCEMENTS (ADMIN PUBLISH & USER VIEW) -->
+      <section id="holidayAnnounceView" class="hidden space-y-6">
+        <div class="bg-gradient-to-r from-slate-900 via-amber-950 to-orange-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold tracking-widest uppercase mb-2 border border-amber-400/30">
+              <i class="fa-solid fa-umbrella-beach"></i> College Holidays
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold">Official Holiday Announcements</h2>
+            <p class="text-xs text-slate-300 mt-1">Review scheduled institution holidays and download authorized letters.</p>
+          </div>
+          <span class="text-xs font-mono bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-slate-200 shrink-0">
+            Sardar Patel College of Pharmacy
+          </span>
+        </div>
+
+        <!-- Admin Only: Publish Holiday Form -->
+        <div id="adminHolidayPublishCard" class="hidden bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs space-y-4">
+          <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-sm border border-amber-200">
+              <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">Broadcast New College Holiday</h3>
+              <p class="text-[11px] text-slate-400">Notifies all student & faculty portals with official circular attached</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+              <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">From Date</label>
+              <input id="holidayFromDate" type="date" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium">
+            </div>
+            <div>
+              <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">To Date</label>
+              <input id="holidayToDate" type="date" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium">
+            </div>
+          </div>
+
+          <div class="text-xs">
+            <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Reason for Holiday</label>
+            <input id="holidayReasonInput" type="text" placeholder="e.g. Diwali Vacation / National Holiday / Ganesh Chaturthi" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-amber-600 focus:outline-none">
+          </div>
+
+          <div class="text-xs space-y-1.5">
+            <label class="block text-slate-600 font-semibold text-[10px] uppercase">Upload Official Circular / Sanction Letter (PDF or Image)</label>
+            <input type="file" id="holidayLetterFileInput" accept=".pdf, image/png, image/jpeg" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-800 hover:file:bg-amber-100 border rounded-2xl p-2 bg-slate-50 cursor-pointer">
+          </div>
+
+          <button type="button" id="btnPublishHoliday" onclick="publishHolidayAction()" class="w-full bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+            <i class="fa-solid fa-bullhorn"></i> Announce & Publish Holiday
+          </button>
+
+          <div id="adminHolidayStatus" class="hidden text-xs p-3 rounded-xl border"></div>
+        </div>
+
+        <!-- Holiday Announcements List (Visible to all) -->
+        <div class="space-y-4">
+          <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-calendar-check text-amber-600"></i> Active & Past Holiday Circulars
+          </h3>
+          <div id="holidayAnnouncementsList" class="space-y-3.5">
+            <div class="text-xs text-slate-400 p-6 text-center">Fetching holiday records...</div>
+          </div>
         </div>
       </section>
 
@@ -615,7 +722,7 @@
         </div>
       </section>
 
-      <!-- Timetable View (Students, Faculty, Admin) -->
+      <!-- Timetable View -->
       <section id="timetableView" class="hidden w-full bg-white/95 backdrop-blur-md p-5 md:p-6 rounded-3xl shadow-xs border border-white/80 space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
           <div>
@@ -646,7 +753,7 @@
         <div id="ttResultContainer" class="pt-2"></div>
       </section>
 
-      <!-- Syllabus View (Students, Faculty, Admin) -->
+      <!-- Syllabus View -->
       <section id="syllabusView" class="hidden w-full bg-white/95 backdrop-blur-md p-5 md:p-6 rounded-3xl shadow-xs border border-white/80 space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
           <div>
@@ -963,67 +1070,6 @@
     </div>
   </div>
 
-  <!-- Modal: Mobile Support -->
-  <div id="mobileSupportModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
-    <div class="bg-white rounded-2xl w-full max-w-sm p-5 border border-slate-100 shadow-2xl text-center relative">
-      <button onclick="toggleMobileSupport(false)" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
-        <i class="fa-solid fa-xmark text-base"></i>
-      </button>
-      <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-2.5">
-        <i class="fa-solid fa-headset text-base"></i>
-      </div>
-      <div class="text-sm font-bold text-slate-800">Need Technical Support?</div>
-      <div class="text-xs text-slate-600 font-semibold mt-2">Call / WhatsApp: +91 9054826042</div>
-      <div class="text-[11px] text-slate-500 font-medium mt-1 break-all">E Mail ID : talpadaparth1@gmail.com</div>
-      <button onclick="toggleMobileSupport(false)" class="w-full mt-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold py-2 rounded-lg transition cursor-pointer">Close</button>
-    </div>
-  </div>
-
-  <!-- Mobile Bottom Nav -->
-  <nav id="mobileBottomNav" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-2 z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.04)]">
-    <div id="facultyMobileNav" class="flex items-center justify-around text-center">
-      <button onclick="navigateView('facultyDashboard')" id="mBtnDash" class="flex flex-col items-center gap-0.5 text-slate-500 mobile-nav-active cursor-pointer">
-        <i class="fa-solid fa-house text-sm"></i>
-        <span class="text-[10px]">Dashboard</span>
-      </button>
-      <button onclick="openTakeAttendanceModal()" class="flex flex-col items-center gap-0.5 text-blue-600 font-bold cursor-pointer">
-        <i class="fa-solid fa-circle-plus text-base"></i>
-        <span class="text-[10px]">Take New</span>
-      </button>
-      <button onclick="navigateView('attendanceLogs')" id="mBtnLogs" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
-        <i class="fa-solid fa-clipboard-list text-sm"></i>
-        <span class="text-[10px]">Sessions</span>
-      </button>
-      <button onclick="navigateView('reportsExport')" id="mBtnReports" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
-        <i class="fa-solid fa-chart-column text-sm"></i>
-        <span class="text-[10px]">Reports</span>
-      </button>
-      <button onclick="toggleMobileSupport(true)" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
-        <i class="fa-solid fa-headset text-sm"></i>
-        <span class="text-[10px]">Support</span>
-      </button>
-    </div>
-
-    <div id="studentMobileNav" class="hidden flex items-center justify-around text-center">
-      <button onclick="navigateView('studentDashboard')" id="mBtnStudentDash" class="flex flex-col items-center gap-0.5 text-blue-600 font-bold cursor-pointer">
-        <i class="fa-solid fa-clipboard-user text-base"></i>
-        <span class="text-[10px]">Attendance</span>
-      </button>
-      <button onclick="navigateView('timetableView')" id="mBtnStudentTT" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
-        <i class="fa-solid fa-calendar-days text-base"></i>
-        <span class="text-[10px]">Timetable</span>
-      </button>
-      <button onclick="navigateView('syllabusView')" id="mBtnStudentSyl" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
-        <i class="fa-solid fa-book-bookmark text-base"></i>
-        <span class="text-[10px]">Syllabus</span>
-      </button>
-      <button onclick="toggleMobileSupport(true)" class="flex flex-col items-center gap-0.5 text-slate-500 cursor-pointer">
-        <i class="fa-solid fa-headset text-base"></i>
-        <span class="text-[10px]">Support</span>
-      </button>
-    </div>
-  </nav>
-
   <!-- Developer Credit -->
   <footer class="shrink-0 py-2 border-t border-slate-200/80 bg-white/80 backdrop-blur-xs text-center select-none z-30">
     <span class="text-[10px] md:text-[11px] font-mono font-medium text-slate-500 hover:text-blue-600 transition cursor-default">
@@ -1038,7 +1084,7 @@
     // =========================================================================
     var SUPABASE_URL = "https://ierhattpsvizmajwtcol.supabase.co";
     var SUPABASE_ANON_KEY = "sb_publishable_rZKrmVTYtxm0KLvFqoI_AQ__hTETjXH";
-
+    
     var LOCAL_BG_IMAGE_PATH  = "bg.png"; 
     var ONLINE_BG_IMAGE_NAME = "bg.png"; 
 
@@ -1092,6 +1138,75 @@
           icon.classList.add('fa-eye');
         }
       }
+    }
+
+    // =========================================================================
+    // DIRECT BLOB FILE DOWNLOAD HELPER (FIXES CROSS-ORIGIN DOWNLOAD BEHAVIOR)
+    // =========================================================================
+    async function forceDownloadBlob(fileUrl, fileName) {
+      if (!fileUrl) return;
+      try {
+        var res = await fetch(fileUrl);
+        if (!res.ok) throw new Error("Network response failed");
+        var blob = await res.blob();
+        var blobUrl = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = blobUrl;
+        a.download = fileName || 'download';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+          window.URL.revokeObjectURL(blobUrl);
+          document.body.removeChild(a);
+        }, 1500);
+      } catch (err) {
+        // Fallback: Open in new window if blob fetch is blocked
+        window.open(fileUrl, '_blank');
+      }
+    }
+
+    // =========================================================================
+    // MOBILE DRAWER CONTROLLER
+    // =========================================================================
+    function toggleMobileDrawer(show) {
+      var drawer = document.getElementById('mobileDrawerBackdrop');
+      if (!drawer) return;
+      if (show) {
+        syncMobileDrawerNavLinks();
+        drawer.classList.remove('hidden');
+      } else {
+        drawer.classList.add('hidden');
+      }
+    }
+
+    function syncMobileDrawerNavLinks() {
+      var listContainer = document.getElementById('mobileDrawerNavList');
+      if (!listContainer) return;
+      listContainer.innerHTML = '';
+
+      var sourceNavId = 'facultyNav';
+      if (currentUser && currentUser.role === 'admin') sourceNavId = 'adminNav';
+      else if (currentRole === 'student') sourceNavId = 'studentNav';
+
+      var sourceNav = document.getElementById(sourceNavId);
+      if (!sourceNav) return;
+
+      var buttons = sourceNav.querySelectorAll('button');
+      buttons.forEach(function(btn) {
+        var clone = btn.cloneNode(true);
+        // Remove desktop specific ids on clones
+        clone.removeAttribute('id');
+        clone.className = "w-full text-left px-3.5 py-2.5 rounded-xl text-xs flex items-center justify-between text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition cursor-pointer";
+        
+        // Wrap click to close drawer after navigation
+        var originalOnClick = btn.getAttribute('onclick');
+        clone.onclick = function() {
+          toggleMobileDrawer(false);
+          if (originalOnClick) eval(originalOnClick);
+        };
+        listContainer.appendChild(clone);
+      });
     }
 
     // =========================================================================
@@ -1274,12 +1389,6 @@
       syncAdminUploadSylSubjects();
     });
 
-    function toggleMobileSupport(show) {
-      var modal = document.getElementById('mobileSupportModal');
-      if (show) modal.classList.remove('hidden');
-      else modal.classList.add('hidden');
-    }
-
     function openTakeAttendanceModal() {
       document.getElementById('takeAttendanceModal').classList.remove('hidden');
     }
@@ -1403,7 +1512,7 @@
     function setupAdminSession() {
       document.getElementById('authSection').classList.add('hidden');
       document.getElementById('appContainer').classList.remove('hidden');
-      document.getElementById('mobileBottomNav').classList.add('hidden');
+      document.getElementById('mobileMenuToggleBtn').classList.remove('hidden');
 
       document.getElementById('userProfileBadge').classList.remove('hidden');
       document.getElementById('userProfileBadge').classList.add('flex');
@@ -1413,20 +1522,21 @@
       document.getElementById('facultyNav').classList.add('hidden');
       document.getElementById('studentNav').classList.add('hidden');
       document.getElementById('adminNav').classList.remove('hidden');
+      document.getElementById('adminHolidayPublishCard').classList.remove('hidden');
 
       navigateView('adminAddOneView');
       syncAdminStudentSemesters();
       syncAdminUploadTTSemesters();
       syncAdminUploadSylSemesters();
       syncAdminUploadSylSubjects();
+      checkUnreadNotifications();
+      checkHolidayBadgeStatus();
     }
 
     function setupFacultySession() {
       document.getElementById('authSection').classList.add('hidden');
       document.getElementById('appContainer').classList.remove('hidden');
-      document.getElementById('mobileBottomNav').classList.remove('hidden');
-      document.getElementById('facultyMobileNav').classList.remove('hidden');
-      document.getElementById('studentMobileNav').classList.add('hidden');
+      document.getElementById('mobileMenuToggleBtn').classList.remove('hidden');
 
       document.getElementById('userProfileBadge').classList.remove('hidden');
       document.getElementById('userProfileBadge').classList.add('flex');
@@ -1437,18 +1547,18 @@
       document.getElementById('adminNav').classList.add('hidden');
       document.getElementById('facultyNav').classList.remove('hidden');
       document.getElementById('studentNav').classList.add('hidden');
+      document.getElementById('adminHolidayPublishCard').classList.add('hidden');
       
       navigateView('facultyDashboard');
       loadFacultyDashboardMetrics();
       checkUnreadNotifications();
+      checkHolidayBadgeStatus();
     }
 
     function setupStudentSession() {
       document.getElementById('authSection').classList.add('hidden');
       document.getElementById('appContainer').classList.remove('hidden');
-      document.getElementById('mobileBottomNav').classList.remove('hidden');
-      document.getElementById('facultyMobileNav').classList.add('hidden');
-      document.getElementById('studentMobileNav').classList.remove('hidden');
+      document.getElementById('mobileMenuToggleBtn').classList.remove('hidden');
 
       document.getElementById('userProfileBadge').classList.remove('hidden');
       document.getElementById('userProfileBadge').classList.add('flex');
@@ -1458,6 +1568,7 @@
       document.getElementById('adminNav').classList.add('hidden');
       document.getElementById('facultyNav').classList.add('hidden');
       document.getElementById('studentNav').classList.remove('hidden');
+      document.getElementById('adminHolidayPublishCard').classList.add('hidden');
 
       if (currentUser.course) {
         var ttC = document.getElementById('ttCourseSelect');
@@ -1479,31 +1590,35 @@
       navigateView('studentDashboard');
       loadStudentPortalData();
       checkUnreadNotifications();
+      checkHolidayBadgeStatus();
     }
 
     function logout() {
       currentUser = null;
       document.getElementById('appContainer').classList.add('hidden');
-      document.getElementById('mobileBottomNav').classList.add('hidden');
+      document.getElementById('mobileMenuToggleBtn').classList.add('hidden');
       document.getElementById('userProfileBadge').classList.add('hidden');
       document.getElementById('userProfileBadge').classList.remove('flex');
       document.getElementById('authSection').classList.remove('hidden');
       document.getElementById('loginPasswordInput').value = '';
+      toggleMobileDrawer(false);
     }
 
     function navigateView(viewName) {
       [
         'adminAddOneView', 'adminAddMultipleView', 'adminUploadTimetableView', 'adminUploadSyllabusView',
-        'facultyDashboardView', 'attendanceLogsView', 'reportsExportView', 'timetableView', 'syllabusView', 'studentDashboardView'
+        'holidayAnnounceView', 'facultyDashboardView', 'attendanceLogsView', 'reportsExportView',
+        'timetableView', 'syllabusView', 'studentDashboardView'
       ].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.classList.add('hidden');
       });
 
       [
-        'btnNavAdminAddOne', 'btnNavAdminAddMultiple', 'btnNavAdminUploadTT', 'btnNavAdminUploadSyl', 'btnNavAdminReports', 'btnNavAdminTimetable', 'btnNavAdminSyllabus',
-        'btnNavDash', 'btnNavLogs', 'btnNavReports', 'btnNavTimetable', 'btnNavSyllabus',
-        'btnNavStudentDash', 'btnNavStudentTimetable', 'btnNavStudentSyllabus'
+        'btnNavAdminAddOne', 'btnNavAdminAddMultiple', 'btnNavAdminUploadTT', 'btnNavAdminUploadSyl', 
+        'btnNavAdminHoliday', 'btnNavAdminReports', 'btnNavAdminTimetable', 'btnNavAdminSyllabus',
+        'btnNavDash', 'btnNavLogs', 'btnNavReports', 'btnNavTimetable', 'btnNavSyllabus', 'btnNavFacultyHoliday',
+        'btnNavStudentDash', 'btnNavStudentTimetable', 'btnNavStudentSyllabus', 'btnNavStudentHoliday'
       ].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) {
@@ -1528,15 +1643,20 @@
         document.getElementById('btnNavAdminUploadSyl')?.classList.add('nav-active');
         syncAdminUploadSylSemesters();
         syncAdminUploadSylSubjects();
+      } else if (viewName === 'holidayAnnounceView') {
+        document.getElementById('holidayAnnounceView').classList.remove('hidden');
+        document.getElementById('btnNavAdminHoliday')?.classList.add('nav-active');
+        document.getElementById('btnNavFacultyHoliday')?.classList.add('nav-active');
+        document.getElementById('btnNavStudentHoliday')?.classList.add('nav-active');
+        markHolidaysAsSeen();
+        loadHolidayAnnouncements();
       } else if (viewName === 'facultyDashboard') {
         document.getElementById('facultyDashboardView').classList.remove('hidden');
         document.getElementById('btnNavDash')?.classList.add('nav-active');
-        document.getElementById('mBtnDash')?.classList.add('mobile-nav-active');
         loadFacultyDashboardMetrics();
       } else if (viewName === 'attendanceLogs') {
         document.getElementById('attendanceLogsView').classList.remove('hidden');
         document.getElementById('btnNavLogs')?.classList.add('nav-active');
-        document.getElementById('mBtnLogs')?.classList.add('mobile-nav-active');
         renderLogs();
       } else if (viewName === 'reportsExport') {
         document.getElementById('reportsExportView').classList.remove('hidden');
@@ -1973,7 +2093,6 @@
         var fileExt = file.name.split('.').pop();
         var cleanFileName = 'timetable_' + course.replace(/[\s\(\)\/]/g, '_') + '_' + sem.replace(/[\s\(\)\/]/g, '_') + '_' + Date.now() + '.' + fileExt;
 
-        // Upload to public 'academic_files' storage bucket
         var { data: uploadData, error: uploadErr } = await db.storage
           .from('academic_files')
           .upload(cleanFileName, file, { upsert: true });
@@ -1983,7 +2102,6 @@
         var { data: urlData } = db.storage.from('academic_files').getPublicUrl(cleanFileName);
         var publicUrl = urlData.publicUrl;
 
-        // Upsert metadata record
         var { error: dbErr } = await db.from('timetables').upsert([{
           course: course,
           semester: sem,
@@ -2071,6 +2189,220 @@
     }
 
     // =========================================================================
+    // HOLIDAY ANNOUNCEMENT ENGINE (PUBLISH, ALERTS, SEEN-DOTS)
+    // =========================================================================
+    async function publishHolidayAction() {
+      if (!db || !currentUser) { alert("Please login first."); return; }
+      var fromDate = document.getElementById('holidayFromDate').value;
+      var toDate = document.getElementById('holidayToDate').value;
+      var reason = document.getElementById('holidayReasonInput').value.trim();
+      var fileInput = document.getElementById('holidayLetterFileInput');
+      var statusBox = document.getElementById('adminHolidayStatus');
+      var btn = document.getElementById('btnPublishHoliday');
+
+      if (!fromDate || !toDate || !reason) {
+        alert("Please complete the From Date, To Date, and Reason fields.");
+        return;
+      }
+
+      if (toDate < fromDate) {
+        alert("Invalid Date Range: 'To Date' cannot be earlier than 'From Date'.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Broadcasting Holiday...';
+
+      statusBox.className = "text-xs p-3 rounded-xl border bg-slate-50 text-slate-700 block";
+      statusBox.innerText = "Processing official circular letter...";
+
+      try {
+        var letterUrl = "";
+        var letterName = "";
+
+        if (fileInput.files && fileInput.files.length > 0) {
+          var file = fileInput.files[0];
+          var fileExt = file.name.split('.').pop();
+          var cleanFileName = 'holiday_circular_' + Date.now() + '.' + fileExt;
+
+          var { error: uploadErr } = await db.storage
+            .from('academic_files')
+            .upload(cleanFileName, file, { upsert: true });
+
+          if (uploadErr) throw uploadErr;
+
+          var { data: urlData } = db.storage.from('academic_files').getPublicUrl(cleanFileName);
+          letterUrl = urlData.publicUrl;
+          letterName = file.name;
+        }
+
+        var adminDisplayName = currentUser.name || "System Administrator";
+
+        // 1. Insert into holidays table
+        var { data: holidayData, error: holidayErr } = await db.from('holidays').insert([{
+          admin_name: adminDisplayName,
+          from_date: fromDate,
+          to_date: toDate,
+          reason: reason,
+          letter_file_name: letterName,
+          letter_file_url: letterUrl,
+          created_at: new Date().toISOString()
+        }]).select().single();
+
+        if (holidayErr) throw holidayErr;
+
+        // 2. Broadcast general notice to Notifications center (WITHOUT letter, instructing users to view circular tab)
+        var noticeMsg = "Official College Holiday announced from " + formatDateToDMY(fromDate) + " to " + formatDateToDMY(toDate) + ". Reason: " + reason + ". Visit the 'Holiday Announcement' tab to inspect and download the official sanction letter.";
+        
+        await db.from('notifications').insert([{
+          sender_id: currentUser.faculty_id || currentUser.id || 'ADMIN',
+          sender_name: adminDisplayName,
+          course: 'ALL',
+          semester: 'ALL',
+          title: "College Holiday: " + reason,
+          message: noticeMsg
+        }]);
+
+        statusBox.className = "text-xs p-3.5 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 block";
+        statusBox.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i> Holiday announced successfully and alert sent to all portal users!';
+        
+        document.getElementById('holidayFromDate').value = '';
+        document.getElementById('holidayToDate').value = '';
+        document.getElementById('holidayReasonInput').value = '';
+        fileInput.value = '';
+
+        loadHolidayAnnouncements();
+        checkHolidayBadgeStatus();
+        alert("Holiday announcement published and notification broadcasted!");
+      } catch (err) {
+        statusBox.className = "text-xs p-3.5 rounded-xl border border-rose-300 bg-rose-50 text-rose-800 block";
+        statusBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1.5"></i> Announcement Failed: ' + err.message;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-bullhorn"></i> Announce & Publish Holiday';
+      }
+    }
+
+    async function loadHolidayAnnouncements() {
+      if (!db) return;
+      var list = document.getElementById('holidayAnnouncementsList');
+      if (!list) return;
+
+      list.innerHTML = '<div class="text-xs text-slate-400 p-6 text-center">Loading holiday records...</div>';
+
+      try {
+        var { data, error } = await db.from('holidays')
+          .select('*')
+          .order('id', { ascending: false });
+
+        if (error) throw error;
+
+        list.innerHTML = '';
+        if (!data || data.length === 0) {
+          list.innerHTML = `
+            <div class="rounded-3xl border border-slate-200/90 bg-white p-8 text-center space-y-2">
+              <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-regular fa-calendar"></i>
+              </div>
+              <h4 class="font-bold text-slate-800 text-sm">No Active Holiday Notices</h4>
+              <p class="text-xs text-slate-500 max-w-sm mx-auto">There are currently no scheduled holidays announced by the college administration.</p>
+            </div>
+          `;
+          return;
+        }
+
+        data.forEach(function(item) {
+          var card = document.createElement('div');
+          card.className = "rounded-3xl border border-amber-200/80 bg-gradient-to-br from-amber-50/50 via-white to-slate-50/60 p-5 md:p-6 shadow-xs space-y-3.5";
+
+          var fromFormatted = formatDateToDMY(item.from_date);
+          var toFormatted = formatDateToDMY(item.to_date);
+          var isSingleDay = item.from_date === item.to_date;
+          var dateRangeText = isSingleDay ? fromFormatted : (fromFormatted + ' to ' + toFormatted);
+
+          var hasFile = item.letter_file_url && item.letter_file_url.length > 0;
+          var isPdf = hasFile && item.letter_file_name.toLowerCase().endsWith('.pdf');
+
+          card.innerHTML = `
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-100 pb-3">
+              <div class="flex items-center gap-2.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                <h4 class="font-bold text-slate-900 text-sm md:text-base">${item.reason}</h4>
+              </div>
+              <div class="inline-flex items-center gap-1.5 text-xs text-amber-800 font-semibold bg-amber-100/70 px-3 py-1 rounded-full w-fit">
+                <i class="fa-solid fa-calendar-day text-[11px]"></i> ${dateRangeText}
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+              <div class="text-slate-600">
+                <span class="font-medium text-slate-400">Sanctioned by:</span> <strong>${item.admin_name}</strong>
+              </div>
+              
+              ${hasFile ? `
+                <div class="flex items-center gap-2">
+                  <a href="${item.letter_file_url}" target="_blank" class="inline-flex items-center gap-1.5 bg-white text-slate-700 hover:text-blue-700 border border-slate-200 px-3 py-1.5 rounded-xl font-semibold transition shadow-2xs cursor-pointer">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> View Circular
+                  </a>
+                  <button type="button" onclick="forceDownloadBlob('${item.letter_file_url}', '${item.letter_file_name}')" class="inline-flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-1.5 rounded-xl font-semibold transition shadow-2xs cursor-pointer">
+                    <i class="fa-solid fa-download text-xs"></i> Download Circular
+                  </button>
+                </div>
+              ` : `
+                <div class="text-[11px] text-slate-400 italic">No document attached to this circular.</div>
+              `}
+            </div>
+          `;
+          list.appendChild(card);
+        });
+
+      } catch (err) {
+        list.innerHTML = '<div class="text-xs text-red-500 p-4 text-center">' + err.message + '</div>';
+      }
+    }
+
+    async function checkHolidayBadgeStatus() {
+      if (!db || !currentUser) return;
+      try {
+        var { data } = await db.from('holidays').select('id').order('id', { ascending: false }).limit(1);
+        if (data && data.length > 0) {
+          var latestId = Number(data[0].id) || 0;
+          var storageKey = 'spcp_last_seen_holiday_' + (currentUser.enrollment_no || currentUser.faculty_id || 'ADMIN');
+          var lastSeenId = Number(localStorage.getItem(storageKey)) || 0;
+
+          var shouldShow = latestId > lastSeenId;
+          ['holidayBadgeDotAdmin', 'holidayBadgeDotFaculty', 'holidayBadgeDotStudent'].forEach(function(dotId) {
+            var dot = document.getElementById(dotId);
+            if (dot) {
+              if (shouldShow) dot.classList.remove('hidden');
+              else dot.classList.add('hidden');
+            }
+          });
+        }
+      } catch (e) {
+        console.warn("Holiday badge error:", e);
+      }
+    }
+
+    async function markHolidaysAsSeen() {
+      if (!db || !currentUser) return;
+      try {
+        var { data } = await db.from('holidays').select('id').order('id', { ascending: false }).limit(1);
+        if (data && data.length > 0) {
+          var latestId = Number(data[0].id) || 0;
+          var storageKey = 'spcp_last_seen_holiday_' + (currentUser.enrollment_no || currentUser.faculty_id || 'ADMIN');
+          localStorage.setItem(storageKey, latestId);
+
+          ['holidayBadgeDotAdmin', 'holidayBadgeDotFaculty', 'holidayBadgeDotStudent'].forEach(function(dotId) {
+            document.getElementById(dotId)?.classList.add('hidden');
+          });
+        }
+      } catch (e) {
+        console.warn("Mark seen error:", e);
+      }
+    }
+
+    // =========================================================================
     // STUDENT & FACULTY: VIEW / DOWNLOAD TIMETABLE & SYLLABUS
     // =========================================================================
     async function fetchAndDisplayTimetable() {
@@ -2122,9 +2454,9 @@
                 <a href="${data.file_url}" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-xs cursor-pointer">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full View
                 </a>
-                <a href="${data.file_url}" download="${data.file_name}" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-xs cursor-pointer">
+                <button type="button" onclick="forceDownloadBlob('${data.file_url}', '${data.file_name}')" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-xs cursor-pointer">
                   <i class="fa-solid fa-download"></i> Download
-                </a>
+                </button>
               </div>
             </div>
 
@@ -2199,9 +2531,9 @@
                 <a href="${data.file_url}" target="_blank" class="inline-flex items-center gap-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-xs cursor-pointer">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full View
                 </a>
-                <a href="${data.file_url}" download="${data.file_name}" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-xs cursor-pointer">
+                <button type="button" onclick="forceDownloadBlob('${data.file_url}', '${data.file_name}')" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-xs cursor-pointer">
                   <i class="fa-solid fa-download"></i> Download
-                </a>
+                </button>
               </div>
             </div>
 
@@ -2219,32 +2551,29 @@
       }
     }
 
-    // -------------------------------------------------------------
+    // =========================================================================
     // NOTIFICATION ENGINE (WITH SEEN TRACKING VIA LOCALSTORAGE)
-    // -------------------------------------------------------------
+    // =========================================================================
     async function checkUnreadNotifications() {
-      if (!db || !currentUser || currentUser.role === 'admin') return;
+      if (!db || !currentUser) return;
       try {
         var dot = document.getElementById('notifBadgeDot');
+        
+        var query = db.from('notifications').select('id').order('id', { ascending: false }).limit(1);
         if (currentRole === 'student') {
-          var { data, error } = await db.from('notifications')
-            .select('id')
-            .eq('course', currentUser.course)
-            .eq('semester', currentUser.semester)
-            .order('id', { ascending: false })
-            .limit(1);
+          query = query.or('course.eq.' + currentUser.course + ',course.eq.ALL');
+        }
 
-          if (error) throw error;
+        var { data, error } = await query;
+        if (error) throw error;
 
-          if (data && data.length > 0) {
-            var latestId = Number(data[0].id) || 0;
-            var lastSeenId = Number(localStorage.getItem('gtu_last_seen_notif_' + currentUser.enrollment_no)) || 0;
+        if (data && data.length > 0) {
+          var latestId = Number(data[0].id) || 0;
+          var storageKey = 'gtu_last_seen_notif_' + (currentUser.enrollment_no || currentUser.faculty_id || 'ADMIN');
+          var lastSeenId = Number(localStorage.getItem(storageKey)) || 0;
 
-            if (latestId > lastSeenId) {
-              dot?.classList.remove('hidden');
-            } else {
-              dot?.classList.add('hidden');
-            }
+          if (latestId > lastSeenId) {
+            dot?.classList.remove('hidden');
           } else {
             dot?.classList.add('hidden');
           }
@@ -2397,8 +2726,7 @@
       try {
         var { data, error } = await db.from('notifications')
           .select('*')
-          .eq('course', currentUser.course)
-          .eq('semester', currentUser.semester)
+          .or('course.eq.' + currentUser.course + ',course.eq.ALL')
           .order('id', { ascending: false });
 
         if (error) throw error;
@@ -2411,14 +2739,15 @@
                 <i class="fa-regular fa-bell-slash"></i>
               </div>
               <div class="text-xs font-bold text-slate-800">No New Notifications</div>
-              <p class="text-[11px] text-slate-400 mt-1">There are currently no announcements broadcasted for ${currentUser.course} (${currentUser.semester}).</p>
+              <p class="text-[11px] text-slate-400 mt-1">There are currently no announcements broadcasted for your session.</p>
             </div>
           `;
           return;
         }
 
         var maxId = Math.max.apply(Math, data.map(function(item) { return Number(item.id) || 0; }));
-        localStorage.setItem('gtu_last_seen_notif_' + currentUser.enrollment_no, maxId);
+        var storageKey = 'gtu_last_seen_notif_' + (currentUser.enrollment_no || currentUser.faculty_id || 'ADMIN');
+        localStorage.setItem(storageKey, maxId);
         document.getElementById('notifBadgeDot')?.classList.add('hidden');
 
         data.forEach(function(item) {
@@ -2430,7 +2759,7 @@
           card.innerHTML = `
             <div class="flex items-center justify-between text-[11px] text-slate-400 border-b border-slate-100 pb-1.5">
               <span class="flex items-center gap-1.5 font-bold text-blue-700">
-                <i class="fa-solid fa-chalkboard-user"></i> ${item.sender_name}
+                <i class="fa-solid fa-circle-info"></i> ${item.sender_name}
               </span>
               <span class="font-mono text-[10px]">${dateFormatted} at ${timeFormatted}</span>
             </div>
@@ -3144,6 +3473,7 @@
       try {
         await loadStudentPortalData();
         await checkUnreadNotifications();
+        await checkHolidayBadgeStatus();
         var now = new Date();
         var timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         var lastUpEl = document.getElementById('studentLastUpdated');
