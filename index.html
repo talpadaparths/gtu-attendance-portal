@@ -159,17 +159,26 @@
         
         <!-- Admin Navigation -->
         <div id="adminNav" class="hidden space-y-1">
-          <button onclick="navigateView('adminDashboardView')" id="btnNavAdminDash" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 transition nav-active cursor-pointer">
-            <i class="fa-solid fa-shield-halved"></i> Admin Control
+          <button onclick="navigateView('adminAddOneView')" id="btnNavAdminAddOne" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 transition nav-active cursor-pointer">
+            <i class="fa-solid fa-user-plus"></i> Add 1 Candidate
+          </button>
+          <button onclick="navigateView('adminAddMultipleView')" id="btnNavAdminAddMultiple" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <i class="fa-solid fa-users"></i> Add Multiple Candidates
+          </button>
+          <button onclick="navigateView('adminUploadTimetableView')" id="btnNavAdminUploadTT" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <i class="fa-solid fa-calendar-plus"></i> Upload Timetable
+          </button>
+          <button onclick="navigateView('adminUploadSyllabusView')" id="btnNavAdminUploadSyl" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            <i class="fa-solid fa-file-circle-plus"></i> Upload Syllabus
           </button>
           <button onclick="navigateView('reportsExport')" id="btnNavAdminReports" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
             <i class="fa-solid fa-chart-column"></i> Attendance Matrix
           </button>
           <button onclick="navigateView('timetableView')" id="btnNavAdminTimetable" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
-            <i class="fa-solid fa-calendar-days"></i> Timetable
+            <i class="fa-solid fa-calendar-days"></i> View Timetable
           </button>
           <button onclick="navigateView('syllabusView')" id="btnNavAdminSyllabus" class="w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center gap-3 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
-            <i class="fa-solid fa-book-bookmark"></i> Syllabus
+            <i class="fa-solid fa-book-bookmark"></i> View Syllabus
           </button>
         </div>
 
@@ -226,26 +235,24 @@
     <div class="flex-1 w-full md:h-full md:overflow-y-auto custom-scroll md:pr-1 space-y-6">
       
       <!-- ========================================================= -->
-      <!-- ADMIN CONTROL DASHBOARD                                   -->
+      <!-- ADMIN VIEW 1: ADD 1 CANDIDATE (INDIVIDUAL)               -->
       <!-- ========================================================= -->
-      <section id="adminDashboardView" class="hidden space-y-6">
+      <section id="adminAddOneView" class="hidden space-y-6">
         <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-bold tracking-widest uppercase mb-2 border border-blue-400/30">
-              <i class="fa-solid fa-shield-halved"></i> Master Administration
+              <i class="fa-solid fa-user-plus"></i> Individual Enrollment
             </div>
-            <h2 class="text-xl md:text-2xl font-bold">University Roster & Faculty Management</h2>
-            <p class="text-xs text-slate-300 mt-1">Register faculty members, enroll individual students, or batch upload student rosters via CSV/Excel.</p>
+            <h2 class="text-xl md:text-2xl font-bold">Register Individual Candidate</h2>
+            <p class="text-xs text-slate-300 mt-1">Add or update individual faculty members or students one by one.</p>
           </div>
           <div class="text-xs font-mono bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-slate-200 shrink-0">
-            Secure Admin Session
+            Master Admin Session
           </div>
         </div>
 
-        <!-- Row 1: Single Faculty & Single Student Forms -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
-          <!-- Card 1: Add New Faculty -->
+          <!-- Card 1: Add Faculty -->
           <div class="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
@@ -271,7 +278,7 @@
                   <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Default Password</label>
                   <div class="relative">
                     <input id="adminFacultyPassword" type="password" placeholder="Enter initial password" class="w-full border rounded-xl pl-3 pr-10 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
-                    <button type="button" onclick="togglePasswordVisibility('adminFacultyPassword', 'adminFacultyEyeIcon')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition cursor-pointer" title="Show/Hide Password">
+                    <button type="button" onclick="togglePasswordVisibility('adminFacultyPassword', 'adminFacultyEyeIcon')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition cursor-pointer">
                       <i id="adminFacultyEyeIcon" class="fa-regular fa-eye text-xs"></i>
                     </button>
                   </div>
@@ -284,7 +291,7 @@
             </button>
           </div>
 
-          <!-- Card 2: Add Single Student -->
+          <!-- Card 2: Add Student -->
           <div class="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
@@ -293,7 +300,7 @@
                 </div>
                 <div>
                   <h3 class="text-sm font-bold text-slate-900">Enroll / Update Student</h3>
-                  <p class="text-[11px] text-slate-400">Assign individual student to Course & Semester</p>
+                  <p class="text-[11px] text-slate-400">Assign student to Course & Semester</p>
                 </div>
               </div>
 
@@ -320,7 +327,7 @@
                   <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Student Password</label>
                   <div class="relative">
                     <input id="adminStudentPassword" type="password" placeholder="Enter initial password" class="w-full border rounded-xl pl-3 pr-10 py-2.5 bg-slate-50 font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
-                    <button type="button" onclick="togglePasswordVisibility('adminStudentPassword', 'adminStudentEyeIcon')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition cursor-pointer" title="Show/Hide Password">
+                    <button type="button" onclick="togglePasswordVisibility('adminStudentPassword', 'adminStudentEyeIcon')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition cursor-pointer">
                       <i id="adminStudentEyeIcon" class="fa-regular fa-eye text-xs"></i>
                     </button>
                   </div>
@@ -332,43 +339,136 @@
               <i class="fa-solid fa-user-check"></i> Enroll Student
             </button>
           </div>
+        </div>
+      </section>
 
+      <!-- ========================================================= -->
+      <!-- ADMIN VIEW 2: ADD MULTIPLE CANDIDATES (BATCH CSV)         -->
+      <!-- ========================================================= -->
+      <section id="adminAddMultipleView" class="hidden space-y-6">
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-bold tracking-widest uppercase mb-2 border border-indigo-400/30">
+              <i class="fa-solid fa-users"></i> Batch Upload
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold">Enroll Multiple Candidates via CSV</h2>
+            <p class="text-xs text-slate-300 mt-1">Upload a complete student roster to enroll hundreds of students at once.</p>
+          </div>
+          <button type="button" onclick="downloadStudentBatchTemplate()" class="inline-flex items-center gap-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2.5 rounded-xl transition cursor-pointer shadow-sm shrink-0">
+            <i class="fa-solid fa-download"></i> Download CSV Template
+          </button>
         </div>
 
-        <!-- Row 2: Batch Student CSV/Excel Upload Card -->
-        <div class="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg border border-indigo-100 shrink-0">
-                <i class="fa-solid fa-file-csv"></i>
-              </div>
-              <div>
-                <h3 class="text-sm font-bold text-slate-900">Batch Student Enrollment (.csv / .xlsx)</h3>
-                <p class="text-[11px] text-slate-400">Enroll entire classes simultaneously by uploading a CSV or Excel spreadsheet</p>
-              </div>
-            </div>
-            <button type="button" onclick="downloadStudentBatchTemplate()" class="inline-flex items-center gap-2 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-3.5 py-2 rounded-xl transition cursor-pointer shadow-2xs shrink-0">
-              <i class="fa-solid fa-download"></i> Download CSV Template
-            </button>
-          </div>
-
+        <div class="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs space-y-5">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div class="md:col-span-2">
-              <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1.5">Select Roster File (.csv, .xlsx, .xls)</label>
-              <input type="file" id="batchStudentFileInput" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 border rounded-2xl p-1.5 bg-slate-50 cursor-pointer">
-              <p class="text-[10px] text-slate-400 mt-1.5 leading-relaxed">
-                Expected columns: <code class="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-700">enrollment_no</code>, <code class="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-700">name</code>, <code class="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-700">course</code>, <code class="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-700">semester</code>, <code class="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-700">password</code> (optional default: SPCP@enrollment).
-              </p>
+            <div class="md:col-span-2 space-y-2">
+              <label class="block text-slate-700 font-bold text-xs">Select CSV or Excel Roster File</label>
+              <input type="file" id="batchStudentFileInput" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 border rounded-2xl p-2 bg-slate-50 cursor-pointer">
+              <div class="bg-slate-50 p-3 rounded-xl border text-[11px] text-slate-500 space-y-1">
+                <div class="font-semibold text-slate-700">Supported Headers:</div>
+                <p><code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">enrollment_no</code> (or Enrollment / ID) • <code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">name</code> • <code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">course</code> • <code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">semester</code> • <code class="font-mono bg-white px-1.5 py-0.5 rounded border text-slate-800">password</code></p>
+              </div>
             </div>
 
             <div class="flex items-end">
-              <button type="button" id="btnBatchEnroll" onclick="processBatchStudentUpload()" class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-sm">
-                <i class="fa-solid fa-cloud-arrow-up"></i> Upload & Enroll Students
+              <button type="button" id="btnBatchEnroll" onclick="processBatchStudentUpload()" class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold text-xs py-3.5 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+                <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Upload & Enroll Students
               </button>
             </div>
           </div>
 
           <div id="batchUploadStatus" class="hidden text-xs p-3 rounded-xl border"></div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- ADMIN VIEW 3: UPLOAD TIMETABLE                            -->
+      <!-- ========================================================= -->
+      <section id="adminUploadTimetableView" class="hidden space-y-6">
+        <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-cyan-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-bold tracking-widest uppercase mb-2 border border-cyan-400/30">
+              <i class="fa-solid fa-calendar-plus"></i> Schedule Publishing
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold">Publish Class & Lab Timetable</h2>
+            <p class="text-xs text-slate-300 mt-1">Upload official timetable documents for students and faculty members.</p>
+          </div>
+          <div class="text-xs font-mono bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-slate-200 shrink-0">
+            GTU / SPCP Academic Session
+          </div>
+        </div>
+
+        <div class="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs space-y-5 max-w-2xl">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+              <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Select Degree Course</label>
+              <select id="adminUploadTTCourse" onchange="syncAdminUploadTTSemesters()" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
+            </div>
+            <div>
+              <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Select Semester / Year</label>
+              <select id="adminUploadTTSem" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
+            </div>
+          </div>
+
+          <div class="text-xs space-y-1.5">
+            <label class="block text-slate-600 font-semibold text-[10px] uppercase">Timetable Document File (PDF or Image)</label>
+            <input type="file" id="adminTTFileInput" accept=".pdf, image/png, image/jpeg" class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border rounded-2xl p-2 bg-slate-50 cursor-pointer">
+            <p class="text-[10px] text-slate-400">Accepted file types: PDF, PNG, JPG (Max 15MB).</p>
+          </div>
+
+          <button type="button" id="btnAdminUploadTT" onclick="adminUploadTimetableAction()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Upload & Publish Timetable
+          </button>
+
+          <div id="adminTTUploadStatus" class="hidden text-xs p-3 rounded-xl border"></div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- ADMIN VIEW 4: UPLOAD SYLLABUS                             -->
+      <!-- ========================================================= -->
+      <section id="adminUploadSyllabusView" class="hidden space-y-6">
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-purple-950 text-white p-6 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-bold tracking-widest uppercase mb-2 border border-purple-400/30">
+              <i class="fa-solid fa-file-circle-plus"></i> Curriculum Publishing
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold">Publish Subject Syllabus</h2>
+            <p class="text-xs text-slate-300 mt-1">Upload PCI and GTU syllabus modules for specific subjects.</p>
+          </div>
+          <div class="text-xs font-mono bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-slate-200 shrink-0">
+            PCI & GTU Compliance
+          </div>
+        </div>
+
+        <div class="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-white/80 shadow-xs space-y-5 max-w-2xl">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+              <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Degree Course</label>
+              <select id="adminUploadSylCourse" onchange="syncAdminUploadSylSemesters()" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
+            </div>
+            <div>
+              <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Semester / Year</label>
+              <select id="adminUploadSylSem" onchange="syncAdminUploadSylSubjects()" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
+            </div>
+          </div>
+
+          <div class="text-xs">
+            <label class="block text-slate-600 font-semibold text-[10px] uppercase mb-1">Subject</label>
+            <select id="adminUploadSylSubject" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium truncate"></select>
+          </div>
+
+          <div class="text-xs space-y-1.5">
+            <label class="block text-slate-600 font-semibold text-[10px] uppercase">Syllabus Document File (PDF or Image)</label>
+            <input type="file" id="adminSylFileInput" accept=".pdf, image/png, image/jpeg" class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 border rounded-2xl p-2 bg-slate-50 cursor-pointer">
+            <p class="text-[10px] text-slate-400">Accepted file types: PDF, PNG, JPG (Max 15MB).</p>
+          </div>
+
+          <button type="button" id="btnAdminUploadSyl" onclick="adminUploadSyllabusAction()" class="w-full bg-purple-600 hover:bg-purple-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Upload & Publish Syllabus
+          </button>
+
+          <div id="adminSylUploadStatus" class="hidden text-xs p-3 rounded-xl border"></div>
         </div>
       </section>
 
@@ -388,19 +488,6 @@
           </div>
 
           <div class="flex items-center gap-5 z-10 w-full md:w-auto justify-between md:justify-end">
-            <div class="hidden lg:block w-28 h-16 opacity-85">
-              <svg viewBox="0 0 160 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="25" y="10" width="110" height="70" rx="6" fill="#1e293b"/>
-                <rect x="30" y="15" width="100" height="60" rx="3" fill="#ffffff"/>
-                <circle cx="55" cy="45" r="16" stroke="#2563eb" stroke-width="4" stroke-dasharray="70 30" fill="none"/>
-                <rect x="80" y="30" width="40" height="4" rx="2" fill="#cbd5e1"/>
-                <rect x="80" y="40" width="30" height="4" rx="2" fill="#93c5fd"/>
-                <rect x="80" y="50" width="45" height="4" rx="2" fill="#e2e8f0"/>
-                <path d="M10 82C10 80.8954 10.8954 80 12 80H148C149.105 80 150 80.8954 150 82V86H10V82Z" fill="#64748b"/>
-                <rect x="68" y="80" width="24" height="2" rx="1" fill="#94a3b8"/>
-              </svg>
-            </div>
-
             <button onclick="openTakeAttendanceModal()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm font-semibold px-5 py-3 rounded-2xl shadow-sm hover:shadow transition flex items-center gap-2 cursor-pointer shrink-0">
               <i class="fa-solid fa-circle-plus text-base"></i> Take New Attendance
             </button>
@@ -528,7 +615,7 @@
         </div>
       </section>
 
-      <!-- Timetable View -->
+      <!-- Timetable View (Students, Faculty, Admin) -->
       <section id="timetableView" class="hidden w-full bg-white/95 backdrop-blur-md p-5 md:p-6 rounded-3xl shadow-xs border border-white/80 space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
           <div>
@@ -547,10 +634,10 @@
           </div>
           <div>
             <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Select Semester / Year</label>
-            <select id="ttSemSelect" onkeydown="if(event.key==='Enter') renderComingSoon('timetable');" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
+            <select id="ttSemSelect" onkeydown="if(event.key==='Enter') fetchAndDisplayTimetable();" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
           </div>
           <div class="flex items-end">
-            <button type="button" onclick="renderComingSoon('timetable')" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-semibold text-xs px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 transition cursor-pointer shadow-sm">
+            <button type="button" onclick="fetchAndDisplayTimetable()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-semibold text-xs px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 transition cursor-pointer shadow-sm">
               <i class="fa-solid fa-magnifying-glass"></i> View Timetable
             </button>
           </div>
@@ -559,7 +646,7 @@
         <div id="ttResultContainer" class="pt-2"></div>
       </section>
 
-      <!-- Syllabus View -->
+      <!-- Syllabus View (Students, Faculty, Admin) -->
       <section id="syllabusView" class="hidden w-full bg-white/95 backdrop-blur-md p-5 md:p-6 rounded-3xl shadow-xs border border-white/80 space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
           <div>
@@ -578,13 +665,18 @@
           </div>
           <div>
             <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Select Semester / Year</label>
-            <select id="sylSemSelect" onkeydown="if(event.key==='Enter') renderComingSoon('syllabus');" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
+            <select id="sylSemSelect" onchange="syncSylSubjects()" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium"></select>
           </div>
-          <div class="flex items-end">
-            <button type="button" onclick="renderComingSoon('syllabus')" class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold text-xs px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 transition cursor-pointer shadow-sm">
-              <i class="fa-solid fa-magnifying-glass"></i> View Syllabus
-            </button>
+          <div>
+            <label class="block text-slate-500 font-semibold text-[10px] uppercase mb-1">Select Subject</label>
+            <select id="sylSubjectSelect" class="w-full border rounded-xl px-3 py-2.5 bg-slate-50 font-medium truncate"></select>
           </div>
+        </div>
+
+        <div>
+          <button type="button" onclick="fetchAndDisplaySyllabus()" class="bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold text-xs px-6 py-2.5 rounded-xl inline-flex items-center gap-2 transition cursor-pointer shadow-sm">
+            <i class="fa-solid fa-magnifying-glass"></i> View Syllabus Document
+          </button>
         </div>
 
         <div id="sylResultContainer" class="pt-2"></div>
@@ -953,7 +1045,6 @@
     var LOCAL_LOGO_PATH  = "SPCP.png";
     var ONLINE_LOGO_NAME = "SPCP.png";
 
-    // Auto-resolve image paths
     var IS_LOCAL_ENV = window.location.protocol === 'file:' || 
                        window.location.hostname === 'localhost' || 
                        window.location.hostname === '127.0.0.1';
@@ -971,12 +1062,8 @@
       if (logoEl) logoEl.src = resolvedLogoPath;
     });
 
-    // =========================================================================
-    // UI PROTECTION: DISABLE RIGHT CLICK & F12 DEVELOPER TOOLS SHORTCUTS
-    // =========================================================================
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
+    // Disable Right-Click and Dev Tools shortcuts
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
     document.addEventListener('keydown', function(e) {
       if (
         e.key === 'F12' || 
@@ -987,9 +1074,6 @@
       }
     });
 
-    // =========================================================================
-    // SHOW / HIDE PASSWORD TOGGLE UTILITY
-    // =========================================================================
     function togglePasswordVisibility(inputId, iconId) {
       var input = document.getElementById(inputId);
       var icon = document.getElementById(iconId);
@@ -1182,8 +1266,12 @@
       syncExportSemesters();
       syncTTSemesters();
       syncSylSemesters();
+      syncSylSubjects();
       syncNotifSemesters();
       syncAdminStudentSemesters();
+      syncAdminUploadTTSemesters();
+      syncAdminUploadSylSemesters();
+      syncAdminUploadSylSubjects();
     });
 
     function toggleMobileSupport(show) {
@@ -1273,7 +1361,6 @@
       }
 
       try {
-        // Faculty & Admin authentication against the database
         if (currentRole === 'faculty' || currentRole === 'admin' || id.toUpperCase() === 'ADMIN') {
           var res = await db.from('faculty').select('*').eq('faculty_id', id).eq('password', pwd);
           if (res.error) throw res.error;
@@ -1293,7 +1380,6 @@
           return;
         }
 
-        // Student authentication against the database
         var resStudent = await db.from('students').select('*').eq('enrollment_no', id).eq('password', pwd);
         if (resStudent.error) throw resStudent.error;
         if (!resStudent.data || resStudent.data.length === 0) {
@@ -1328,8 +1414,11 @@
       document.getElementById('studentNav').classList.add('hidden');
       document.getElementById('adminNav').classList.remove('hidden');
 
-      navigateView('adminDashboardView');
+      navigateView('adminAddOneView');
       syncAdminStudentSemesters();
+      syncAdminUploadTTSemesters();
+      syncAdminUploadSylSemesters();
+      syncAdminUploadSylSubjects();
     }
 
     function setupFacultySession() {
@@ -1383,6 +1472,7 @@
           var sylS = document.getElementById('sylSemSelect');
           if (ttS) ttS.value = currentUser.semester;
           if (sylS) sylS.value = currentUser.semester;
+          syncSylSubjects();
         }
       }
 
@@ -1402,12 +1492,19 @@
     }
 
     function navigateView(viewName) {
-      ['adminDashboardView', 'facultyDashboardView', 'attendanceLogsView', 'reportsExportView', 'timetableView', 'syllabusView', 'studentDashboardView'].forEach(function(id) {
+      [
+        'adminAddOneView', 'adminAddMultipleView', 'adminUploadTimetableView', 'adminUploadSyllabusView',
+        'facultyDashboardView', 'attendanceLogsView', 'reportsExportView', 'timetableView', 'syllabusView', 'studentDashboardView'
+      ].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.classList.add('hidden');
       });
 
-      ['btnNavAdminDash', 'btnNavAdminReports', 'btnNavAdminTimetable', 'btnNavAdminSyllabus', 'btnNavDash', 'btnNavLogs', 'btnNavReports', 'btnNavTimetable', 'btnNavSyllabus', 'btnNavStudentDash', 'btnNavStudentTimetable', 'btnNavStudentSyllabus'].forEach(function(id) {
+      [
+        'btnNavAdminAddOne', 'btnNavAdminAddMultiple', 'btnNavAdminUploadTT', 'btnNavAdminUploadSyl', 'btnNavAdminReports', 'btnNavAdminTimetable', 'btnNavAdminSyllabus',
+        'btnNavDash', 'btnNavLogs', 'btnNavReports', 'btnNavTimetable', 'btnNavSyllabus',
+        'btnNavStudentDash', 'btnNavStudentTimetable', 'btnNavStudentSyllabus'
+      ].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) {
           el.classList.remove('nav-active');
@@ -1415,9 +1512,22 @@
         }
       });
 
-      if (viewName === 'adminDashboardView') {
-        document.getElementById('adminDashboardView').classList.remove('hidden');
-        document.getElementById('btnNavAdminDash')?.classList.add('nav-active');
+      if (viewName === 'adminAddOneView') {
+        document.getElementById('adminAddOneView').classList.remove('hidden');
+        document.getElementById('btnNavAdminAddOne')?.classList.add('nav-active');
+        syncAdminStudentSemesters();
+      } else if (viewName === 'adminAddMultipleView') {
+        document.getElementById('adminAddMultipleView').classList.remove('hidden');
+        document.getElementById('btnNavAdminAddMultiple')?.classList.add('nav-active');
+      } else if (viewName === 'adminUploadTimetableView') {
+        document.getElementById('adminUploadTimetableView').classList.remove('hidden');
+        document.getElementById('btnNavAdminUploadTT')?.classList.add('nav-active');
+        syncAdminUploadTTSemesters();
+      } else if (viewName === 'adminUploadSyllabusView') {
+        document.getElementById('adminUploadSyllabusView').classList.remove('hidden');
+        document.getElementById('btnNavAdminUploadSyl')?.classList.add('nav-active');
+        syncAdminUploadSylSemesters();
+        syncAdminUploadSylSubjects();
       } else if (viewName === 'facultyDashboard') {
         document.getElementById('facultyDashboardView').classList.remove('hidden');
         document.getElementById('btnNavDash')?.classList.add('nav-active');
@@ -1445,6 +1555,7 @@
         document.getElementById('btnNavAdminSyllabus')?.classList.add('nav-active');
         document.getElementById('btnNavStudentSyllabus')?.classList.add('nav-active');
         syncSylSemesters();
+        syncSylSubjects();
       } else if (viewName === 'studentDashboard') {
         document.getElementById('studentDashboardView').classList.remove('hidden');
         document.getElementById('btnNavStudentDash')?.classList.add('nav-active');
@@ -1452,7 +1563,10 @@
     }
 
     function populateCourseDropdowns() {
-      var dropdownIds = ['courseSelect', 'exportCourseSelect', 'ttCourseSelect', 'sylCourseSelect', 'notifCourseSelect', 'adminStudentCourse'];
+      var dropdownIds = [
+        'courseSelect', 'exportCourseSelect', 'ttCourseSelect', 'sylCourseSelect', 'notifCourseSelect',
+        'adminStudentCourse', 'adminUploadTTCourse', 'adminUploadSylCourse'
+      ];
       dropdownIds.forEach(function(id) {
         var el = document.getElementById(id);
         if (el) {
@@ -1538,6 +1652,24 @@
         opt.innerText = s;
         sSelect.appendChild(opt);
       });
+      syncSylSubjects();
+    }
+
+    function syncSylSubjects() {
+      var cSelect = document.getElementById('sylCourseSelect');
+      var sSelect = document.getElementById('sylSemSelect');
+      var subSelect = document.getElementById('sylSubjectSelect');
+      if (!cSelect || !sSelect || !subSelect) return;
+      var course = cSelect.value;
+      var sem = sSelect.value;
+      subSelect.innerHTML = '';
+      var subjects = (ACADEMIC_MAP[course] && ACADEMIC_MAP[course].subjects[sem]) || [];
+      subjects.forEach(function(sub) {
+        var opt = document.createElement('option');
+        opt.value = sub;
+        opt.innerText = sub;
+        subSelect.appendChild(opt);
+      });
     }
 
     function syncNotifSemesters() {
@@ -1570,8 +1702,56 @@
       });
     }
 
+    function syncAdminUploadTTSemesters() {
+      var cSelect = document.getElementById('adminUploadTTCourse');
+      var sSelect = document.getElementById('adminUploadTTSem');
+      if (!cSelect || !sSelect) return;
+      var course = cSelect.value;
+      sSelect.innerHTML = '';
+      if (!ACADEMIC_MAP[course]) return;
+      ACADEMIC_MAP[course].semesters.forEach(function(s) {
+        var opt = document.createElement('option');
+        opt.value = s;
+        opt.innerText = s;
+        sSelect.appendChild(opt);
+      });
+    }
+
+    function syncAdminUploadSylSemesters() {
+      var cSelect = document.getElementById('adminUploadSylCourse');
+      var sSelect = document.getElementById('adminUploadSylSem');
+      if (!cSelect || !sSelect) return;
+      var course = cSelect.value;
+      sSelect.innerHTML = '';
+      if (!ACADEMIC_MAP[course]) return;
+      ACADEMIC_MAP[course].semesters.forEach(function(s) {
+        var opt = document.createElement('option');
+        opt.value = s;
+        opt.innerText = s;
+        sSelect.appendChild(opt);
+      });
+      syncAdminUploadSylSubjects();
+    }
+
+    function syncAdminUploadSylSubjects() {
+      var cSelect = document.getElementById('adminUploadSylCourse');
+      var sSelect = document.getElementById('adminUploadSylSem');
+      var subSelect = document.getElementById('adminUploadSylSubject');
+      if (!cSelect || !sSelect || !subSelect) return;
+      var course = cSelect.value;
+      var sem = sSelect.value;
+      subSelect.innerHTML = '';
+      var subjects = (ACADEMIC_MAP[course] && ACADEMIC_MAP[course].subjects[sem]) || [];
+      subjects.forEach(function(sub) {
+        var opt = document.createElement('option');
+        opt.value = sub;
+        opt.innerText = sub;
+        subSelect.appendChild(opt);
+      });
+    }
+
     // =========================================================================
-    // ADMIN ACTIONS: ADD / UPDATE FACULTY & INDIVIDUAL STUDENT
+    // ADMIN ACTIONS: ADD / UPDATE CANDIDATES
     // =========================================================================
     async function adminCreateFaculty() {
       if (!db) { alert("Supabase is not connected."); return; }
@@ -1586,7 +1766,7 @@
 
       var btn = document.getElementById('btnAdminSaveFaculty');
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving to Database...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
       try {
         var { error } = await db.from('faculty').upsert([{
@@ -1624,7 +1804,7 @@
 
       var btn = document.getElementById('btnAdminSaveStudent');
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enrolling Student...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enrolling...';
 
       try {
         var { error } = await db.from('students').upsert([{
@@ -1649,15 +1829,12 @@
       }
     }
 
-    // =========================================================================
-    // BATCH STUDENT CSV / EXCEL UPLOAD ENGINE
-    // =========================================================================
     function downloadStudentBatchTemplate() {
       var templateData = [
         ["enrollment_no", "name", "course", "semester", "password"],
-        ["252440888001", "Student Name A", "B.Pharm", "Sem 1", "SPCP@252440888001"],
-        ["252440888002", "Student Name B", "B.Pharm", "Sem 1", "SPCP@252440888002"],
-        ["252440888003", "Student Name C", "Pharm. D", "Year 1", "SPCP@252440888003"]
+        ["252440888001", "Student Name A", "B.Pharm", "Sem 1", "SPCP@0001"],
+        ["252440888002", "Student Name B", "B.Pharm", "Sem 1", "SPCP@0002"],
+        ["252440888003", "Student Name C", "Pharm. D", "Year 1", "SPCP@0003"]
       ];
 
       var ws = XLSX.utils.aoa_to_sheet(templateData);
@@ -1703,7 +1880,6 @@
             var row = rows[i];
             var keys = Object.keys(row);
 
-            // Normalize header names
             var enrollVal = "";
             var nameVal = "";
             var courseVal = "B.Pharm";
@@ -1719,7 +1895,7 @@
               else if (cleanKey.indexOf("pass") !== -1 || cleanKey.indexOf("pwd") !== -1) pwdVal = String(row[k]).trim();
             });
 
-            if (!enrollVal || !nameVal) continue; // Skip incomplete lines
+            if (!enrollVal || !nameVal) continue;
 
             if (!pwdVal) {
               pwdVal = "SPCP@" + enrollVal.slice(-4);
@@ -1740,7 +1916,6 @@
 
           statusBox.innerText = "Saving " + validRecords.length + " students to database in batches...";
 
-          // Upsert in batches of 50 to ensure reliable network transport
           var batchSize = 50;
           for (var b = 0; b < validRecords.length; b += batchSize) {
             var chunk = validRecords.slice(b, b + batchSize);
@@ -1771,47 +1946,277 @@
       reader.readAsArrayBuffer(file);
     }
 
-    function renderComingSoon(type) {
-      var isTT = type === 'timetable';
-      var courseId = isTT ? 'ttCourseSelect' : 'sylCourseSelect';
-      var semId = isTT ? 'ttSemSelect' : 'sylSemSelect';
-      var containerId = isTT ? 'ttResultContainer' : 'sylResultContainer';
+    // =========================================================================
+    // ADMIN ACTIONS: UPLOAD TIMETABLE & SYLLABUS TO SUPABASE STORAGE
+    // =========================================================================
+    async function adminUploadTimetableAction() {
+      if (!db) { alert("Supabase is not connected."); return; }
+      var course = document.getElementById('adminUploadTTCourse').value;
+      var sem = document.getElementById('adminUploadTTSem').value;
+      var fileInput = document.getElementById('adminTTFileInput');
+      var statusBox = document.getElementById('adminTTUploadStatus');
+      var btn = document.getElementById('btnAdminUploadTT');
 
-      var course = document.getElementById(courseId)?.value || 'Selected Course';
-      var sem = document.getElementById(semId)?.value || 'Selected Term';
-      var container = document.getElementById(containerId);
-      if (!container) return;
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert("Please select a Timetable document (PDF or Image).");
+        return;
+      }
 
-      var typeTitle = isTT ? 'Academic Timetable' : 'Course Syllabus';
-      var iconClass = isTT ? 'fa-solid fa-calendar-days' : 'fa-solid fa-book-open';
-      var accentColor = isTT ? 'blue' : 'indigo';
+      var file = fileInput.files[0];
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading to Storage...';
 
-      container.innerHTML = `
-        <div class="rounded-3xl border border-${accentColor}-100/90 bg-gradient-to-br from-${accentColor}-50/60 via-white/90 to-slate-50/70 p-6 md:p-10 text-center shadow-xs relative overflow-hidden transition-all">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-${accentColor}-100/80 text-${accentColor}-700 text-[10px] md:text-[11px] font-bold tracking-wider uppercase mb-3 shadow-2xs">
-            <span class="w-2 h-2 rounded-full bg-${accentColor}-600 animate-ping"></span> Under Academic Review
+      statusBox.className = "text-xs p-3 rounded-xl border bg-slate-50 text-slate-700 block";
+      statusBox.innerText = "Uploading file to Supabase Storage...";
+
+      try {
+        var fileExt = file.name.split('.').pop();
+        var cleanFileName = 'timetable_' + course.replace(/[\s\(\)\/]/g, '_') + '_' + sem.replace(/[\s\(\)\/]/g, '_') + '_' + Date.now() + '.' + fileExt;
+
+        // Upload to public 'academic_files' storage bucket
+        var { data: uploadData, error: uploadErr } = await db.storage
+          .from('academic_files')
+          .upload(cleanFileName, file, { upsert: true });
+
+        if (uploadErr) throw uploadErr;
+
+        var { data: urlData } = db.storage.from('academic_files').getPublicUrl(cleanFileName);
+        var publicUrl = urlData.publicUrl;
+
+        // Upsert metadata record
+        var { error: dbErr } = await db.from('timetables').upsert([{
+          course: course,
+          semester: sem,
+          file_name: file.name,
+          file_url: publicUrl,
+          uploaded_at: new Date().toISOString()
+        }], { onConflict: 'course, semester' });
+
+        if (dbErr) throw dbErr;
+
+        statusBox.className = "text-xs p-3.5 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 block";
+        statusBox.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i> Timetable successfully published for <strong>' + course + ' (' + sem + ')</strong>!';
+        fileInput.value = '';
+        alert("Timetable uploaded and published successfully!");
+      } catch (err) {
+        statusBox.className = "text-xs p-3.5 rounded-xl border border-rose-300 bg-rose-50 text-rose-800 block";
+        statusBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1.5"></i> Upload Failed: ' + err.message;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Upload & Publish Timetable';
+      }
+    }
+
+    async function adminUploadSyllabusAction() {
+      if (!db) { alert("Supabase is not connected."); return; }
+      var course = document.getElementById('adminUploadSylCourse').value;
+      var sem = document.getElementById('adminUploadSylSem').value;
+      var subject = document.getElementById('adminUploadSylSubject').value;
+      var fileInput = document.getElementById('adminSylFileInput');
+      var statusBox = document.getElementById('adminSylUploadStatus');
+      var btn = document.getElementById('btnAdminUploadSyl');
+
+      if (!subject) {
+        alert("Please select a subject.");
+        return;
+      }
+
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert("Please select a Syllabus document (PDF or Image).");
+        return;
+      }
+
+      var file = fileInput.files[0];
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading to Storage...';
+
+      statusBox.className = "text-xs p-3 rounded-xl border bg-slate-50 text-slate-700 block";
+      statusBox.innerText = "Uploading syllabus document...";
+
+      try {
+        var fileExt = file.name.split('.').pop();
+        var cleanFileName = 'syllabus_' + course.replace(/[\s\(\)\/]/g, '_') + '_' + sem.replace(/[\s\(\)\/]/g, '_') + '_' + Date.now() + '.' + fileExt;
+
+        var { data: uploadData, error: uploadErr } = await db.storage
+          .from('academic_files')
+          .upload(cleanFileName, file, { upsert: true });
+
+        if (uploadErr) throw uploadErr;
+
+        var { data: urlData } = db.storage.from('academic_files').getPublicUrl(cleanFileName);
+        var publicUrl = urlData.publicUrl;
+
+        var { error: dbErr } = await db.from('syllabi').upsert([{
+          course: course,
+          semester: sem,
+          subject: subject,
+          file_name: file.name,
+          file_url: publicUrl,
+          uploaded_at: new Date().toISOString()
+        }], { onConflict: 'course, semester, subject' });
+
+        if (dbErr) throw dbErr;
+
+        statusBox.className = "text-xs p-3.5 rounded-xl border border-purple-300 bg-purple-50 text-purple-800 block";
+        statusBox.innerHTML = '<i class="fa-solid fa-circle-check text-purple-600 mr-1.5"></i> Syllabus for <strong>' + subject + '</strong> successfully published!';
+        fileInput.value = '';
+        alert("Syllabus uploaded and published successfully!");
+      } catch (err) {
+        statusBox.className = "text-xs p-3.5 rounded-xl border border-rose-300 bg-rose-50 text-rose-800 block";
+        statusBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1.5"></i> Upload Failed: ' + err.message;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Upload & Publish Syllabus';
+      }
+    }
+
+    // =========================================================================
+    // STUDENT & FACULTY: VIEW / DOWNLOAD TIMETABLE & SYLLABUS
+    // =========================================================================
+    async function fetchAndDisplayTimetable() {
+      if (!db) return;
+      var course = document.getElementById('ttCourseSelect').value;
+      var sem = document.getElementById('ttSemSelect').value;
+      var container = document.getElementById('ttResultContainer');
+      container.innerHTML = '<div class="text-xs text-slate-400 p-6 text-center">Checking for published timetable...</div>';
+
+      try {
+        var { data, error } = await db.from('timetables')
+          .select('*')
+          .eq('course', course)
+          .eq('semester', sem)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (!data || !data.file_url) {
+          container.innerHTML = `
+            <div class="rounded-3xl border border-slate-200/90 bg-slate-50/70 p-8 text-center space-y-2">
+              <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-regular fa-calendar-xmark"></i>
+              </div>
+              <h4 class="font-bold text-slate-800 text-sm">No Timetable Uploaded Yet</h4>
+              <p class="text-xs text-slate-500 max-w-sm mx-auto">The academic timetable for <strong>${course} (${sem})</strong> has not been published by the administration yet.</p>
+            </div>
+          `;
+          return;
+        }
+
+        var isPdf = data.file_name.toLowerCase().endsWith('.pdf');
+        var dateFormatted = data.uploaded_at ? new Date(data.uploaded_at).toLocaleDateString() : '';
+
+        container.innerHTML = `
+          <div class="rounded-3xl border border-blue-200 bg-gradient-to-br from-blue-50/70 via-white to-slate-50/60 p-6 shadow-xs space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-xl shadow-sm shrink-0">
+                  <i class="${isPdf ? 'fa-solid fa-file-pdf' : 'fa-solid fa-image'}"></i>
+                </div>
+                <div>
+                  <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Official Schedule</span>
+                  <h3 class="text-sm font-bold text-slate-900 mt-0.5">${course} - ${sem} Timetable</h3>
+                  <div class="text-[11px] text-slate-500 font-mono mt-0.5">Published on: ${dateFormatted}</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <a href="${data.file_url}" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-xs cursor-pointer">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full View
+                </a>
+                <a href="${data.file_url}" download="${data.file_name}" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-xs cursor-pointer">
+                  <i class="fa-solid fa-download"></i> Download
+                </a>
+              </div>
+            </div>
+
+            <div class="rounded-2xl border border-slate-200 overflow-hidden bg-slate-100">
+              ${isPdf ? `
+                <iframe src="${data.file_url}" class="w-full h-96 border-0"></iframe>
+              ` : `
+                <img src="${data.file_url}" alt="Timetable Document" class="w-full max-h-96 object-contain mx-auto p-2 bg-white">
+              `}
+            </div>
           </div>
-          
-          <div class="w-16 h-16 md:w-20 md:h-20 rounded-3xl bg-${accentColor}-600/10 text-${accentColor}-600 border border-${accentColor}-200/80 flex items-center justify-center mx-auto mb-3 text-2xl md:text-3xl shadow-inner">
-            <i class="${iconClass}"></i>
-          </div>
+        `;
+      } catch (err) {
+        container.innerHTML = '<div class="text-xs text-red-500 p-4 text-center">' + err.message + '</div>';
+      }
+    }
 
-          <h3 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Coming Soon</h3>
-          <div class="text-xs md:text-sm font-semibold text-${accentColor}-700 mt-1">
-            ${course} • ${sem} • ${typeTitle}
-          </div>
+    async function fetchAndDisplaySyllabus() {
+      if (!db) return;
+      var course = document.getElementById('sylCourseSelect').value;
+      var sem = document.getElementById('sylSemSelect').value;
+      var subject = document.getElementById('sylSubjectSelect').value;
+      var container = document.getElementById('sylResultContainer');
 
-          <p class="text-xs text-slate-500 max-w-md mx-auto mt-2 leading-relaxed">
-            The digitized ${typeTitle.toLowerCase()} for this curriculum is currently being finalized in accordance with Sardar Patel College of Pharmacy, GTU, and PCI regulations. It will appear here shortly.
-          </p>
+      if (!subject) {
+        alert("Please select a subject to view its syllabus.");
+        return;
+      }
 
-          <div class="inline-flex flex-wrap items-center justify-center gap-3 md:gap-4 mt-5 pt-5 border-t border-slate-200/70 text-[11px] text-slate-400 font-mono">
-            <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-500"></i> SPCP / GTU Syllabus Compliance</span>
-            <span>•</span>
-            <span>Academic Session 2026-2027</span>
+      container.innerHTML = '<div class="text-xs text-slate-400 p-6 text-center">Checking for published syllabus...</div>';
+
+      try {
+        var { data, error } = await db.from('syllabi')
+          .select('*')
+          .eq('course', course)
+          .eq('semester', sem)
+          .eq('subject', subject)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (!data || !data.file_url) {
+          container.innerHTML = `
+            <div class="rounded-3xl border border-slate-200/90 bg-slate-50/70 p-8 text-center space-y-2">
+              <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-book-open"></i>
+              </div>
+              <h4 class="font-bold text-slate-800 text-sm">No Syllabus Uploaded Yet</h4>
+              <p class="text-xs text-slate-500 max-w-sm mx-auto">The digitized syllabus for <strong>${subject}</strong> has not been published yet.</p>
+            </div>
+          `;
+          return;
+        }
+
+        var isPdf = data.file_name.toLowerCase().endsWith('.pdf');
+        var dateFormatted = data.uploaded_at ? new Date(data.uploaded_at).toLocaleDateString() : '';
+
+        container.innerHTML = `
+          <div class="rounded-3xl border border-purple-200 bg-gradient-to-br from-purple-50/70 via-white to-slate-50/60 p-6 shadow-xs space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-xl shadow-sm shrink-0">
+                  <i class="${isPdf ? 'fa-solid fa-file-pdf' : 'fa-solid fa-file-lines'}"></i>
+                </div>
+                <div>
+                  <span class="text-[10px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider">PCI & GTU Syllabus</span>
+                  <h3 class="text-sm font-bold text-slate-900 mt-0.5">${data.subject}</h3>
+                  <div class="text-[11px] text-slate-500 font-mono mt-0.5">${course} • ${sem} • Published: ${dateFormatted}</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <a href="${data.file_url}" target="_blank" class="inline-flex items-center gap-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-xs cursor-pointer">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full View
+                </a>
+                <a href="${data.file_url}" download="${data.file_name}" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-xs cursor-pointer">
+                  <i class="fa-solid fa-download"></i> Download
+                </a>
+              </div>
+            </div>
+
+            <div class="rounded-2xl border border-slate-200 overflow-hidden bg-slate-100">
+              ${isPdf ? `
+                <iframe src="${data.file_url}" class="w-full h-96 border-0"></iframe>
+              ` : `
+                <img src="${data.file_url}" alt="Syllabus Document" class="w-full max-h-96 object-contain mx-auto p-2 bg-white">
+              `}
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      } catch (err) {
+        container.innerHTML = '<div class="text-xs text-red-500 p-4 text-center">' + err.message + '</div>';
+      }
     }
 
     // -------------------------------------------------------------
